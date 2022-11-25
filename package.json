@@ -9,7 +9,9 @@
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
-    "lint": "eslint --ext .ts,.tsx ."
+    "format": "prettier --parser typescript --write *.ts src/**/*.ts src/**/*.tsx ",
+    "check:format": "prettier --parser typescript --list-different *.ts src/**/*.ts src/**/*.tsx",
+    "check:lint": "eslint --ext .ts,.tsx ."
   },
   "keywords": [],
   "author": "picar",
@@ -32,7 +34,9 @@
     "css-loader": "^6.0.0",
     "electron": "21.3.0",
     "eslint": "^8.0.1",
+    "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.25.0",
+    "eslint-plugin-prettier": "^4.2.1",
     "fork-ts-checker-webpack-plugin": "^7.2.13",
     "node-loader": "^2.0.0",
     "style-loader": "^3.0.0",
@@ -42,6 +46,7 @@
   },
   "dependencies": {
     "electron-squirrel-startup": "^1.0.0",
+    "prettier": "^2.8.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   }

@@ -34,5 +34,5 @@ export const rules: Required<ModuleOptions>['rules'] = [
     use: {
       loader: 'babel-loader',
     },
-  }
+  },
 ];

@@ -1,8 +1,8 @@
 {
   "name": "node-package-notifier",
-  "productName": "node-package-notifier",
-  "version": "1.0.0",
-  "description": "My Electron application description",
+  "productName": "NPN",
+  "version": "0.0.1",
+  "description": "An simple Electron Js app that notify new npm package release.",
   "main": ".webpack/main",
   "scripts": {
     "start": "electron-forge start",
@@ -14,7 +14,7 @@
     "check:lint": "eslint --ext .ts,.tsx ."
   },
   "keywords": [],
-  "author": "picar",
+  "author": "Thibault Picard",
   "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.20.2",
@@ -31,6 +31,7 @@
     "@typescript-eslint/parser": "^5.0.0",
     "@vercel/webpack-asset-relocator-loader": "1.7.3",
     "babel-loader": "^9.1.0",
+    "copy-webpack-plugin": "^11.0.0",
     "css-loader": "^6.0.0",
     "electron": "21.3.0",
     "eslint": "^8.0.1",
@@ -39,6 +40,8 @@
     "eslint-plugin-prettier": "^4.2.1",
     "fork-ts-checker-webpack-plugin": "^7.2.13",
     "node-loader": "^2.0.0",
+    "sass": "^1.56.1",
+    "sass-loader": "^13.2.0",
     "style-loader": "^3.0.0",
     "ts-loader": "^9.2.2",
     "ts-node": "^10.0.0",

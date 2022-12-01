@@ -1,4 +1,5 @@
 import { BrowserWindow } from 'electron';
+import * as path from 'path';
 
 export function createMainWindow(
   preloadEntry: string,
@@ -8,6 +9,7 @@ export function createMainWindow(
   const mainWindow = new BrowserWindow({
     height: 600,
     width: 800,
+    icon: path.join(__dirname, 'ressources', 'logo.png'),
     webPreferences: {
       preload: preloadEntry,
     },

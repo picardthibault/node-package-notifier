@@ -1,3 +1,4 @@
+import './listener/index';
 import { app, BrowserWindow, Menu, nativeImage, Tray } from 'electron';
 import * as path from 'path';
 import { createMainWindow } from './helper/AppLifeCycleHelper';

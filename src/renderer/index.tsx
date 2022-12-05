@@ -1,12 +1,12 @@
 import './styles/styles.scss';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import { Configuration } from './views/Configuration';
 
-const router = createBrowserRouter([
+const router = createMemoryRouter([
   {
-    path: '/main_window',
+    path: '/',
     element: <Configuration />,
   },
 ]);

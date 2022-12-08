@@ -9,7 +9,6 @@ export const Configuration = (): JSX.Element => {
   const [formInstance] = Form.useForm<NotifierCreationForm>();
 
   const onFinish = () => {
-    console.log(formInstance.getFieldsValue());
     // @ts-ignore
     window.notifierManagement.create(formInstance.getFieldsValue());
   };

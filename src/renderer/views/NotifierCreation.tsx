@@ -5,11 +5,10 @@ interface NotifierCreationForm {
   packageName: string;
 }
 
-export const Configuration = (): JSX.Element => {
+export const NotifierCreation = (): JSX.Element => {
   const [formInstance] = Form.useForm<NotifierCreationForm>();
 
   const onFinish = () => {
-    // @ts-ignore
     window.notifierManagement.create(formInstance.getFieldsValue());
   };
 

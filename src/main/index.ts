@@ -14,7 +14,7 @@ if (require('electron-squirrel-startup')) {
   app.quit();
 }
 
-let mainWindow: BrowserWindow | undefined;
+export let mainWindow: BrowserWindow | undefined;
 
 function quitApp(): void {
   console.log('Exiting app');

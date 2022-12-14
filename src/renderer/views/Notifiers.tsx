@@ -1,19 +1,57 @@
 import React, { useEffect, useState } from 'react';
 import { NotifierConfig } from '../../main/Store/NotifierStore';
 import { IpcRendererEvent } from 'electron';
-import { Button } from 'antd';
+import { Button, Table } from 'antd';
+import { EyeOutlined } from '@ant-design/icons';
+import { ColumnsType } from 'antd/es/table';
+interface TableItemType {
+  key: number;
+  notifierId: string;
+  name: string;
+}
+
+const tableColumns: ColumnsType<TableItemType> = [
+  {
+    key: 'name',
+    title: 'Name',
+    dataIndex: 'name',
+  },
+  {
+    key: 'action',
+    title: 'Action',
+    render: (tableItem: TableItemType) => (
+      <Button
+        type="primary"
+        onClick={() => console.log(`open details for ${tableItem.notifierId}`)}
+      >
+        <EyeOutlined />
+      </Button>
+    ),
+  },
+];
 
 export const Notifiers = (): JSX.Element => {
-  const [notifiers, setNotifiers] = useState<{ [key: string]: NotifierConfig }>(
-    {},
-  );
+  const [notifiers, setNotifiers] = useState<TableItemType[]>([]);
+
+  useEffect(() => {
+    // Load Notifiers
+    window.notifierManagement.getAll();
+  }, []);
 
   useEffect(() => {
     const notifiersListener = (
       event: IpcRendererEvent,
       notifiers: { [key: string]: NotifierConfig },
     ) => {
-      setNotifiers(notifiers);
+      const tableItems: TableItemType[] = Object.keys(notifiers).map(
+        (notifierId, index) => ({
+          key: index,
+          notifierId,
+          name: notifiers[notifierId].name,
+        }),
+      );
+
+      setNotifiers(tableItems);
     };
 
     const cleanListener =
@@ -27,14 +65,13 @@ export const Notifiers = (): JSX.Element => {
   return (
     <>
       <h1>Notifiers</h1>
-      <Button type="primary" onClick={() => window.notifierManagement.getAll()}>
-        Load
-      </Button>
-      <p>
-        {Object.keys(notifiers)
-          .map((el) => notifiers[el].name)
-          .join('\n')}
-      </p>
+      <Table
+        columns={tableColumns}
+        dataSource={notifiers}
+        pagination={{
+          position: ['bottomCenter'],
+        }}
+      />
     </>
   );
 };

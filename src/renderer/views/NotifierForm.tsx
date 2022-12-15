@@ -1,12 +1,15 @@
 import React from 'react';
 import { Button, Form, Input } from 'antd';
+import { useParams } from 'react-router-dom';
 
-interface NotifierCreationForm {
+interface NotifierForm {
   packageName: string;
 }
 
-export const NotifierCreation = (): JSX.Element => {
-  const [formInstance] = Form.useForm<NotifierCreationForm>();
+export const NotifierForm = (): JSX.Element => {
+  const { id } = useParams();
+
+  const [formInstance] = Form.useForm<NotifierForm>();
 
   const onFinish = () => {
     window.notifierManagement.create(formInstance.getFieldsValue());
@@ -14,9 +17,9 @@ export const NotifierCreation = (): JSX.Element => {
 
   return (
     <>
-      <h1>Notifier Creation</h1>
+      <h1>Notifier Form</h1>
       <Form
-        name="notifierCreation"
+        name="notifierForm"
         form={formInstance}
         initialValues={{
           packageName: '',

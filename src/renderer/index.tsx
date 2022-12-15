@@ -3,7 +3,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import { Notifiers } from './views/Notifiers';
-import { NotifierCreation } from './views/NotifierCreation';
+import { NotifierForm } from './views/NotifierForm';
 
 const router = createMemoryRouter([
   {
@@ -11,8 +11,8 @@ const router = createMemoryRouter([
     element: <Notifiers />,
   },
   {
-    path: '/notifiers/create',
-    element: <NotifierCreation />,
+    path: '/notifier/:id',
+    element: <NotifierForm />,
   },
 ]);
 

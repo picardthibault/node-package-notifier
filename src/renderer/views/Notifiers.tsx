@@ -4,33 +4,18 @@ import { IpcRendererEvent } from 'electron';
 import { Button, Table } from 'antd';
 import { EyeOutlined } from '@ant-design/icons';
 import { ColumnsType } from 'antd/es/table';
+import { useNavigate } from 'react-router-dom';
+
 interface TableItemType {
   key: number;
   notifierId: string;
   name: string;
 }
 
-const tableColumns: ColumnsType<TableItemType> = [
-  {
-    key: 'name',
-    title: 'Name',
-    dataIndex: 'name',
-  },
-  {
-    key: 'action',
-    title: 'Action',
-    render: (tableItem: TableItemType) => (
-      <Button
-        type="primary"
-        onClick={() => console.log(`open details for ${tableItem.notifierId}`)}
-      >
-        <EyeOutlined />
-      </Button>
-    ),
-  },
-];
 
 export const Notifiers = (): JSX.Element => {
+  const navigate = useNavigate();
+
   const [notifiers, setNotifiers] = useState<TableItemType[]>([]);
 
   useEffect(() => {
@@ -60,7 +45,28 @@ export const Notifiers = (): JSX.Element => {
     return () => {
       cleanListener();
     };
-  }, []);
+  }, [setNotifiers]);
+
+  const tableColumns: ColumnsType<TableItemType> = [
+    {
+      key: 'name',
+      title: 'Name',
+      dataIndex: 'name',
+    },
+    {
+      key: 'action',
+      title: 'Action',
+      width: '50px',
+      render: (tableItem: TableItemType) => (
+        <Button
+          type="primary"
+          onClick={() => navigate(`/notifier/${tableItem.notifierId}`)}
+        >
+          <EyeOutlined />
+        </Button>
+      ),
+    },
+  ];
 
   return (
     <>
@@ -69,6 +75,7 @@ export const Notifiers = (): JSX.Element => {
         columns={tableColumns}
         dataSource={notifiers}
         pagination={{
+          defaultPageSize: 10,
           position: ['bottomCenter'],
         }}
       />

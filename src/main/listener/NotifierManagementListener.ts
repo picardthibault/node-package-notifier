@@ -21,3 +21,7 @@ ipcMain.on(NotifierManagementChannel.GET_ALL, () => {
     );
   }
 });
+
+ipcMain.on(NotifierManagementChannel.GET, (event, notifierId: string) => {
+  event.returnValue = NotifierStore.get().getListener(notifierId);
+});

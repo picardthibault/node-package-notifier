@@ -12,7 +12,6 @@ interface TableItemType {
   name: string;
 }
 
-
 export const Notifiers = (): JSX.Element => {
   const navigate = useNavigate();
 
@@ -71,6 +70,9 @@ export const Notifiers = (): JSX.Element => {
   return (
     <>
       <h1>Notifiers</h1>
+      <Button type="primary" onClick={() => navigate('/notifier')}>
+        Create
+      </Button>
       <Table
         columns={tableColumns}
         dataSource={notifiers}

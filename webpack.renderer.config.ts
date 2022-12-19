@@ -18,6 +18,6 @@ export const rendererConfig: Configuration = {
   },
   plugins: rendererPlugins,
   resolve: {
-    extensions: ['.js', '.ts', '.jsx', '.tsx', '.css'],
+    extensions: ['.js', '.ts', '.jsx', '.tsx', '.css', '.json'],
   },
 };

@@ -15,6 +15,7 @@ declare global {
           notifiers: { [key: string]: NotifierConfig },
         ) => void,
       ) => () => void;
+      get: (notifierId: string) => { name: string };
     };
   }
 }

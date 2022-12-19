@@ -20,4 +20,6 @@ contextBridge.exposeInMainWorld('notifierManagement', {
         listener,
       );
   },
+  get: (notifierId: string): { name: string } =>
+    ipcRenderer.sendSync(NotifierManagementChannel.GET, notifierId),
 });

@@ -1,0 +1,12 @@
+{
+    "notifier": {
+        "title": {
+            "create": "Create Notifier",
+            "update": "Update Notifier"
+        },
+        "button": {
+            "create": "Create",
+            "update": "Update"
+        }
+    }
+}

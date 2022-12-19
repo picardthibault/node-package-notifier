@@ -1,11 +1,16 @@
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
-import { NotifierCreationArgs } from '../types/NotifierManagement';
+import {
+  NotifierCreationArgs,
+  NotifierUpdateArgs,
+} from '../types/NotifierManagement';
 import { NotifierManagementChannel } from '../types/IpcChannel';
 import { NotifierConfig } from '../main/Store/NotifierStore';
 
 contextBridge.exposeInMainWorld('notifierManagement', {
   create: (creationArgs: NotifierCreationArgs) =>
     ipcRenderer.send(NotifierManagementChannel.CREATE, creationArgs),
+  update: (updateArgs: NotifierUpdateArgs) =>
+    ipcRenderer.send(NotifierManagementChannel.UPDATE, updateArgs),
   getAll: () => ipcRenderer.send(NotifierManagementChannel.GET_ALL),
   getAllListener: (
     listener: (

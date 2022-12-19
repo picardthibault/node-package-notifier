@@ -1,4 +1,4 @@
-import { NotifierCreationArgs } from './NotifierManagement';
+import { NotifierCreationArgs, NotifierUpdateArgs } from './NotifierManagement';
 import { IpcRendererEvent } from 'electron';
 import { NotifierConfig } from '../main/Store/NotifierStore';
 
@@ -8,6 +8,7 @@ declare global {
   interface Window {
     notifierManagement: {
       create: (creationArgs: NotifierCreationArgs) => void;
+      update: (updateArgs: NotifierUpdateArgs) => void;
       getAll: () => void;
       getAllListener: (
         listener: (

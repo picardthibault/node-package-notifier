@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Form, Input } from 'antd';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
-interface NotifierForm {
+interface NotifierFormField {
   packageName: string;
+}
+
+interface NotifierData {
+  name: string;
 }
 
 export const NotifierForm = (): JSX.Element => {
@@ -12,9 +16,11 @@ export const NotifierForm = (): JSX.Element => {
 
   const { t } = useTranslation();
 
-  const [formInstance] = Form.useForm<NotifierForm>();
+  const navigate = useNavigate();
 
-  const [notifier, setNotifier] = useState<{ name: string } | null>(null);
+  const [formInstance] = Form.useForm<NotifierFormField>();
+
+  const [notifier, setNotifier] = useState<NotifierData | null>(null);
 
   useEffect(() => {
     if (id) {
@@ -27,12 +33,22 @@ export const NotifierForm = (): JSX.Element => {
   }, [id]);
 
   const onFinish = () => {
-    window.notifierManagement.create(formInstance.getFieldsValue());
+    if (notifier === null) {
+      window.notifierManagement.create(formInstance.getFieldsValue());
+    } else {
+      window.notifierManagement.update({
+        notifierId: id,
+        ...formInstance.getFieldsValue(),
+      });
+    }
   };
 
   return (
     <>
       <h1>{t(`notifier.title.${notifier === null ? 'create' : 'update'}`)}</h1>
+      <Button type="primary" onClick={() => navigate('/')}>
+        {t('notifier.button.back')}
+      </Button>
       <Form
         name="notifierForm"
         form={formInstance}

@@ -5,6 +5,7 @@ import { Button, Table } from 'antd';
 import { EyeOutlined } from '@ant-design/icons';
 import { ColumnsType } from 'antd/es/table';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 interface TableItemType {
   key: number;
@@ -14,6 +15,8 @@ interface TableItemType {
 
 export const Notifiers = (): JSX.Element => {
   const navigate = useNavigate();
+
+  const { t } = useTranslation();
 
   const [notifiers, setNotifiers] = useState<TableItemType[]>([]);
 
@@ -69,9 +72,9 @@ export const Notifiers = (): JSX.Element => {
 
   return (
     <>
-      <h1>Notifiers</h1>
+      <h1>{t('notifier.title.list')}</h1>
       <Button type="primary" onClick={() => navigate('/notifier')}>
-        Create
+        {t('notifier.button.create')}
       </Button>
       <Table
         columns={tableColumns}

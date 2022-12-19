@@ -6,10 +6,8 @@ export interface NotifierConfig {
 }
 
 export type INotifierStore = {
-  notifiers: {
-    // key is the SHA1 of the notifier name
-    [key: string]: NotifierConfig;
-  };
+  // key is the SHA1 of the notifier name
+  [key: string]: NotifierConfig;
 };
 
 export class NotifierStore {
@@ -30,16 +28,22 @@ export class NotifierStore {
     });
   }
 
-  addListener(newListener: NotifierConfig): void {
-    const listenerKey = getSha1(newListener.name);
-    this.store.set(`notifiers.${listenerKey}`, newListener);
+  addNotifier(newNotifier: NotifierConfig): void {
+    const notifierKey = getSha1(newNotifier.name);
+    this.store.set(notifierKey, newNotifier);
   }
 
-  getListener(key: string): NotifierConfig {
-    return this.store.get(`notifiers.${key}`);
+  updateNotifier(notifierId: string, newNotifier: NotifierConfig): void {
+    const newNotifierKey = getSha1(newNotifier.name);
+    this.store.delete(notifierId);
+    this.store.set(newNotifierKey, newNotifier);
   }
 
-  getListeners(): { [key: string]: NotifierConfig } {
-    return this.store.get('notifiers');
+  getNotifier(key: string): NotifierConfig {
+    return this.store.get(key);
+  }
+
+  getNotifiers(): { [key: string]: NotifierConfig } {
+    return this.store.store;
   }
 }

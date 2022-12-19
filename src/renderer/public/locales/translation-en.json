@@ -1,12 +1,14 @@
 {
     "notifier": {
         "title": {
+            "list": "Notifiers",
             "create": "Create Notifier",
             "update": "Update Notifier"
         },
         "button": {
             "create": "Create",
-            "update": "Update"
+            "update": "Update",
+            "back": "Back"
         }
     }
 }

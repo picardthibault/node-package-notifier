@@ -4,7 +4,7 @@ import {
   NotifierCreationArgs,
   NotifierUpdateArgs,
 } from '../../types/NotifierManagement';
-import { NotifierStore } from '../Store/NotifierStore';
+import { NotifierStore } from '../store/NotifierStore';
 import { mainWindow } from '../index';
 
 ipcMain.on(

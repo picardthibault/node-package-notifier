@@ -1,6 +1,6 @@
 import { NotifierCreationArgs, NotifierUpdateArgs } from './NotifierManagement';
 import { IpcRendererEvent } from 'electron';
-import { NotifierConfig } from '../main/Store/NotifierStore';
+import { NotifierConfig } from '../main/store/NotifierStore';
 
 export {};
 

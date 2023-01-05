@@ -4,7 +4,7 @@ import {
   NotifierUpdateArgs,
 } from '../types/NotifierManagement';
 import { NotifierManagementChannel } from '../types/IpcChannel';
-import { NotifierConfig } from '../main/Store/NotifierStore';
+import { NotifierConfig } from '../main/store/NotifierStore';
 
 contextBridge.exposeInMainWorld('notifierManagement', {
   create: (creationArgs: NotifierCreationArgs) =>

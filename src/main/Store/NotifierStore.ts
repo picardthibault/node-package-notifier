@@ -1,5 +1,5 @@
 import Store = require('electron-store');
-import { getSha1 } from '../helper/hashHelper';
+import { getSha1 } from '../helpers/HashHelper';
 
 export interface NotifierConfig {
   name: string;

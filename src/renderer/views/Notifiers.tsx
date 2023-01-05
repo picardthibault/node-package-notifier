@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { NotifierConfig } from '../../main/Store/NotifierStore';
+import { NotifierConfig } from '../../main/store/NotifierStore';
 import { IpcRendererEvent } from 'electron';
 import { Button, Table } from 'antd';
 import { EyeOutlined } from '@ant-design/icons';

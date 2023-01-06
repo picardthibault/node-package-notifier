@@ -3,6 +3,7 @@ import { getSha1 } from '../helpers/HashHelper';
 
 export interface NotifierConfig {
   name: string;
+  latest?: string;
 }
 
 export type INotifierStore = {

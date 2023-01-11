@@ -1,11 +1,13 @@
 import { NotifierConfig, NotifierStore } from '../../store/NotifierStore';
 import { NpmRegistryApi } from '../api/NpmRegistryApi';
 
-export async function updateNotifiersData(): Promise<void> {
+export async function updateNotifiersData(): Promise<string[]> {
+  const notifierWithNewVersion: string[] = [];
+
   const notifiers = NotifierStore.get().getNotifiers();
   for (const key of Object.keys(notifiers)) {
     try {
-      console.log(`Update notifier "${notifiers[key].name}" start`);
+      console.debug(`Update notifier "${notifiers[key].name}" start`);
       const notifierData = await NpmRegistryApi.getPackageInfo(
         notifiers[key].name,
       );
@@ -13,8 +15,11 @@ export async function updateNotifiersData(): Promise<void> {
         ...notifiers[key],
         latest: notifierData['dist-tags'].latest,
       };
+      if (notifiers[key].latest !== newNotifierConfig.latest) {
+        notifierWithNewVersion.push(key);
+      }
       NotifierStore.get().updateNotifier(key, newNotifierConfig);
-      console.log(`Update notifier "${notifiers[key].name}" end`);
+      console.debug(`Update notifier "${notifiers[key].name}" end`);
     } catch (err) {
       console.error(
         `Error while updating ${notifiers[key].name} package data`,
@@ -22,4 +27,6 @@ export async function updateNotifiersData(): Promise<void> {
       );
     }
   }
+
+  return notifierWithNewVersion;
 }

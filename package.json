@@ -25,6 +25,7 @@
     "@electron-forge/maker-squirrel": "^6.0.3",
     "@electron-forge/maker-zip": "^6.0.3",
     "@electron-forge/plugin-webpack": "^6.0.3",
+    "@types/cron": "^2.0.0",
     "@types/react": "^18.0.25",
     "@types/react-dom": "^18.0.9",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
@@ -49,6 +50,7 @@
   },
   "dependencies": {
     "antd": "^5.0.3",
+    "cron": "^2.2.0",
     "electron-squirrel-startup": "^1.0.0",
     "electron-store": "^8.1.0",
     "i18next": "^22.4.5",

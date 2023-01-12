@@ -17,6 +17,8 @@ if (require('electron-squirrel-startup')) {
 
 export let mainWindow: BrowserWindow | undefined;
 
+export const ressourcePathFolder = path.join(__dirname, 'ressources');
+
 function quitApp(): void {
   console.log('Exiting app');
   app.quit();
@@ -53,7 +55,7 @@ app.on('ready', () => {
 
   // Set Tray Icon
   const icon = nativeImage.createFromPath(
-    path.join(__dirname, 'ressources', 'logo.png'),
+    path.join(ressourcePathFolder, 'logo.png'),
   );
   const trayIcon = new Tray(icon);
   trayIcon.setToolTip('NPN');

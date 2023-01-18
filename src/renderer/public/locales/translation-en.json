@@ -1,9 +1,20 @@
 {
-    "notifier": {
+    "package": {
         "title": {
-            "list": "Notifiers",
-            "create": "Create Notifier",
-            "update": "Update Notifier"
+            "list": "Packages",
+            "create": "Create Package",
+            "update": "Update Package"
+        },
+        "table": {
+            "columns": {
+                "name": "Package name",
+                "version": "Current version"
+            }
+        },
+        "form": {
+            "fieldLabel": {
+                "name": "Package name"
+            }
         },
         "button": {
             "create": "Create",

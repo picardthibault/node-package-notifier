@@ -1,5 +1,5 @@
 {
-    "notification": {
+    "package": {
         "newVersion": {
             "title": "{{name}} new version",
             "body": "Version {{version}} of {{name}} has been released, feel free to update your project !"

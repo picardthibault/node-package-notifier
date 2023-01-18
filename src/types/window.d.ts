@@ -1,22 +1,22 @@
-import { NotifierCreationArgs, NotifierUpdateArgs } from './NotifierManagement';
+import { PackageCreationArgs, PackageUpdateArgs } from './PackageManagement';
 import { IpcRendererEvent } from 'electron';
-import { NotifierConfig } from '../main/store/NotifierStore';
+import { PackageConfig } from '../main/store/PackageStore';
 
 export {};
 
 declare global {
   interface Window {
-    notifierManagement: {
-      create: (creationArgs: NotifierCreationArgs) => void;
-      update: (updateArgs: NotifierUpdateArgs) => void;
+    packageManagement: {
+      create: (creationArgs: PackageCreationArgs) => void;
+      update: (updateArgs: PackageUpdateArgs) => void;
       getAll: () => void;
       getAllListener: (
         listener: (
           event: IpcRendererEvent,
-          notifiers: { [key: string]: NotifierConfig },
+          packages: { [key: string]: PackageConfig },
         ) => void,
       ) => () => void;
-      get: (notifierId: string) => { name: string };
+      get: (packageId: string) => { name: string };
     };
   }
 }

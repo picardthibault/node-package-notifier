@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { NotifierConfig } from '../../main/store/NotifierStore';
+import { PackageConfig } from '../../main/store/PackageStore';
 import { IpcRendererEvent } from 'electron';
 import { Button, Table } from 'antd';
 import { EyeOutlined } from '@ant-design/icons';
@@ -9,51 +9,58 @@ import { useTranslation } from 'react-i18next';
 
 interface TableItemType {
   key: number;
-  notifierId: string;
+  packageId: string;
   name: string;
+  version: string;
 }
 
-export const Notifiers = (): JSX.Element => {
+export const PackagesView = (): JSX.Element => {
   const navigate = useNavigate();
 
   const { t } = useTranslation();
 
-  const [notifiers, setNotifiers] = useState<TableItemType[]>([]);
+  const [packages, setPackages] = useState<TableItemType[]>([]);
 
   useEffect(() => {
-    // Load Notifiers
-    window.notifierManagement.getAll();
+    // Load packages
+    window.packageManagement.getAll();
   }, []);
 
   useEffect(() => {
-    const notifiersListener = (
+    const packagesListener = (
       event: IpcRendererEvent,
-      notifiers: { [key: string]: NotifierConfig },
+      packages: { [key: string]: PackageConfig },
     ) => {
-      const tableItems: TableItemType[] = Object.keys(notifiers).map(
-        (notifierId, index) => ({
+      const tableItems: TableItemType[] = Object.keys(packages).map(
+        (packageId, index) => ({
           key: index,
-          notifierId,
-          name: notifiers[notifierId].name,
+          packageId,
+          name: packages[packageId].name,
+          version: packages[packageId].latest ? packages[packageId].latest : '',
         }),
       );
 
-      setNotifiers(tableItems);
+      setPackages(tableItems);
     };
 
     const cleanListener =
-      window.notifierManagement.getAllListener(notifiersListener);
+      window.packageManagement.getAllListener(packagesListener);
 
     return () => {
       cleanListener();
     };
-  }, [setNotifiers]);
+  }, [setPackages]);
 
   const tableColumns: ColumnsType<TableItemType> = [
     {
       key: 'name',
-      title: 'Name',
+      title: t('package.table.columns.name'),
       dataIndex: 'name',
+    },
+    {
+      key: 'version',
+      title: t('package.table.columns.version'),
+      dataIndex: 'version',
     },
     {
       key: 'action',
@@ -62,7 +69,7 @@ export const Notifiers = (): JSX.Element => {
       render: (tableItem: TableItemType) => (
         <Button
           type="primary"
-          onClick={() => navigate(`/notifier/${tableItem.notifierId}`)}
+          onClick={() => navigate(`/package/${tableItem.packageId}`)}
         >
           <EyeOutlined />
         </Button>
@@ -72,13 +79,13 @@ export const Notifiers = (): JSX.Element => {
 
   return (
     <>
-      <h1>{t('notifier.title.list')}</h1>
-      <Button type="primary" onClick={() => navigate('/notifier')}>
-        {t('notifier.button.create')}
+      <h1>{t('package.title.list')}</h1>
+      <Button type="primary" onClick={() => navigate('/package')}>
+        {t('package.button.create')}
       </Button>
       <Table
         columns={tableColumns}
-        dataSource={notifiers}
+        dataSource={packages}
         pagination={{
           defaultPageSize: 10,
           position: ['bottomCenter'],

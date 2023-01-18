@@ -3,22 +3,22 @@ import i18n from './i18n';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
-import { Notifiers } from './views/Notifiers';
-import { NotifierForm } from './views/NotifierForm';
+import { PackagesView } from './views/PackagesView';
+import { PackageForm } from './views/PackageForm';
 import { I18nextProvider } from 'react-i18next';
 
 const router = createMemoryRouter([
   {
     path: '/',
-    element: <Notifiers />,
+    element: <PackagesView />,
   },
   {
-    path: '/notifier/:id',
-    element: <NotifierForm />,
+    path: '/package/:id',
+    element: <PackageForm />,
   },
   {
-    path: '/notifier',
-    element: <NotifierForm />,
+    path: '/package',
+    element: <PackageForm />,
   },
 ]);
 

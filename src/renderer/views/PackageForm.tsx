@@ -3,41 +3,41 @@ import { Button, Form, Input } from 'antd';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
-interface NotifierFormField {
+interface PackageFormField {
   packageName: string;
 }
 
-interface NotifierData {
+interface packageData {
   name: string;
 }
 
-export const NotifierForm = (): JSX.Element => {
+export const PackageForm = (): JSX.Element => {
   const { id } = useParams<{ id: string }>();
 
   const { t } = useTranslation();
 
   const navigate = useNavigate();
 
-  const [formInstance] = Form.useForm<NotifierFormField>();
+  const [formInstance] = Form.useForm<PackageFormField>();
 
-  const [notifier, setNotifier] = useState<NotifierData | null>(null);
+  const [packageData, setPackageData] = useState<packageData | null>(null);
 
   useEffect(() => {
     if (id) {
-      const notifierData = window.notifierManagement.get(id);
-      setNotifier(notifierData);
+      const fetchedPackageData = window.packageManagement.get(id);
+      setPackageData(fetchedPackageData);
       formInstance.setFieldsValue({
-        packageName: notifierData.name,
+        packageName: fetchedPackageData.name,
       });
     }
   }, [id]);
 
   const onFinish = () => {
-    if (notifier === null) {
-      window.notifierManagement.create(formInstance.getFieldsValue());
+    if (packageData === null) {
+      window.packageManagement.create(formInstance.getFieldsValue());
     } else {
-      window.notifierManagement.update({
-        notifierId: id,
+      window.packageManagement.update({
+        packageId: id,
         ...formInstance.getFieldsValue(),
       });
     }
@@ -45,23 +45,25 @@ export const NotifierForm = (): JSX.Element => {
 
   return (
     <>
-      <h1>{t(`notifier.title.${notifier === null ? 'create' : 'update'}`)}</h1>
+      <h1>
+        {t(`package.title.${packageData === null ? 'create' : 'update'}`)}
+      </h1>
       <Button type="primary" onClick={() => navigate('/')}>
-        {t('notifier.button.back')}
+        {t('package.button.back')}
       </Button>
       <Form
-        name="notifierForm"
+        name="packageForm"
         form={formInstance}
         initialValues={{
           packageName: '',
         }}
         onFinish={onFinish}
       >
-        <Form.Item label="Package name" name="packageName">
+        <Form.Item label={t('package.form.fieldLabel.name')} name="packageName">
           <Input />
         </Form.Item>
         <Button type="primary" htmlType="submit">
-          {t(`notifier.button.${notifier === null ? 'create' : 'update'}`)}
+          {t(`package.button.${packageData === null ? 'create' : 'update'}`)}
         </Button>
       </Form>
     </>

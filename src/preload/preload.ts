@@ -1,30 +1,30 @@
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
 import {
-  NotifierCreationArgs,
-  NotifierUpdateArgs,
-} from '../types/NotifierManagement';
-import { NotifierManagementChannel } from '../types/IpcChannel';
-import { NotifierConfig } from '../main/store/NotifierStore';
+  PackageCreationArgs,
+  PackageUpdateArgs,
+} from '../types/PackageManagement';
+import { PackageManagementChannel } from '../types/IpcChannel';
+import { PackageConfig } from '../main/store/PackageStore';
 
-contextBridge.exposeInMainWorld('notifierManagement', {
-  create: (creationArgs: NotifierCreationArgs) =>
-    ipcRenderer.send(NotifierManagementChannel.CREATE, creationArgs),
-  update: (updateArgs: NotifierUpdateArgs) =>
-    ipcRenderer.send(NotifierManagementChannel.UPDATE, updateArgs),
-  getAll: () => ipcRenderer.send(NotifierManagementChannel.GET_ALL),
+contextBridge.exposeInMainWorld('packageManagement', {
+  create: (creationArgs: PackageCreationArgs) =>
+    ipcRenderer.send(PackageManagementChannel.CREATE, creationArgs),
+  update: (updateArgs: PackageUpdateArgs) =>
+    ipcRenderer.send(PackageManagementChannel.UPDATE, updateArgs),
+  getAll: () => ipcRenderer.send(PackageManagementChannel.GET_ALL),
   getAllListener: (
     listener: (
       event: IpcRendererEvent,
-      args: { [key: string]: NotifierConfig },
+      args: { [key: string]: PackageConfig },
     ) => void,
   ) => {
-    ipcRenderer.on(NotifierManagementChannel.GET_ALL_LISTENER, listener);
+    ipcRenderer.on(PackageManagementChannel.GET_ALL_LISTENER, listener);
     return () =>
       ipcRenderer.removeListener(
-        NotifierManagementChannel.GET_ALL_LISTENER,
+        PackageManagementChannel.GET_ALL_LISTENER,
         listener,
       );
   },
-  get: (notifierId: string): { name: string } =>
-    ipcRenderer.sendSync(NotifierManagementChannel.GET, notifierId),
+  get: (packageId: string): { name: string } =>
+    ipcRenderer.sendSync(PackageManagementChannel.GET, packageId),
 });

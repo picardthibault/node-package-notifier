@@ -9,8 +9,8 @@ import { mainWindow } from '../index';
 
 ipcMain.on(
   PackageManagementChannel.CREATE,
-  (event, creationArgs: PackageCreationArgs) => {
-    PackageStore.get().addPackage({
+  async (event, creationArgs: PackageCreationArgs) => {
+    await PackageStore.get().addPackage({
       name: creationArgs.packageName,
     });
   },
@@ -18,8 +18,8 @@ ipcMain.on(
 
 ipcMain.on(
   PackageManagementChannel.UPDATE,
-  (event, updateArgs: PackageUpdateArgs) => {
-    PackageStore.get().updatePackage(updateArgs.packageId, {
+  async (event, updateArgs: PackageUpdateArgs) => {
+    await PackageStore.get().updatePackage(updateArgs.packageId, {
       name: updateArgs.packageName,
     });
   },

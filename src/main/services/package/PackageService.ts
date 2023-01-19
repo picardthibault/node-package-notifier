@@ -8,12 +8,10 @@ export async function updatePackagesData(): Promise<string[]> {
   for (const key of Object.keys(packages)) {
     try {
       console.debug(`Update package "${packages[key].name}" start`);
-      const packageData = await NpmRegistryApi.getPackageInfo(
-        packages[key].name,
-      );
+      const latest = await getPackageVersion(packages[key].name);
       const newPackageConfig: PackageConfig = {
         ...packages[key],
-        latest: packageData['dist-tags'].latest,
+        latest,
       };
       if (packages[key].latest !== newPackageConfig.latest) {
         packageWithNewVersion.push(key);
@@ -29,4 +27,9 @@ export async function updatePackagesData(): Promise<string[]> {
   }
 
   return packageWithNewVersion;
+}
+
+export async function getPackageVersion(packageName: string): Promise<string> {
+  const packageData = await NpmRegistryApi.getPackageInfo(packageName);
+  return packageData['dist-tags'].latest;
 }

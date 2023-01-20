@@ -100,9 +100,17 @@ export const PackagesView = (): JSX.Element => {
   return (
     <>
       <h1>{t('package.title.list')}</h1>
-      <Button type="primary" onClick={() => navigate('/package')}>
-        {t('package.button.create')}
-      </Button>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'end',
+          padding: '4px',
+        }}
+      >
+        <Button type="primary" onClick={() => navigate('/package')}>
+          {t('package.button.create')}
+        </Button>
+      </div>
       <Table
         columns={tableColumns}
         dataSource={packages}

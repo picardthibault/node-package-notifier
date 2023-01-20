@@ -41,6 +41,7 @@ export const PackageForm = (): JSX.Element => {
         ...formInstance.getFieldsValue(),
       });
     }
+    navigate('/');
   };
 
   return (

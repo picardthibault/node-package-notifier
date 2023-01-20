@@ -25,6 +25,13 @@ ipcMain.on(
   },
 );
 
+ipcMain.on(PackageManagementChannel.DELETE, (event, packageId: string) => {
+  PackageStore.get().deletePackage(packageId);
+  if (mainWindow) {
+    mainWindow.webContents.send(PackageManagementChannel.DELETE_LISTENER);
+  }
+});
+
 ipcMain.on(PackageManagementChannel.GET_ALL, () => {
   if (mainWindow) {
     mainWindow.webContents.send(

@@ -9,6 +9,8 @@ declare global {
     packageManagement: {
       create: (creationArgs: PackageCreationArgs) => void;
       update: (updateArgs: PackageUpdateArgs) => void;
+      delete: (packageId: string) => void;
+      deleteListener: (listener: () => void) => () => void;
       getAll: () => void;
       getAllListener: (
         listener: (

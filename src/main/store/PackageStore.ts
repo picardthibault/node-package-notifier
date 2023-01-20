@@ -56,6 +56,10 @@ export class PackageStore {
     await this.createPackage(newPackage);
   }
 
+  deletePackage(packageId: string): void {
+    this.store.delete(packageId);
+  }
+
   getPackage(key: string): PackageConfig {
     return this.store.get(key);
   }

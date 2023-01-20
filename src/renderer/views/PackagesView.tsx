@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { PackageConfig } from '../../main/store/PackageStore';
 import { IpcRendererEvent } from 'electron';
-import { Button, Table } from 'antd';
-import { EyeOutlined } from '@ant-design/icons';
+import { Button, Space, Table } from 'antd';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { ColumnsType } from 'antd/es/table';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -51,6 +51,18 @@ export const PackagesView = (): JSX.Element => {
     };
   }, [setPackages]);
 
+  useEffect(() => {
+    const deletePackageListener = () => window.packageManagement.getAll();
+
+    const cleanListener = window.packageManagement.deleteListener(
+      deletePackageListener,
+    );
+
+    return () => {
+      cleanListener();
+    };
+  });
+
   const tableColumns: ColumnsType<TableItemType> = [
     {
       key: 'name',
@@ -65,14 +77,22 @@ export const PackagesView = (): JSX.Element => {
     {
       key: 'action',
       title: 'Action',
-      width: '50px',
+      width: '110px',
       render: (tableItem: TableItemType) => (
-        <Button
-          type="primary"
-          onClick={() => navigate(`/package/${tableItem.packageId}`)}
-        >
-          <EyeOutlined />
-        </Button>
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => navigate(`/package/${tableItem.packageId}`)}
+          >
+            <EditOutlined />
+          </Button>
+          <Button
+            type="primary"
+            onClick={() => window.packageManagement.delete(tableItem.packageId)}
+          >
+            <DeleteOutlined />
+          </Button>
+        </Space>
       ),
     },
   ];

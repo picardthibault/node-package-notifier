@@ -1,10 +1,11 @@
 import { ApiResponse, RestApi } from './RestApi';
 
-export interface PackageInfo {
+interface PackageInfo {
   description: string;
   'dist-tags': {
     latest: string;
   };
+  license: 'string';
 }
 
 export class NpmRegistryApi {

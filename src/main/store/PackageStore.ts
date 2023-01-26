@@ -1,10 +1,14 @@
 import Store = require('electron-store');
 import { getSha1 } from '../helpers/HashHelper';
-import { getPackageVersion } from '../services/package/PackageService';
+import {
+  getPackageInfo,
+  PackageInfo,
+} from '../services/package/PackageService';
 
 export interface PackageConfig {
   name: string;
   latest?: string;
+  license?: string;
 }
 
 export type IPackageStore = {
@@ -31,16 +35,17 @@ export class PackageStore {
   }
 
   private async createPackage(newPackage: PackageConfig): Promise<void> {
-    let packageVersion: string | undefined;
+    let packageInfo: PackageInfo | undefined;
     try {
-      packageVersion = await getPackageVersion(newPackage.name);
+      packageInfo = await getPackageInfo(newPackage.name);
     } catch (err) {
-      console.error(`Error while fetching ${newPackage.name} version`);
+      console.error(`Error while fetching ${newPackage.name} informations`);
     }
     const packageKey = getSha1(newPackage.name);
     this.store.set(packageKey, {
       ...newPackage,
-      latest: packageVersion,
+      latest: packageInfo.latest,
+      license: packageInfo.license,
     });
   }
 

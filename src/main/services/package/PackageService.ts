@@ -1,6 +1,11 @@
 import { PackageConfig, PackageStore } from '../../store/PackageStore';
 import { NpmRegistryApi } from '../api/NpmRegistryApi';
 
+export interface PackageInfo {
+  latest?: string;
+  license?: string;
+}
+
 export async function updatePackagesData(): Promise<string[]> {
   const packageWithNewVersion: string[] = [];
 
@@ -8,10 +13,11 @@ export async function updatePackagesData(): Promise<string[]> {
   for (const key of Object.keys(packages)) {
     try {
       console.debug(`Update package "${packages[key].name}" start`);
-      const latest = await getPackageVersion(packages[key].name);
+      const packageInfo = await getPackageInfo(packages[key].name);
       const newPackageConfig: PackageConfig = {
         ...packages[key],
-        latest,
+        latest: packageInfo.latest,
+        license: packageInfo.license,
       };
       if (packages[key].latest !== newPackageConfig.latest) {
         packageWithNewVersion.push(key);
@@ -29,7 +35,12 @@ export async function updatePackagesData(): Promise<string[]> {
   return packageWithNewVersion;
 }
 
-export async function getPackageVersion(packageName: string): Promise<string> {
+export async function getPackageInfo(
+  packageName: string,
+): Promise<PackageInfo> {
   const packageData = await NpmRegistryApi.getPackageInfo(packageName);
-  return packageData['dist-tags'].latest;
+  return {
+    latest: packageData['dist-tags'].latest,
+    license: packageData.license,
+  };
 }

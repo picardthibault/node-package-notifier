@@ -11,6 +11,7 @@ interface TableItemType {
   key: number;
   packageId: string;
   name: string;
+  license: string;
   version: string;
 }
 
@@ -36,7 +37,12 @@ export const PackagesView = (): JSX.Element => {
           key: index,
           packageId,
           name: packages[packageId].name,
-          version: packages[packageId].latest ? packages[packageId].latest : '',
+          license: packages[packageId].license
+            ? packages[packageId].license
+            : t('common.na'),
+          version: packages[packageId].latest
+            ? packages[packageId].latest
+            : t('common.na'),
         }),
       );
 
@@ -68,6 +74,11 @@ export const PackagesView = (): JSX.Element => {
       key: 'name',
       title: t('package.table.columns.name'),
       dataIndex: 'name',
+    },
+    {
+      key: 'license',
+      title: t('package.table.columns.license'),
+      dataIndex: 'license',
     },
     {
       key: 'version',

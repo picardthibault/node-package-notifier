@@ -15,7 +15,7 @@
   },
   "keywords": [],
   "author": "Thibault Picard",
-  "license": "MIT",
+  "license": "GPLv3",
   "devDependencies": {
     "@babel/core": "^7.20.2",
     "@babel/preset-react": "^7.18.6",

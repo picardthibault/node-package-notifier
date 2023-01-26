@@ -6,6 +6,7 @@ import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { ColumnsType } from 'antd/es/table';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import ActionButton from '../components/Button/ActionButton';
 
 interface TableItemType {
   key: number;
@@ -91,18 +92,18 @@ export const PackagesView = (): JSX.Element => {
       width: '110px',
       render: (tableItem: TableItemType) => (
         <Space>
-          <Button
+          <ActionButton
             type="primary"
             onClick={() => navigate(`/package/${tableItem.packageId}`)}
           >
             <EditOutlined />
-          </Button>
-          <Button
+          </ActionButton>
+          <ActionButton
             type="primary"
             onClick={() => window.packageManagement.delete(tableItem.packageId)}
           >
             <DeleteOutlined />
-          </Button>
+          </ActionButton>
         </Space>
       ),
     },

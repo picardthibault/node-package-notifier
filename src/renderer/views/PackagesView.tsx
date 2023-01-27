@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { PackageConfig } from '../../main/store/PackageStore';
 import { IpcRendererEvent } from 'electron';
-import { Button, Space, Table } from 'antd';
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { Space, Table } from 'antd';
+import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import { ColumnsType } from 'antd/es/table';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -99,7 +99,8 @@ export const PackagesView = (): JSX.Element => {
             <EditOutlined />
           </ActionButton>
           <ActionButton
-            type="primary"
+            type="default"
+            danger={true}
             onClick={() => window.packageManagement.delete(tableItem.packageId)}
           >
             <DeleteOutlined />
@@ -111,19 +112,19 @@ export const PackagesView = (): JSX.Element => {
 
   return (
     <>
-      <h1>{t('package.title.list')}</h1>
       <div
         style={{
           display: 'flex',
           justifyContent: 'end',
-          padding: '4px',
+          padding: '6px',
         }}
       >
-        <Button type="primary" onClick={() => navigate('/package')}>
-          {t('package.button.create')}
-        </Button>
+        <ActionButton type="primary" onClick={() => navigate('/package')}>
+          <PlusOutlined />
+        </ActionButton>
       </div>
       <Table
+        bordered={true}
         columns={tableColumns}
         dataSource={packages}
         pagination={{

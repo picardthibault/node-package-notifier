@@ -1,4 +1,4 @@
-import { BrowserWindow } from 'electron';
+import { app, BrowserWindow } from 'electron';
 import * as path from 'path';
 
 export function createMainWindow(
@@ -15,6 +15,9 @@ export function createMainWindow(
     },
   });
 
+  if (app.isPackaged) {
+    mainWindow.removeMenu();
+  }
   mainWindow.loadURL(mainWindowEntry);
 
   return mainWindow;

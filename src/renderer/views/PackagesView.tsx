@@ -94,6 +94,7 @@ export const PackagesView = (): JSX.Element => {
         <Space>
           <ActionButton
             type="primary"
+            toolTip={t('package.tooltips.updatePackage')}
             onClick={() => navigate(`/package/${tableItem.packageId}`)}
           >
             <EditOutlined />
@@ -101,6 +102,7 @@ export const PackagesView = (): JSX.Element => {
           <ActionButton
             type="default"
             danger={true}
+            toolTip={t('package.tooltips.deletePackage')}
             onClick={() => window.packageManagement.delete(tableItem.packageId)}
           >
             <DeleteOutlined />
@@ -112,6 +114,7 @@ export const PackagesView = (): JSX.Element => {
 
   return (
     <>
+      <h1>{t('package.title.list')}</h1>
       <div
         style={{
           display: 'flex',
@@ -119,7 +122,11 @@ export const PackagesView = (): JSX.Element => {
           padding: '6px',
         }}
       >
-        <ActionButton type="primary" onClick={() => navigate('/package')}>
+        <ActionButton
+          type="primary"
+          toolTip={t('package.tooltips.createPackage')}
+          onClick={() => navigate('/package')}
+        >
           <PlusOutlined />
         </ActionButton>
       </div>

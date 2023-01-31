@@ -4,12 +4,13 @@
     },
     "package": {
         "title": {
+            "list": "Package List",
             "create": "Create Package",
             "update": "Update Package"
         },
         "table": {
             "columns": {
-                "name": "Package name",
+                "name": "Name",
                 "license": "License",
                 "version": "Current version"
             }
@@ -22,6 +23,11 @@
         "button": {
             "update": "Update",
             "back": "Back"
+        },
+        "tooltips": {
+            "createPackage": "Create new package",
+            "updatePackage": "Update package",
+            "deletePackage": "Delete package"
         }
     }
 }

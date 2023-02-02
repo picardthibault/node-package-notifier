@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Form, Input } from 'antd';
+import { Button, Form, Input, Space } from 'antd';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import ActionButton from '../components/Button/ActionButton';
 
 interface PackageFormField {
   packageName: string;
@@ -49,9 +50,7 @@ export const PackageForm = (): JSX.Element => {
       <h1>
         {t(`package.title.${packageData === null ? 'create' : 'update'}`)}
       </h1>
-      <Button type="primary" onClick={() => navigate('/')}>
-        {t('package.button.back')}
-      </Button>
+
       <Form
         name="packageForm"
         form={formInstance}
@@ -63,9 +62,23 @@ export const PackageForm = (): JSX.Element => {
         <Form.Item label={t('package.form.fieldLabel.name')} name="packageName">
           <Input />
         </Form.Item>
-        <Button type="primary" htmlType="submit">
-          {t(`package.button.${packageData === null ? 'create' : 'update'}`)}
-        </Button>
+
+        <div style={{ textAlign: 'center' }}>
+          <Space>
+            <ActionButton
+              type="default"
+              danger={true}
+              onClick={() => navigate('/')}
+            >
+              {t('package.button.cancel')}
+            </ActionButton>
+            <ActionButton type="primary" htmlType="submit">
+              {t(
+                `package.button.${packageData === null ? 'create' : 'update'}`,
+              )}
+            </ActionButton>
+          </Space>
+        </div>
       </Form>
     </>
   );

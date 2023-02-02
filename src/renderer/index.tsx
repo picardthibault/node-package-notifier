@@ -29,8 +29,15 @@ createRoot(document.getElementById('root')).render(
       <ConfigProvider
         theme={{
           token: {
-            borderRadius: 4,
-            colorPrimary: '#000000',
+            colorPrimary: '#313131',
+          },
+          components: {
+            Button: {
+              borderRadius: 4,
+            },
+            Table: {
+              borderRadius: 4,
+            },
           },
         }}
       >

@@ -21,8 +21,9 @@
             }
         },
         "button": {
+            "create": "Create",
             "update": "Update",
-            "back": "Back"
+            "cancel": "Cancel"
         },
         "tooltips": {
             "createPackage": "Create new package",

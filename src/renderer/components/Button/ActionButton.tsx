@@ -4,18 +4,20 @@ import React from 'react';
 interface ActionButtonProps {
   children: string | JSX.Element;
   type: 'default' | 'primary' | 'ghost' | 'dashed' | 'link' | 'text';
+  htmlType?: 'button' | 'submit' | 'reset';
   danger?: boolean;
   toolTip?: string;
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 const ActionButton = (props: ActionButtonProps): JSX.Element => {
-  const { children, type, danger, toolTip, onClick } = props;
+  const { children, type, htmlType, danger, toolTip, onClick } = props;
 
   return (
     <Tooltip title={toolTip} placement="topLeft">
       <Button
         type={type}
+        htmlType={htmlType}
         onClick={onClick}
         danger={danger}
         style={{

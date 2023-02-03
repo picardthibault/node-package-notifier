@@ -18,6 +18,9 @@
         "form": {
             "fieldLabel": {
                 "name": "Package name"
+            },
+            "rules": {
+                "required": "This field is required"
             }
         },
         "button": {
@@ -29,6 +32,15 @@
             "createPackage": "Create new package",
             "updatePackage": "Update package",
             "deletePackage": "Delete package"
+        },
+        "alert": {
+            "title": {
+                "create": "Unable to create package",
+                "update": "Unable to update package"
+            },
+            "description": {
+                "createOrUpdate": "NPM registry is not available or the package does not exist"
+            }
         }
     }
 }

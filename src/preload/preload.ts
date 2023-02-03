@@ -9,8 +9,28 @@ import { PackageConfig } from '../main/store/PackageStore';
 contextBridge.exposeInMainWorld('packageManagement', {
   create: (creationArgs: PackageCreationArgs) =>
     ipcRenderer.send(PackageManagementChannel.CREATE, creationArgs),
+  createListener: (
+    listener: (event: IpcRendererEvent, isAdded: boolean) => void,
+  ) => {
+    ipcRenderer.on(PackageManagementChannel.CREATE_LISTENER, listener);
+    return () =>
+      ipcRenderer.removeListener(
+        PackageManagementChannel.CREATE_LISTENER,
+        listener,
+      );
+  },
   update: (updateArgs: PackageUpdateArgs) =>
     ipcRenderer.send(PackageManagementChannel.UPDATE, updateArgs),
+  updateListener: (
+    listener: (event: IpcRendererEvent, isUpdated: boolean) => void,
+  ) => {
+    ipcRenderer.on(PackageManagementChannel.UPDATE_LISTENER, listener);
+    return () =>
+      ipcRenderer.removeListener(
+        PackageManagementChannel.UPDATE_LISTENER,
+        listener,
+      );
+  },
   delete: (packageId: string) =>
     ipcRenderer.send(PackageManagementChannel.DELETE, packageId),
   deleteListener: (listener: () => void) => {

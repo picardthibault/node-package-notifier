@@ -10,18 +10,33 @@ import { mainWindow } from '../index';
 ipcMain.on(
   PackageManagementChannel.CREATE,
   async (event, creationArgs: PackageCreationArgs) => {
-    await PackageStore.get().addPackage({
+    const isAdded = await PackageStore.get().addPackage({
       name: creationArgs.packageName,
     });
+    if (mainWindow) {
+      mainWindow.webContents.send(
+        PackageManagementChannel.CREATE_LISTENER,
+        isAdded,
+      );
+    }
   },
 );
 
 ipcMain.on(
   PackageManagementChannel.UPDATE,
   async (event, updateArgs: PackageUpdateArgs) => {
-    await PackageStore.get().updatePackage(updateArgs.packageId, {
-      name: updateArgs.packageName,
-    });
+    const isUpdated = await PackageStore.get().updatePackage(
+      updateArgs.packageId,
+      {
+        name: updateArgs.packageName,
+      },
+    );
+    if (mainWindow) {
+      mainWindow.webContents.send(
+        PackageManagementChannel.UPDATE_LISTENER,
+        isUpdated,
+      );
+    }
   },
 );
 

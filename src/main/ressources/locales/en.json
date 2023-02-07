@@ -1,4 +1,8 @@
 {
+    "trayMenu": {
+        "open": "Open",
+        "quit": "Quit NPN"
+    },
     "package": {
         "newVersion": {
             "title": "{{name}} new version",

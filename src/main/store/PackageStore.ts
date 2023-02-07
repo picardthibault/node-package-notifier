@@ -34,13 +34,15 @@ export class PackageStore {
     });
   }
 
-  private async createPackage(newPackage: PackageConfig): Promise<boolean> {
+  private async createPackage(
+    newPackage: PackageConfig,
+  ): Promise<string | undefined> {
     let packageInfo: PackageInfo | undefined;
     try {
       packageInfo = await getPackageInfo(newPackage.name);
     } catch (err) {
       console.error(`Error while fetching ${newPackage.name} informations`);
-      return false;
+      return undefined;
     }
     const packageKey = getSha1(newPackage.name);
     this.store.set(packageKey, {
@@ -48,22 +50,23 @@ export class PackageStore {
       latest: packageInfo.latest,
       license: packageInfo.license,
     });
-    return true;
+    return packageKey;
   }
 
   async addPackage(newPackage: PackageConfig): Promise<boolean> {
-    return this.createPackage(newPackage);
+    const packageKey = await this.createPackage(newPackage);
+    return packageKey !== undefined;
   }
 
   async updatePackage(
     packageId: string,
     newPackage: PackageConfig,
   ): Promise<boolean> {
-    const isUpdated = await this.createPackage(newPackage);
-    if (isUpdated) {
+    const newPackageId = await this.createPackage(newPackage);
+    if (newPackageId !== undefined && newPackageId !== packageId) {
       this.store.delete(packageId);
     }
-    return isUpdated;
+    return newPackageId !== undefined;
   }
 
   deletePackage(packageId: string): void {

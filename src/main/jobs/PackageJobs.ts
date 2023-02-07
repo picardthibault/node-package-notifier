@@ -13,7 +13,6 @@ export function launchUpdatePackageJob() {
       const packagesWithNewVersion = await updatePackagesData();
       packagesWithNewVersion.forEach((packageId) => {
         const packageData = PackageStore.get().getPackage(packageId);
-        // TODO : Voir pour modifier le nom de l'appli sur la notification
         new Notification({
           title: i18n.t('package.newVersion.title', {
             name: packageData.name,

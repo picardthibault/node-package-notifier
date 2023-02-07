@@ -59,6 +59,7 @@ app.on('ready', () => {
   );
   const trayIcon = new Tray(icon);
   trayIcon.setToolTip('NPN');
+  trayIcon.addListener('click', reopenApp);
 
   // Create Tray menu
   const trayMenu = Menu.buildFromTemplate([
@@ -68,7 +69,7 @@ app.on('ready', () => {
       click: reopenApp,
     },
     {
-      label: 'Quit',
+      label: 'Quit NPN',
       type: 'normal',
       click: quitApp,
     },
@@ -90,4 +91,9 @@ app.on('activate', () => {
       MAIN_WINDOW_WEBPACK_ENTRY,
     );
   }
+});
+
+// Configure the app to automatically start at user login
+app.setLoginItemSettings({
+  openAtLogin: true,
 });

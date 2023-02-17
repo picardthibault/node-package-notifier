@@ -14,9 +14,27 @@ const config: ForgeConfig = {
   },
   rebuildConfig: {},
   makers: [
-    new MakerSquirrel({
-      setupIcon: './src/main/ressources/logo.ico',
-    }),
+    new MakerSquirrel(
+      {
+        setupIcon: './src/main/ressources/logo.ico',
+      },
+      ['win32'],
+    ),
+    {
+      name: '@electron-forge/maker-wix',
+      config: {
+        icon: './src/main/ressources/logo.ico',
+        description:
+          'A simple Electron Js app that notify new npm package release.',
+        exe: 'npn',
+        manufacturer: 'Thibault Picard',
+        name: 'node-package-notifier',
+        shortName: 'npn',
+        ui: {
+          chooseDirectory: true,
+        },
+      },
+    },
     new MakerZIP({}, ['darwin']),
     new MakerRpm({}),
     new MakerDeb({}),

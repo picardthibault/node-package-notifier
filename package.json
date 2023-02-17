@@ -50,16 +50,16 @@
     "typescript": "~4.5.4"
   },
   "dependencies": {
-    "antd": "^5.0.3",
-    "cron": "^2.2.0",
-    "electron-squirrel-startup": "^1.0.0",
-    "electron-store": "^8.1.0",
-    "i18next": "^22.4.5",
-    "i18next-fs-backend": "^2.1.1",
-    "prettier": "^2.8.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-i18next": "^12.1.1",
-    "react-router-dom": "^6.4.4"
+    "antd": "5.2.1",
+    "cron": "2.2.0",
+    "electron-squirrel-startup": "1.0.0",
+    "electron-store": "8.1.0",
+    "i18next": "22.4.9",
+    "i18next-fs-backend": "2.1.1",
+    "prettier": "2.8.4",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-i18next": "12.1.5",
+    "react-router-dom": "6.8.1"
   }
 }

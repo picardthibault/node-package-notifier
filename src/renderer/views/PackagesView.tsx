@@ -75,6 +75,8 @@ export const PackagesView = (): JSX.Element => {
       key: 'name',
       title: t('package.table.columns.name'),
       dataIndex: 'name',
+      defaultSortOrder: 'ascend',
+      sorter: (a, b) => a.name.localeCompare(b.name),
     },
     {
       key: 'license',
@@ -137,6 +139,7 @@ export const PackagesView = (): JSX.Element => {
         pagination={{
           defaultPageSize: 10,
           position: ['bottomCenter'],
+          showSizeChanger: true,
         }}
       />
     </>

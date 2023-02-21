@@ -52,6 +52,8 @@
   "dependencies": {
     "antd": "5.2.1",
     "cron": "2.2.0",
+    "effector": "22.5.0",
+    "effector-react": "22.5.0",
     "electron-squirrel-startup": "1.0.0",
     "electron-store": "8.1.0",
     "i18next": "22.4.9",

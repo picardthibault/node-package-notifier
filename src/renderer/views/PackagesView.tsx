@@ -7,6 +7,12 @@ import { ColumnsType } from 'antd/es/table';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import ActionButton from '../components/Button/ActionButton';
+import {
+  packageListStore,
+  PackageListStore,
+  updatePackageListPageConfig,
+} from '../stores/PackageListStore';
+import { useStore } from 'effector-react';
 
 interface TableItemType {
   key: number;
@@ -22,6 +28,8 @@ export const PackagesView = (): JSX.Element => {
   const { t } = useTranslation();
 
   const [packages, setPackages] = useState<TableItemType[]>([]);
+
+  const { page, pageSize } = useStore<PackageListStore>(packageListStore);
 
   useEffect(() => {
     // Load packages
@@ -137,9 +145,13 @@ export const PackagesView = (): JSX.Element => {
         columns={tableColumns}
         dataSource={packages}
         pagination={{
-          defaultPageSize: 10,
+          current: page,
+          defaultPageSize: pageSize,
           position: ['bottomCenter'],
           showSizeChanger: true,
+          onChange(page, pageSize) {
+            updatePackageListPageConfig({ page, pageSize });
+          },
         }}
       />
     </>

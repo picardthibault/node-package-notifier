@@ -14,19 +14,25 @@ export async function updatePackagesData(): Promise<string[]> {
     try {
       console.debug(`Update package "${packages[key].name}" start`);
       const packageInfo = await getPackageInfo(packages[key].name);
-      const newPackageConfig: PackageConfig = {
-        ...packages[key],
-        latest: packageInfo.latest,
-        license: packageInfo.license,
-      };
-      if (packages[key].latest !== newPackageConfig.latest) {
-        packageWithNewVersion.push(key);
+      if (packageInfo) {
+        const newPackageConfig: PackageConfig = {
+          ...packages[key],
+          latest: packageInfo.latest,
+          license: packageInfo.license,
+        };
+        if (packages[key].latest !== newPackageConfig.latest) {
+          packageWithNewVersion.push(key);
+        }
+        await PackageStore.get().updatePackage(key, newPackageConfig);
+        console.debug(`Update package "${packages[key].name}" end`);
+      } else {
+        console.warn(
+          `Unable to fetch "${packages[key].name}" package data. The package has not been updated`,
+        );
       }
-      await PackageStore.get().updatePackage(key, newPackageConfig);
-      console.debug(`Update package "${packages[key].name}" end`);
     } catch (err) {
       console.error(
-        `Error while updating ${packages[key].name} package data`,
+        `Error while updating "${packages[key].name}" package data`,
         err,
       );
     }
@@ -37,10 +43,15 @@ export async function updatePackagesData(): Promise<string[]> {
 
 export async function getPackageInfo(
   packageName: string,
-): Promise<PackageInfo> {
-  const packageData = await NpmRegistryApi.getPackageInfo(packageName);
-  return {
-    latest: packageData['dist-tags'].latest,
-    license: packageData.license,
-  };
+): Promise<PackageInfo | undefined> {
+  try {
+    const packageData = await NpmRegistryApi.getPackageInfo(packageName);
+    return {
+      latest: packageData['dist-tags'].latest,
+      license: packageData.license,
+    };
+  } catch (ex) {
+    console.error(`Unable to fetch "${packageName}" info`, ex);
+    return undefined;
+  }
 }

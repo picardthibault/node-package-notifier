@@ -31,6 +31,11 @@ export class RestApi {
           reject(`Unable to fetch ${url}`);
         });
       });
+
+      apiRequest.on('error', (message) =>
+        reject(`Error while fetching "${url}", message : ${message}`),
+      );
+
       apiRequest.end();
     });
   }

@@ -1,4 +1,5 @@
 import { net } from 'electron';
+import log from 'electron-log';
 
 export interface ApiResponse<T> {
   status: number;
@@ -27,7 +28,7 @@ export class RestApi {
           });
         });
         response.on('error', (error: Error) => {
-          console.error(`An error occurred while fetching ${url}.`, error);
+          log.error(`An error occurred while fetching ${url}.`, error);
           reject(`Unable to fetch ${url}`);
         });
       });

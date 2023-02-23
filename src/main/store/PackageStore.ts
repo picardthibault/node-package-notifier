@@ -1,3 +1,4 @@
+import log from 'electron-log';
 import Store = require('electron-store');
 import { getSha1 } from '../helpers/HashHelper';
 import { getPackageInfo } from '../services/package/PackageService';
@@ -36,7 +37,7 @@ export class PackageStore {
   ): Promise<string | undefined> {
     const packageInfo = await getPackageInfo(newPackage.name);
     if (packageInfo === undefined) {
-      console.error(`Error while fetching "${newPackage.name}" informations`);
+      log.error(`Error while fetching "${newPackage.name}" informations`);
       return undefined;
     }
     const packageKey = getSha1(newPackage.name);

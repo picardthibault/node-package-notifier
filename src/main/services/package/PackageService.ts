@@ -1,3 +1,4 @@
+import log from 'electron-log';
 import { PackageConfig, PackageStore } from '../../store/PackageStore';
 import { NpmRegistryApi } from '../api/NpmRegistryApi';
 
@@ -12,7 +13,7 @@ export async function updatePackagesData(): Promise<string[]> {
   const packages = PackageStore.get().getPackages();
   for (const key of Object.keys(packages)) {
     try {
-      console.debug(`Update package "${packages[key].name}" start`);
+      log.debug(`Update package "${packages[key].name}" start`);
       const packageInfo = await getPackageInfo(packages[key].name);
       if (packageInfo) {
         const newPackageConfig: PackageConfig = {
@@ -24,14 +25,14 @@ export async function updatePackagesData(): Promise<string[]> {
           packageWithNewVersion.push(key);
         }
         await PackageStore.get().updatePackage(key, newPackageConfig);
-        console.debug(`Update package "${packages[key].name}" end`);
+        log.debug(`Update package "${packages[key].name}" end`);
       } else {
-        console.warn(
+        log.warn(
           `Unable to fetch "${packages[key].name}" package data. The package has not been updated`,
         );
       }
     } catch (err) {
-      console.error(
+      log.error(
         `Error while updating "${packages[key].name}" package data`,
         err,
       );
@@ -51,7 +52,7 @@ export async function getPackageInfo(
       license: packageData.license,
     };
   } catch (ex) {
-    console.error(`Unable to fetch "${packageName}" info`, ex);
+    log.error(`Unable to fetch "${packageName}" info`, ex);
     return undefined;
   }
 }

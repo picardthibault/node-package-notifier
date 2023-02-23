@@ -5,11 +5,13 @@ import { PackageStore } from '../store/PackageStore';
 import * as path from 'path';
 import { ressourcePathFolder } from '..';
 import i18n from '../i18n';
+import log from 'electron-log';
 
 export function launchUpdatePackageJob() {
   new CronJob(
     '0 0 */1 * * *',
     async function () {
+      log.info('Update package job - start');
       const packagesWithNewVersion = await updatePackagesData();
       packagesWithNewVersion.forEach((packageId) => {
         const packageData = PackageStore.get().getPackage(packageId);
@@ -26,6 +28,7 @@ export function launchUpdatePackageJob() {
           ),
         }).show();
       });
+      log.info('Update Package job - end');
     },
     null,
     true,

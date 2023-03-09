@@ -8,8 +8,8 @@ export function createMainWindow(
 ): BrowserWindow {
   log.info('Create main Window');
   const mainWindow = new BrowserWindow({
-    height: 600,
-    width: 800,
+    height: 1050,
+    width: 1650,
     icon: path.join(__dirname, 'ressources', 'logo.png'),
     webPreferences: {
       preload: preloadEntry,

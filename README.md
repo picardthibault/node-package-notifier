@@ -22,4 +22,18 @@ In order to build windows MSI you shall:
 
 - Install Wix toolkit v3 [[link]](https://wixtoolset.org/docs/wix3/)
 - Add bin/ folder of the Wix toolkit in your path
-- Excute the command ``yarn make --targets=@electron-forge/maker-wix`` 
+- Execute the command ``yarn make --targets=@electron-forge/maker-wix`` 
+
+### Windows appx
+
+In order to build a windows MSI you shall:
+
+- Execute the command ``yarn package``
+- Install globally the npm package electron-windows-store ``npm install -g electron-windows-store``
+- Configure electron-windows-store, run in an administrator powershell ``electron-windows-store`` 
+- Navigate to out directory
+- Execute the command ``electron-windows-store --input-directory NPN-win32-x64 --output-directory ./appx --package-version X.X.X.X --package-name npn --package-display-name NPN --publisher-display-name "Node Package Notifier" --assets ../src/main/ressources/ --make-pri true``
+
+Sources: 
+- [Medium article for electron-windows-store configuration](https://medium.com/@sangamrajpara/publishing-electron-app-to-windows-store-3cadeed26a32)
+- [Github issue with procedure to configure logos](https://github.com/electron-userland/electron-builder/issues/987)

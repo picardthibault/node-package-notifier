@@ -37,8 +37,8 @@ In order to build a windows MSI you shall:
 - Open AppxManifest.xml 
 - Add the following namespace ``xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10"``
 - Add the following node
-`` 
-<Application Id="npn" Executable="app\npn.exe" EntryPoint="Windows.FullTrustApplication">
+
+``<Application Id="npn" Executable="app\npn.exe" EntryPoint="Windows.FullTrustApplication">
         ...
 	  <Extensions>
 		<desktop:Extension
@@ -48,8 +48,7 @@ In order to build a windows MSI you shall:
 			<desktop:StartupTask TaskId="npnStartup" Enabled="true" DisplayName="NPN" />
 		</desktop:Extension>
 	  </Extensions>
-    </Application>
-``
+    </Application>``
 - Save the file, close it and navigate to the root folder of the unzipped .appx file
 - Run the following command ``makeappx pack -d ".\npn" -p "npn.appx" -l``
 - Rn the following command ``signtool.exe sign -f path\to\your\cert.pfx -fd SHA256 -v .\npn.appx``

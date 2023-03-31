@@ -57,3 +57,4 @@ Sources:
 - [Medium article for electron-windows-store configuration](https://medium.com/@sangamrajpara/publishing-electron-app-to-windows-store-3cadeed26a32)
 - [Github issue with procedure to configure logos](https://github.com/electron-userland/electron-builder/issues/987)
 - [Microsoft documentation for startupTasks](https://learn.microsoft.com/en-us/uwp/schemas/appxpackage/uapmanifestschema/element-desktop-startuptasks)
+- [Inspiration for windows startupTasks](https://www.npmjs.com/package/electron-winstore-auto-launch)

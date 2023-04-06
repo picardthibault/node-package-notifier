@@ -32,7 +32,7 @@ In order to build a windows MSI you shall:
 - Install globally the npm package electron-windows-store ``npm install -g electron-windows-store``
 - Configure electron-windows-store, run in an administrator powershell ``electron-windows-store`` 
 - Navigate to out directory
-- Execute the command ``electron-windows-store --input-directory NPN-win32-x64 --output-directory ./appx --package-version X.X.X.X --package-name npn --package-display-name NPN --publisher-display-name "Node Package Notifier" --assets ../src/main/ressources/ --make-pri true``
+- Execute the command ``electron-windows-store --input-directory NPN-win32-x64 --output-directory ./appx --package-version X.X.X.X --identity-name "Your identity Name" --package-name "npn" --package-display-name "node-package-notifier" --publisher-display-name "Your Publisher Name" --assets ../src/main/ressources/ --make-pri true``
 - Unzip generated .appx file in a subfolder called npn and navigate to this folder
 - Open AppxManifest.xml 
 - Add the following namespace ``xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10"``
@@ -45,7 +45,7 @@ In order to build a windows MSI you shall:
 			Category="windows.startupTask"
 			Executable="app\npn.exe"
 			EntryPoint="Windows.FullTrustApplication">
-			<desktop:StartupTask TaskId="npnStartup" Enabled="true" DisplayName="NPN" />
+			<desktop:StartupTask TaskId="npnStartup" Enabled="true" DisplayName="node-package-notifier" />
 		</desktop:Extension>
 	  </Extensions>
     </Application>

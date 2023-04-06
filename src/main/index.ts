@@ -60,7 +60,7 @@ app.on('ready', () => {
     path.join(ressourcePathFolder, 'logo.png'),
   );
   const trayIcon = new Tray(icon);
-  trayIcon.setToolTip('NPN');
+  trayIcon.setToolTip('node-package-notifier');
   trayIcon.addListener('click', reopenApp);
 
   // Create Tray menu
@@ -71,7 +71,7 @@ app.on('ready', () => {
       click: reopenApp,
     },
     {
-      label: 'Quit NPN',
+      label: 'Quit',
       type: 'normal',
       click: quitApp,
     },

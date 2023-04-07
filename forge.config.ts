@@ -35,6 +35,18 @@ const config: ForgeConfig = {
         },
       },
     },
+    {
+      name: '@electron-forge/maker-appx',
+      config: {
+        identityName: 'Your Identity Name',
+        packageDisplayName: 'node-package-notifier',
+        publisherDisplayName: 'Your Publisher Name',
+        assets: './src/main/ressources/',
+        makePri: 'true',
+        publisher: 'Your Publisher DN',
+        devCert: 'Your Dev Cert Path'
+      }
+    },
     new MakerZIP({}, ['darwin']),
     new MakerRpm({}),
     new MakerDeb({}),

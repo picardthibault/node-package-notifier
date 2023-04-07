@@ -91,5 +91,5 @@ out/
 # IDE
 .idea
 
-# Unoffuscated commands
-unoffuscatedCommands.txt
+# Unoffuscated configuration
+unoffuscatedConfig.md

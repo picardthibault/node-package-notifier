@@ -16,7 +16,7 @@ Node-package-notifier does not use Your Personal Data.
 Node-package-notifier does not retain Your Personnal Data.
 
 # Other Websites
-Node-package-notifier use other websites that are not operated by Us to fetch information. 
+Node-package-notifier use other websites that are not operated by node-package-notifier to fetch information. 
 
 Node-package-notifier have no control over and assume no responsibility for the content, privacy policies or practices of any third party sites or services.
 

@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import ActionButton from '../components/Button/ActionButton';
 import { IpcRendererEvent } from 'electron';
+import Title from '../components/Title/Title';
 
 interface PackageFormField {
   packageName: string;
@@ -87,9 +88,11 @@ export const PackageForm = (): JSX.Element => {
 
   return (
     <>
-      <h1>
-        {t(`package.title.${packageData === null ? 'create' : 'update'}`)}
-      </h1>
+      <Title
+        content={t(
+          `package.title.${packageData === null ? 'create' : 'update'}`,
+        )}
+      />
 
       <Form
         name="packageForm"

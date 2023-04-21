@@ -13,6 +13,7 @@ import {
   updatePackageListPageConfig,
 } from '../stores/PackageListStore';
 import { useStore } from 'effector-react';
+import Title from '../components/Title/Title';
 
 interface TableItemType {
   key: number;
@@ -124,7 +125,7 @@ export const PackagesView = (): JSX.Element => {
 
   return (
     <>
-      <h1>{t('package.title.list')}</h1>
+      <Title content={t('package.title.list')} />
       <div
         style={{
           display: 'flex',

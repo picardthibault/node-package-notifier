@@ -1,4 +1,4 @@
-import './styles/styles.scss';
+import './styles/index.scss';
 import i18n from './i18n';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
@@ -12,7 +12,7 @@ createRoot(document.getElementById('root')).render(
       <ConfigProvider
         theme={{
           token: {
-            colorPrimary: '#313131',
+            colorPrimary: '#032b43',
           },
           components: {
             Layout: {

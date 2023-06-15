@@ -3,7 +3,6 @@ import React from 'react';
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 import { PackageForm } from './views/PackageForm';
 import { PackagesView } from './views/PackagesView';
-import Sider from 'antd/es/layout/Sider';
 import SideMenu from './components/Menu/SideMenu';
 import { Content } from 'antd/es/layout/layout';
 
@@ -25,9 +24,7 @@ const router = createMemoryRouter([
 const App = (): JSX.Element => {
   return (
     <Layout>
-      <Sider style={{ background: '#FFFFFF' }}>
-        <SideMenu />
-      </Sider>
+      <SideMenu />
       <Content>
         <RouterProvider router={router} />
       </Content>

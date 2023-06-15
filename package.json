@@ -9,7 +9,7 @@
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
-    "format": "prettier --parser typescript --write *.ts src/**/*.ts src/**/*.tsx ",
+    "format": "prettier --parser typescript --write *.ts src/**/*.ts src/**/*.tsx",
     "check:format": "prettier --parser typescript --list-different *.ts src/**/*.ts src/**/*.tsx",
     "check:lint": "eslint --ext .ts,.tsx ."
   },
@@ -53,6 +53,7 @@
     "webpack": "5.75.0"
   },
   "dependencies": {
+    "@ant-design/icons": "5.1.4",
     "@types/node": "18.14.0",
     "antd": "5.2.1",
     "cron": "2.2.0",

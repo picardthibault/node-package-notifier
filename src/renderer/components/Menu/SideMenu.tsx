@@ -1,88 +1,69 @@
 import { Menu, MenuProps } from 'antd';
 import {
-  MailOutlined,
-  AppstoreOutlined,
-  SettingOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  PlusCircleOutlined,
 } from '@ant-design/icons';
-import React from 'react';
-
-type MenuItem = Required<MenuProps>['items'][number];
-
-function getItem(
-  label: React.ReactNode,
-  key: React.Key,
-  icon?: React.ReactNode,
-  children?: MenuItem[],
-  type?: 'group',
-): MenuItem {
-  return {
-    key,
-    icon,
-    children,
-    label,
-    type,
-  } as MenuItem;
-}
-
-const items: MenuProps['items'] = [
-  getItem('Navigation One', 'sub1', <MailOutlined />, [
-    getItem(
-      'Item 1',
-      'g1',
-      null,
-      [getItem('Option 1', '1'), getItem('Option 2', '2')],
-      'group',
-    ),
-    getItem(
-      'Item 2',
-      'g2',
-      null,
-      [getItem('Option 3', '3'), getItem('Option 4', '4')],
-      'group',
-    ),
-  ]),
-
-  getItem('Navigation Two', 'sub2', <AppstoreOutlined />, [
-    getItem('Option 5', '5'),
-    getItem('Option 6', '6'),
-    getItem('Submenu', 'sub3', null, [
-      getItem('Option 7', '7'),
-      getItem('Option 8', '8'),
-    ]),
-  ]),
-
-  { type: 'divider' },
-
-  getItem('Navigation Three', 'sub4', <SettingOutlined />, [
-    getItem('Option 9', '9'),
-    getItem('Option 10', '10'),
-    getItem('Option 11', '11'),
-    getItem('Option 12', '12'),
-  ]),
-
-  getItem(
-    'Group',
-    'grp',
-    null,
-    [getItem('Option 13', '13'), getItem('Option 14', '14')],
-    'group',
-  ),
-];
+import { ItemType } from 'antd/es/menu/hooks/useItems';
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import Sider from 'antd/es/layout/Sider';
 
 const SideMenu: React.FC = () => {
+  const { t } = useTranslation();
+
+  const [collapsed, setCollapsed] = useState<boolean>(false);
+
   const onClick: MenuProps['onClick'] = (e) => {
     console.log('click ', e);
   };
 
+  const packageListItem: ItemType = {
+    key: 'packageList',
+    label: t('sideMenu.items.packageList'),
+    style: {
+      paddingLeft: '12px',
+    },
+  };
+
+  const addProjectItem: ItemType = {
+    key: 'addProjectList',
+    label: t('sideMenu.items.addProject'),
+    icon: <PlusCircleOutlined />,
+  };
+
+  const items: ItemType[] = [
+    packageListItem,
+    {
+      key: 'projectList',
+      label: t('sideMenu.items.projectList'),
+      type: 'group',
+      children: [addProjectItem],
+    },
+  ];
+
   return (
-    <Menu
-      onClick={onClick}
-      // style={{ width: 200 }}
-      defaultSelectedKeys={['1']}
-      defaultOpenKeys={['sub1']}
-      mode="inline"
-      items={items}
-    />
+    <Sider
+      collapsible
+      collapsed={collapsed}
+      onCollapse={(value) => setCollapsed(value)}
+      width="300"
+      trigger={
+        collapsed ? (
+          <MenuUnfoldOutlined style={{ fontSize: '16px' }} />
+        ) : (
+          <MenuFoldOutlined style={{ fontSize: '16px' }} />
+        )
+      }
+    >
+      <Menu
+        onClick={onClick}
+        defaultSelectedKeys={[packageListItem.key as string]}
+        mode="inline"
+        items={items}
+        className="sideMenu"
+      />
+    </Sider>
   );
 };
 

@@ -2,6 +2,13 @@
     "common": {
         "na": "N/A"
     },
+    "sideMenu": {
+        "items": {
+            "packageList": "Package List",
+            "projectList": "Project List",
+            "addProject": "Add a new Project"
+        }
+    },
     "package": {
         "title": {
             "list": "Package List",

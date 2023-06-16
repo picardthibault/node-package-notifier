@@ -1,17 +1,15 @@
 #root {
     .sideMenu{
         background: none;
-        
-
         border-inline-end: 0;
+        color: #FFFFFF;
 
-
-        .ant-menu-item-selected, .ant-menu-item-group-title {
+        .ant-menu-item-selected, .ant-menu-item-active, .ant-menu-item-group-title {
             color: #FFFFFF;
         }
-        color: #FFFFFF;
         
-        .ant-menu-item-selected {
+        
+        .ant-menu-item-selected, .ant-menu-item-active {
             background: $secondary-color;
         }
   }

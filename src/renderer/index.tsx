@@ -13,6 +13,7 @@ createRoot(document.getElementById('root')).render(
         theme={{
           token: {
             colorPrimary: '#032b43',
+            fontFamily: 'Heebo',
           },
           components: {
             Layout: {

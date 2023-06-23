@@ -5,6 +5,7 @@ import { createRoot } from 'react-dom/client';
 import { I18nextProvider } from 'react-i18next';
 import { ConfigProvider } from 'antd';
 import App from './App';
+import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 
 createRoot(document.getElementById('root')).render(
   <I18nextProvider i18n={i18n}>
@@ -28,7 +29,9 @@ createRoot(document.getElementById('root')).render(
           },
         }}
       >
-        <App />
+        <RouterProvider router={createMemoryRouter([
+          { path: '*', element: <App /> }
+        ])} />
       </ConfigProvider>
     </React.StrictMode>
   </I18nextProvider>,

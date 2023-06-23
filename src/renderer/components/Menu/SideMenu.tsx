@@ -3,44 +3,47 @@ import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   PlusCircleOutlined,
+  ProjectOutlined,
+  UnorderedListOutlined,
 } from '@ant-design/icons';
-import { ItemType } from 'antd/es/menu/hooks/useItems';
+import { MenuItemType, SubMenuType } from 'antd/es/menu/hooks/useItems';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Sider from 'antd/es/layout/Sider';
+import { useNavigate } from 'react-router-dom';
+import { routePaths } from '../../routes';
+
 
 const SideMenu: React.FC = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const [collapsed, setCollapsed] = useState<boolean>(false);
+  const [selectedKey, setSelectedKey] = useState<string>(routePaths.packageList.generate());
 
-  const onClick: MenuProps['onClick'] = (e) => {
-    console.log('click ', e);
+  const onClick: MenuProps['onClick'] = (menuItem) => {
+    setSelectedKey(menuItem.key);
+    navigate(menuItem.key);
   };
 
-  const packageListItem: ItemType = {
-    key: 'packageList',
+  const packageListItem: MenuItemType = {
+    key: routePaths.packageList.generate(),
     label: t('sideMenu.items.packageList'),
-    style: {
-      paddingLeft: '12px',
-    },
+    icon: <UnorderedListOutlined />,
   };
 
-  const addProjectItem: ItemType = {
-    key: 'addProjectList',
-    label: t('sideMenu.items.addProject'),
-    icon: <PlusCircleOutlined />,
+  const projetListItem: SubMenuType = {
+    key: 'projectList',
+    label: t('sideMenu.items.projectList'),
+    icon: <ProjectOutlined />,
+    children : [
+      {
+        key: '/package',
+        label: t('sideMenu.items.addProject'),
+        icon: <PlusCircleOutlined />,
+      },
+    ],
   };
-
-  const items: ItemType[] = [
-    packageListItem,
-    {
-      key: 'projectList',
-      label: t('sideMenu.items.projectList'),
-      type: 'group',
-      children: [addProjectItem],
-    },
-  ];
 
   return (
     <Sider
@@ -58,9 +61,12 @@ const SideMenu: React.FC = () => {
     >
       <Menu
         onClick={onClick}
-        defaultSelectedKeys={[packageListItem.key as string]}
+        selectedKeys={[selectedKey]}
         mode="inline"
-        items={items}
+        items={[
+          packageListItem,
+          projetListItem,
+        ]}
         className="sideMenu"
       />
     </Sider>

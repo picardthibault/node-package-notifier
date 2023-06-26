@@ -5,8 +5,12 @@ import { getPackageInfo } from '../services/package/PackageService';
 
 export interface PackageConfig {
   name: string;
-  latest?: string;
+  registryUrl: string;
   license?: string;
+  homePage?: string;
+  repository?: string;
+  description?: string;
+  latest?: string;
 }
 
 export type IPackageStore = {
@@ -33,32 +37,38 @@ export class PackageStore {
   }
 
   private async createPackage(
-    newPackage: PackageConfig,
+    packageName: string,
+    registryUrl: string,
   ): Promise<string | undefined> {
-    const packageInfo = await getPackageInfo(newPackage.name);
+    const packageInfo = await getPackageInfo(packageName);
     if (packageInfo === undefined) {
-      log.error(`Error while fetching "${newPackage.name}" informations`);
+      log.error(`Error while fetching "${packageName}" informations`);
       return undefined;
     }
-    const packageKey = getSha1(newPackage.name);
+    const packageKey = getSha1(packageName);
     this.store.set(packageKey, {
-      ...newPackage,
-      latest: packageInfo.latest,
+      name: packageName,
+      registryUrl,
       license: packageInfo.license,
+      homePage: packageInfo.homePage,
+      repository: packageInfo.repository,
+      description: packageInfo.description,
+      latest: packageInfo.latest,
     });
     return packageKey;
   }
 
-  async addPackage(newPackage: PackageConfig): Promise<boolean> {
-    const packageKey = await this.createPackage(newPackage);
+  async addPackage(packageName: string, registryUrl: string): Promise<boolean> {
+    const packageKey = await this.createPackage(packageName, registryUrl);
     return packageKey !== undefined;
   }
 
   async updatePackage(
     packageId: string,
-    newPackage: PackageConfig,
+    packageName: string,
+    registryUrl: string,
   ): Promise<boolean> {
-    const newPackageId = await this.createPackage(newPackage);
+    const newPackageId = await this.createPackage(packageName, registryUrl);
     if (newPackageId !== undefined && newPackageId !== packageId) {
       this.store.delete(packageId);
     }

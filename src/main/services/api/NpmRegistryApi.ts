@@ -6,6 +6,10 @@ interface PackageInfo {
     latest: string;
   };
   license: 'string';
+  homepage: 'string';
+  repository: {
+    url: 'string';
+  };
 }
 
 export class NpmRegistryApi {

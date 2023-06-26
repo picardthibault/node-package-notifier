@@ -5,6 +5,9 @@ import { NpmRegistryApi } from '../api/NpmRegistryApi';
 export interface PackageInfo {
   latest?: string;
   license?: string;
+  homePage?: string;
+  repository?: string;
+  description?: string;
 }
 
 export async function updatePackagesData(): Promise<string[]> {
@@ -21,10 +24,10 @@ export async function updatePackagesData(): Promise<string[]> {
           latest: packageInfo.latest,
           license: packageInfo.license,
         };
-        if (packages[key].latest !== newPackageConfig.latest) {
+        if (packages[key].latest !== packageInfo.latest) {
           packageWithNewVersion.push(key);
         }
-        await PackageStore.get().updatePackage(key, newPackageConfig);
+        await PackageStore.get().updatePackage(key, packages[key].name, packages[key].registryUrl);
         log.debug(`Update package "${packages[key].name}" end`);
       } else {
         log.warn(
@@ -50,6 +53,9 @@ export async function getPackageInfo(
     return {
       latest: packageData['dist-tags'].latest,
       license: packageData.license,
+      homePage: packageData.homepage,
+      repository: packageData.repository.url,
+      description: packageData.description,
     };
   } catch (ex) {
     log.error(`Unable to fetch "${packageName}" info`, ex);

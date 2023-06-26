@@ -1,6 +1,7 @@
 import { PackageCreationArgs, PackageUpdateArgs } from './PackageManagement';
 import { IpcRendererEvent } from 'electron';
 import { PackageConfig } from '../main/store/PackageStore';
+import { PackageData } from './PackageInfo';
 
 export {};
 
@@ -24,7 +25,7 @@ declare global {
           packages: { [key: string]: PackageConfig },
         ) => void,
       ) => () => void;
-      get: (packageId: string) => { name: string };
+      get: (packageId: string) => PackageData;
     };
   }
 }

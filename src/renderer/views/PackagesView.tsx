@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { PackageConfig } from '../../main/store/PackageStore';
 import { IpcRendererEvent } from 'electron';
 import { Space, Table } from 'antd';
-import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
+import { DeleteOutlined, PlusOutlined, EyeOutlined } from '@ant-design/icons';
 import { ColumnsType } from 'antd/es/table';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -108,7 +108,7 @@ export const PackagesView = (): JSX.Element => {
             toolTip={t('package.tooltips.updatePackage')}
             onClick={() => navigate(`/package/${tableItem.packageId}`)}
           >
-            <EditOutlined />
+            <EyeOutlined />
           </ActionButton>
           <ActionButton
             type="default"

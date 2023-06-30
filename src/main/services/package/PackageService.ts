@@ -27,7 +27,11 @@ export async function updatePackagesData(): Promise<string[]> {
         if (packages[key].latest !== packageInfo.latest) {
           packageWithNewVersion.push(key);
         }
-        await PackageStore.get().updatePackage(key, packages[key].name, packages[key].registryUrl);
+        await PackageStore.get().updatePackage(
+          key,
+          packages[key].name,
+          packages[key].registryUrl,
+        );
         log.debug(`Update package "${packages[key].name}" end`);
       } else {
         log.warn(

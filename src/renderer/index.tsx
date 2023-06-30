@@ -7,6 +7,8 @@ import { ConfigProvider } from 'antd';
 import App from './App';
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 
+const routeProvider = createMemoryRouter([{ path: '*', element: <App /> }]);
+
 createRoot(document.getElementById('root')).render(
   <I18nextProvider i18n={i18n}>
     <React.StrictMode>
@@ -29,9 +31,7 @@ createRoot(document.getElementById('root')).render(
           },
         }}
       >
-        <RouterProvider router={createMemoryRouter([
-          { path: '*', element: <App /> }
-        ])} />
+        <RouterProvider router={routeProvider} />
       </ConfigProvider>
     </React.StrictMode>
   </I18nextProvider>,

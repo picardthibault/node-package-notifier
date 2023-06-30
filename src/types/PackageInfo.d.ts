@@ -1,7 +1,7 @@
 export interface PackageData {
     name: string;
     registryUrl: string;
-    licence?: string;
+    license?: string;
     homePage?: string;
     repository?: string;
     description?: string;

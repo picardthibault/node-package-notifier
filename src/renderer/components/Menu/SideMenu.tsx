@@ -13,13 +13,14 @@ import Sider from 'antd/es/layout/Sider';
 import { useNavigate } from 'react-router-dom';
 import { routePaths } from '../../routes';
 
-
 const SideMenu: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
   const [collapsed, setCollapsed] = useState<boolean>(false);
-  const [selectedKey, setSelectedKey] = useState<string>(routePaths.packageList.generate());
+  const [selectedKey, setSelectedKey] = useState<string>(
+    routePaths.packageList.generate(),
+  );
 
   const onClick: MenuProps['onClick'] = (menuItem) => {
     setSelectedKey(menuItem.key);
@@ -36,7 +37,7 @@ const SideMenu: React.FC = () => {
     key: 'projectList',
     label: t('sideMenu.items.projectList'),
     icon: <ProjectOutlined />,
-    children : [
+    children: [
       {
         key: '/package',
         label: t('sideMenu.items.addProject'),
@@ -63,10 +64,7 @@ const SideMenu: React.FC = () => {
         onClick={onClick}
         selectedKeys={[selectedKey]}
         mode="inline"
-        items={[
-          packageListItem,
-          projetListItem,
-        ]}
+        items={[packageListItem, projetListItem]}
         className="sideMenu"
       />
     </Sider>

@@ -1,6 +1,7 @@
 {
     "common": {
-        "na": "N/A"
+        "na": "N/A",
+        "back": "Back"
     },
     "sideMenu": {
         "items": {

@@ -8,6 +8,7 @@ export function createMainWindow(
 ): BrowserWindow {
   log.info('Create main Window');
   const mainWindow = new BrowserWindow({
+    title: 'Node Package Notifier',
     height: 1050,
     minHeight: 530,
     width: 1650,

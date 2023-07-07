@@ -6,4 +6,5 @@ export interface PackageData {
   repository?: string;
   description?: string;
   latest?: string;
+  tags?: { [key: string]: string };
 }

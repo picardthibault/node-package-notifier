@@ -11,6 +11,7 @@ export interface PackageConfig {
   repository?: string;
   description?: string;
   latest?: string;
+  tags?: { [key: string]: string };
 }
 
 export type IPackageStore = {
@@ -39,7 +40,7 @@ export class PackageStore {
   private async createPackage(
     packageName: string,
     registryUrl: string,
-  ): Promise<string | undefined> {
+  ): Promise<{ key: string; package: PackageConfig } | undefined> {
     const packageInfo = await getPackageInfo(packageName);
     if (packageInfo === undefined) {
       log.error(`Error while fetching "${packageName}" informations`);
@@ -54,8 +55,12 @@ export class PackageStore {
       repository: packageInfo.repository,
       description: packageInfo.description,
       latest: packageInfo.latest,
+      tags: packageInfo.tags,
     });
-    return packageKey;
+    return {
+      key: packageKey,
+      package: this.store.get(packageKey),
+    };
   }
 
   async addPackage(packageName: string, registryUrl: string): Promise<boolean> {
@@ -67,12 +72,12 @@ export class PackageStore {
     packageId: string,
     packageName: string,
     registryUrl: string,
-  ): Promise<boolean> {
-    const newPackageId = await this.createPackage(packageName, registryUrl);
-    if (newPackageId !== undefined && newPackageId !== packageId) {
+  ): Promise<PackageConfig | undefined> {
+    const updateResult = await this.createPackage(packageName, registryUrl);
+    if (updateResult !== undefined && updateResult.key !== packageId) {
       this.store.delete(packageId);
     }
-    return newPackageId !== undefined;
+    return updateResult?.package;
   }
 
   deletePackage(packageId: string): void {

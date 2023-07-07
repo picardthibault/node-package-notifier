@@ -4,6 +4,7 @@ interface PackageInfo {
   description: string;
   'dist-tags': {
     latest: string;
+    [key: string]: string;
   };
   license: 'string';
   homepage: 'string';

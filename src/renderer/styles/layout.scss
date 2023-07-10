@@ -14,9 +14,12 @@ body {
 
     .ant-layout {
         height: 100%;
+        overflow: auto;
     }
         
     .ant-layout-sider {
+        height: 100vh;
+        overflow: auto;
         padding-top: 50px;
         background: $menu-color !important;
     }
@@ -34,6 +37,8 @@ body {
     }
 
     .ant-layout-content {
+        height: 100vh;
+        overflow: auto;
         padding: 10px 10px 0 10px;
     }
     

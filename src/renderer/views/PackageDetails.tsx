@@ -1,13 +1,19 @@
-import React, { FunctionComponent, useEffect, useRef, useState } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Title from '../components/Title/Title';
-import { Form, Input } from 'antd';
+import { Form, Input, Table } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import Loading from '../components/Loading/Loading';
 import { routePaths } from '../routes';
 import LinkButton from '../components/Button/LinkButton';
 import { useTranslation } from 'react-i18next';
-import { LeftOutlined } from '@ant-design/icons';
+import { ColumnsType } from 'antd/es/table';
+
+interface TableItemType {
+  key: number;
+  tagName: string;
+  tagVersion: string;
+}
 
 const PackageDetails: FunctionComponent = () => {
   const { id } = useParams<{ id: string }>();
@@ -16,6 +22,7 @@ const PackageDetails: FunctionComponent = () => {
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [title, setTitle] = useState<string>('');
+  const [tags, setTags] = useState<TableItemType[]>([]);
 
   const [formInstance] = Form.useForm();
 
@@ -31,8 +38,35 @@ const PackageDetails: FunctionComponent = () => {
       repository: packageInfo.repository,
       description: packageInfo.description,
     });
+    if (packageInfo.tags) {
+      const tags: TableItemType[] = Object.keys(packageInfo.tags).map(
+        (key, index) => ({
+          key: index,
+          tagName: key,
+          tagVersion: packageInfo.tags[key],
+        }),
+      );
+      setTags(tags);
+    } else {
+      setTags([]);
+    }
     setIsLoading(false);
   }, [id]);
+
+  const tableColumns: ColumnsType<TableItemType> = [
+    {
+      key: 'name',
+      title: 'Tags',
+      dataIndex: 'tagName',
+      defaultSortOrder: 'descend',
+      sorter: (a, b) => a.tagName.localeCompare(b.tagName),
+    },
+    {
+      key: 'version',
+      title: 'Version',
+      dataIndex: 'tagVersion',
+    },
+  ];
 
   return (
     <>
@@ -70,6 +104,18 @@ const PackageDetails: FunctionComponent = () => {
               </Form.Item>
             </Form>
           </div>
+          <Table
+            bordered
+            style={{
+              padding: '0 20px 0 20px',
+            }}
+            columns={tableColumns}
+            dataSource={tags}
+            pagination={{
+              position: ['bottomCenter'],
+              showSizeChanger: true,
+            }}
+          />
         </>
       )}
     </>

@@ -56,14 +56,14 @@ const PackageDetails: FunctionComponent = () => {
   const tableColumns: ColumnsType<TableItemType> = [
     {
       key: 'name',
-      title: 'Tags',
+      title: t('package.details.table.columns.tags'),
       dataIndex: 'tagName',
       defaultSortOrder: 'descend',
       sorter: (a, b) => a.tagName.localeCompare(b.tagName),
     },
     {
       key: 'version',
-      title: 'Version',
+      title: t('package.details.table.columns.version'),
       dataIndex: 'tagVersion',
     },
   ];
@@ -87,28 +87,40 @@ const PackageDetails: FunctionComponent = () => {
               labelAlign="left"
               labelCol={{ lg: 4, xl: 2 }}
             >
-              <Form.Item label="Registry url" name="registryUrl">
+              <Form.Item
+                label={t('package.details.form.field.registry')}
+                name="registryUrl"
+              >
                 <Input disabled />
               </Form.Item>
-              <Form.Item label="Licence" name="licence">
+              <Form.Item
+                label={t('package.details.form.field.licence')}
+                name="licence"
+              >
                 <Input disabled />
               </Form.Item>
-              <Form.Item label="Home page" name="homePage">
+              <Form.Item
+                label={t('package.details.form.field.homePage')}
+                name="homePage"
+              >
                 <Input disabled />
               </Form.Item>
-              <Form.Item label="Repository" name="repository">
+              <Form.Item
+                label={t('package.details.form.field.repository')}
+                name="repository"
+              >
                 <Input disabled />
               </Form.Item>
-              <Form.Item label="Description" name="description">
+              <Form.Item
+                label={t('package.details.form.field.description')}
+                name="description"
+              >
                 <TextArea disabled />
               </Form.Item>
             </Form>
           </div>
           <Table
             bordered
-            style={{
-              padding: '0 20px 0 20px',
-            }}
             columns={tableColumns}
             dataSource={tags}
             pagination={{

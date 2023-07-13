@@ -29,6 +29,7 @@ export class PackageStore {
     return PackageStore.instance;
   }
 
+  private readonly npmRegistryUrl = 'https://registry.npmjs.org';
   private store: Store<IPackageStore>;
 
   constructor() {
@@ -39,9 +40,12 @@ export class PackageStore {
 
   private async createPackage(
     packageName: string,
-    registryUrl: string,
+    registryUrl?: string,
   ): Promise<{ key: string; package: PackageConfig } | undefined> {
-    const packageInfo = await getPackageInfo(packageName);
+    const packageInfo = await getPackageInfo(
+      packageName,
+      registryUrl ? registryUrl : this.npmRegistryUrl,
+    );
     if (packageInfo === undefined) {
       log.error(`Error while fetching "${packageName}" informations`);
       return undefined;
@@ -63,7 +67,10 @@ export class PackageStore {
     };
   }
 
-  async addPackage(packageName: string, registryUrl: string): Promise<boolean> {
+  async addPackage(
+    packageName: string,
+    registryUrl?: string,
+  ): Promise<boolean> {
     const packageKey = await this.createPackage(packageName, registryUrl);
     return packageKey !== undefined;
   }
@@ -71,7 +78,7 @@ export class PackageStore {
   async updatePackage(
     packageId: string,
     packageName: string,
-    registryUrl: string,
+    registryUrl?: string,
   ): Promise<PackageConfig | undefined> {
     const updateResult = await this.createPackage(packageName, registryUrl);
     if (updateResult !== undefined && updateResult.key !== packageId) {

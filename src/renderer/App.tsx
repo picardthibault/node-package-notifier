@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
-import { PackageForm } from './views/PackageForm';
+import { PackageCreation } from './views/PackageCreation';
 import { PackagesView } from './views/PackagesView';
 import { routePaths } from './routes';
 import PackageDetails from './views/PackageDetails';
@@ -15,10 +15,13 @@ const App = (): JSX.Element => {
           element={<PackagesView />}
         />
         <Route
+          path={routePaths.packageCreation.generate()}
+          element={<PackageCreation />}
+        />
+        <Route
           path={routePaths.packageDetails.generate(':id')}
           element={<PackageDetails />}
         />
-        <Route path={'/package'} element={<PackageForm />} />
       </Route>
     </Routes>
   );

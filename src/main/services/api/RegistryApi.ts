@@ -13,9 +13,7 @@ interface PackageInfo {
   };
 }
 
-export class NpmRegistryApi {
-  static baseUrl = 'https://registry.npmjs.org';
-
+export class RegistryApi {
   static handleApiResponse<T>(url: string, response: ApiResponse<T>): T {
     if (response.status === 200 || response.status === 201) {
       return response.body;
@@ -23,11 +21,14 @@ export class NpmRegistryApi {
     throw new Error(`Error while fetching ${url}. Received : ${response.body}`);
   }
 
-  static async getPackageInfo(packageName: string): Promise<PackageInfo> {
-    const url = `${NpmRegistryApi.baseUrl}/${packageName}`;
+  static async getPackageInfo(
+    packageName: string,
+    registryUrl: string,
+  ): Promise<PackageInfo> {
+    const url = `${registryUrl}/${packageName}`;
 
     const response = await RestApi.requestGet<PackageInfo>(url);
 
-    return NpmRegistryApi.handleApiResponse(url, response);
+    return RegistryApi.handleApiResponse(url, response);
   }
 }

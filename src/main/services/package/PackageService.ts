@@ -1,6 +1,6 @@
 import log from 'electron-log';
 import { PackageStore } from '../../store/PackageStore';
-import { NpmRegistryApi } from '../api/NpmRegistryApi';
+import { RegistryApi } from '../api/RegistryApi';
 
 export interface PackageInfo {
   latest?: string;
@@ -44,14 +44,18 @@ export async function updatePackagesData(): Promise<string[]> {
 
 export async function getPackageInfo(
   packageName: string,
+  registryUrl: string,
 ): Promise<PackageInfo | undefined> {
   try {
-    const packageData = await NpmRegistryApi.getPackageInfo(packageName);
+    const packageData = await RegistryApi.getPackageInfo(
+      packageName,
+      registryUrl,
+    );
     return {
-      latest: packageData['dist-tags'].latest,
+      latest: packageData['dist-tags']?.latest,
       license: packageData.license,
       homePage: packageData.homepage,
-      repository: packageData.repository.url,
+      repository: packageData.repository?.url,
       description: packageData.description,
       tags: packageData['dist-tags'],
     };

@@ -14,7 +14,7 @@ ipcMain.on(
     log.debug('Received create package IPC');
     const isAdded = await PackageStore.get().addPackage(
       creationArgs.packageName,
-      'https://registry.npmjs.org',
+      creationArgs.registryUrl,
     );
     if (mainWindow) {
       mainWindow.webContents.send(

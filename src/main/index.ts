@@ -55,11 +55,6 @@ if (!singleInstanceLock) {
 }
 
 app.on('ready', () => {
-  mainWindow = createMainWindow(
-    MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
-    MAIN_WINDOW_WEBPACK_ENTRY,
-  );
-
   // Set Tray Icon
   const icon = nativeImage.createFromPath(
     path.join(ressourcePathFolder, 'logo.png'),

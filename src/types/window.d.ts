@@ -10,7 +10,7 @@ declare global {
     packageManagement: {
       create: (creationArgs: PackageCreationArgs) => void;
       createListener: (
-        listener: (event: IpcRendererEvent, isAdded: boolean) => void,
+        listener: (event: IpcRendererEvent, errorMessage: string | undefined) => void,
       ) => void;
       update: (updateArgs: PackageUpdateArgs) => void;
       updateListener: (

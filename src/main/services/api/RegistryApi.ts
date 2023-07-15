@@ -1,3 +1,5 @@
+import log from 'electron-log';
+import i18n from '../../i18n';
 import { ApiResponse, RestApi } from './RestApi';
 
 interface PackageInfo {
@@ -15,10 +17,18 @@ interface PackageInfo {
 
 export class RegistryApi {
   static handleApiResponse<T>(url: string, response: ApiResponse<T>): T {
-    if (response.status === 200 || response.status === 201) {
-      return response.body;
+    log.debug(`Receive response from <${url}> with ${response.status}`);
+
+    switch (response.status) {
+      case 200:
+        return response.body;
+      case 404:
+        throw new Error(i18n.t('package.creation.errors.notFound'));
+      case 503:
+        throw new Error(i18n.t('package.creation.errors.notAvailable'));
+      default:
+        throw new Error(i18n.t('package.creation.errors.unknownResponse'));
     }
-    throw new Error(`Error while fetching ${url}. Received : ${response.body}`);
   }
 
   static async getPackageInfo(

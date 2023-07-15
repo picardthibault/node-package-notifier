@@ -50,8 +50,13 @@
                 "cancel": "Cancel"
             },
             "alert": {
-                "title": "Unable to create package",
-                "description": "The registry is not available or the package does not exist"
+                "title": {
+                    "success": "Package has been successfully created",
+                    "error": "Unable to create package"
+                },
+                "description": {
+                    "error": "Unable to create package. {{cause}}"
+                }
             }
         },
         "details": {

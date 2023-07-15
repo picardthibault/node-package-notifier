@@ -3,6 +3,13 @@
         "newVersion": {
             "title": "{{name}} new version",
             "body": "Version {{version}} of {{name}} has been released, feel free to update your project !"
+        },
+        "creation": {
+            "errors": {
+                "notFound": "Package not found on registry.",
+                "notAvailable": "Registry is not available.",
+                "unknownResponse": "Registry returns an unknown response."
+            }
         }
     }
 }

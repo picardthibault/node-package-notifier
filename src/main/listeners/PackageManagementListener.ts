@@ -12,14 +12,14 @@ ipcMain.on(
   PackageManagementChannel.CREATE,
   async (event, creationArgs: PackageCreationArgs) => {
     log.debug('Received create package IPC');
-    const isAdded = await PackageStore.get().addPackage(
+    const errorMessage = await PackageStore.get().addPackage(
       creationArgs.packageName,
       creationArgs.registryUrl,
     );
     if (mainWindow) {
       mainWindow.webContents.send(
         PackageManagementChannel.CREATE_LISTENER,
-        isAdded,
+        errorMessage,
       );
     }
   },

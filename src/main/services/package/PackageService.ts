@@ -1,6 +1,7 @@
 import log from 'electron-log';
-import { PackageStore } from '../../store/PackageStore';
+import { PackageStore, isPackageConfig } from '../../store/PackageStore';
 import { RegistryApi } from '../api/RegistryApi';
+import i18n from '../../i18n';
 
 export interface PackageInfo {
   latest?: string;
@@ -18,18 +19,20 @@ export async function updatePackagesData(): Promise<string[]> {
   for (const key of Object.keys(packages)) {
     try {
       log.debug(`Update package "${packages[key].name}" start`);
-      const updatedPackage = await PackageStore.get().updatePackage(
+      const updatedResult = await PackageStore.get().updatePackage(
         key,
         packages[key].name,
         packages[key].registryUrl,
       );
-      if (updatedPackage) {
-        if (packages[key].latest !== updatedPackage.latest) {
+      if (isPackageConfig(updatedResult)) {
+        if (packages[key].latest !== updatedResult.latest) {
           packageWithNewVersion.push(key);
         }
         log.debug(`Update package "${packages[key].name}" end`);
       } else {
-        log.warn(`Unable to update "${packages[key].name}" package data.`);
+        log.warn(
+          `Unable to update "${packages[key].name}" package data. Received error : ${updatedResult}`,
+        );
       }
     } catch (err) {
       log.error(
@@ -45,7 +48,7 @@ export async function updatePackagesData(): Promise<string[]> {
 export async function getPackageInfo(
   packageName: string,
   registryUrl: string,
-): Promise<PackageInfo | undefined> {
+): Promise<PackageInfo | string> {
   try {
     const packageData = await RegistryApi.getPackageInfo(
       packageName,
@@ -59,8 +62,17 @@ export async function getPackageInfo(
       description: packageData.description,
       tags: packageData['dist-tags'],
     };
-  } catch (ex) {
-    log.error(`Unable to fetch "${packageName}" info`, ex);
-    return undefined;
+  } catch (err) {
+    if (err instanceof Error) {
+      log.error(`Received an error while fetching "${packageName}" info.`, err);
+      return err.message;
+    } else {
+      log.error(
+        `Received an unknown error while fetching "${packageName}" info. Error : ${JSON.stringify(
+          err,
+        )}`,
+      );
+      return i18n.t('package.creation.errors.unknownResponse');
+    }
   }
 }

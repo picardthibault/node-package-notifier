@@ -13,6 +13,27 @@ export interface PackageConfig {
   latest?: string;
   tags?: { [key: string]: string };
 }
+export const isPackageConfig = (object: unknown): object is PackageConfig => {
+  const objectAsPackageConfig = object as PackageConfig;
+  return (
+    objectAsPackageConfig.name !== undefined &&
+    objectAsPackageConfig.registryUrl !== undefined
+  );
+};
+
+export interface PackageCreationResult {
+  key: string;
+  package: PackageConfig;
+}
+export const isPackageCreationResult = (
+  object: unknown,
+): object is PackageCreationResult => {
+  const objectAsPackageCreationResult = object as PackageCreationResult;
+  return (
+    objectAsPackageCreationResult.key !== undefined &&
+    isPackageConfig(objectAsPackageCreationResult.package)
+  );
+};
 
 export type IPackageStore = {
   // key is the SHA1 of the package name
@@ -41,14 +62,13 @@ export class PackageStore {
   private async createPackage(
     packageName: string,
     registryUrl?: string,
-  ): Promise<{ key: string; package: PackageConfig } | undefined> {
+  ): Promise<PackageCreationResult | string> {
     const packageInfo = await getPackageInfo(
       packageName,
       registryUrl ? registryUrl : this.npmRegistryUrl,
     );
-    if (packageInfo === undefined) {
-      log.error(`Error while fetching "${packageName}" informations`);
-      return undefined;
+    if (typeof packageInfo === 'string') {
+      return packageInfo;
     }
     const packageKey = getSha1(packageName);
     this.store.set(packageKey, {
@@ -70,21 +90,28 @@ export class PackageStore {
   async addPackage(
     packageName: string,
     registryUrl?: string,
-  ): Promise<boolean> {
-    const packageKey = await this.createPackage(packageName, registryUrl);
-    return packageKey !== undefined;
+  ): Promise<string | undefined> {
+    const creationResult = await this.createPackage(packageName, registryUrl);
+    return isPackageCreationResult(creationResult) ? undefined : creationResult;
   }
 
   async updatePackage(
     packageId: string,
     packageName: string,
     registryUrl?: string,
-  ): Promise<PackageConfig | undefined> {
+  ): Promise<PackageConfig | string> {
     const updateResult = await this.createPackage(packageName, registryUrl);
-    if (updateResult !== undefined && updateResult.key !== packageId) {
+
+    if (
+      isPackageCreationResult(updateResult) &&
+      updateResult.key !== packageId
+    ) {
       this.store.delete(packageId);
     }
-    return updateResult?.package;
+
+    return isPackageCreationResult(updateResult)
+      ? updateResult.package
+      : updateResult;
   }
 
   deletePackage(packageId: string): void {

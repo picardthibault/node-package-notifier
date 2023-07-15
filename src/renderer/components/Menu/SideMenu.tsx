@@ -64,7 +64,7 @@ const SideMenu: React.FC = () => {
         onClick={onClick}
         selectedKeys={[selectedKey]}
         mode="inline"
-        items={[packageListItem, /* projetListItem */]}
+        items={[packageListItem /* projetListItem */]}
         className="sideMenu"
       />
     </Sider>

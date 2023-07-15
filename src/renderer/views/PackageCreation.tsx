@@ -1,23 +1,16 @@
 import React, { useEffect } from 'react';
-import { Form, Input, notification, Space } from 'antd';
+import { Form, Input, Space } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import ActionButton from '../components/Button/ActionButton';
 import { IpcRendererEvent } from 'electron';
 import Title from '../components/Title/Title';
 import { routePaths } from '../routes';
+import { openAlert } from '../components/Alert/Alert';
 
 interface PackageFormField {
   packageName: string;
 }
-
-const openAlert = (title: string, description: string) => {
-  notification.error({
-    message: title,
-    description,
-    placement: 'topRight',
-  });
-};
 
 export const PackageCreation = (): JSX.Element => {
   const { t } = useTranslation();
@@ -27,13 +20,20 @@ export const PackageCreation = (): JSX.Element => {
   const [formInstance] = Form.useForm<PackageFormField>();
 
   useEffect(() => {
-    const createListener = (event: IpcRendererEvent, isAdded: boolean) => {
-      if (isAdded) {
+    const createListener = (
+      event: IpcRendererEvent,
+      errorMessage: string | undefined,
+    ) => {
+      if (!errorMessage) {
+        openAlert('success', t('package.creation.alert.title.success'));
         navigate(routePaths.packageList.generate());
       } else {
         openAlert(
-          t('package.creation.alert.title'),
-          t('package.creation.alert.description'),
+          'error',
+          t('package.creation.alert.title.error'),
+          t('package.creation.alert.description.error', {
+            cause: errorMessage,
+          }),
         );
       }
     };

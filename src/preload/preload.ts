@@ -10,7 +10,10 @@ contextBridge.exposeInMainWorld('packageManagement', {
   create: (creationArgs: PackageCreationArgs) =>
     ipcRenderer.send(PackageManagementChannel.CREATE, creationArgs),
   createListener: (
-    listener: (event: IpcRendererEvent, errorMessage: string | undefined) => void,
+    listener: (
+      event: IpcRendererEvent,
+      errorMessage: string | undefined,
+    ) => void,
   ) => {
     ipcRenderer.on(PackageManagementChannel.CREATE_LISTENER, listener);
     return () =>

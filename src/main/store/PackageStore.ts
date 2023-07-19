@@ -1,4 +1,3 @@
-import log from 'electron-log';
 import Store = require('electron-store');
 import { getSha1 } from '../helpers/HashHelper';
 import { getPackageInfo } from '../services/package/PackageService';

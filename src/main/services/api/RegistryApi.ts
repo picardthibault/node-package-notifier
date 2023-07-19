@@ -17,7 +17,7 @@ interface PackageInfo {
 
 export class RegistryApi {
   static handleApiResponse<T>(url: string, response: ApiResponse<T>): T {
-    log.debug(`Receive response from <${url}> with ${response.status}`);
+    log.debug(`Received response from <${url}> with status ${response.status}`);
 
     switch (response.status) {
       case 200:

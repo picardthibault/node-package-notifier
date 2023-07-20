@@ -55,6 +55,8 @@ if (!singleInstanceLock) {
 }
 
 app.on('ready', () => {
+  log.info('Opening app');
+
   // Set Tray Icon
   const icon = nativeImage.createFromPath(
     path.join(ressourcePathFolder, 'logo.png'),

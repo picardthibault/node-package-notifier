@@ -10,7 +10,6 @@ export interface PackageConfig {
   repository?: string;
   description?: string;
   latest?: string;
-  tags?: { [key: string]: string };
 }
 export const isPackageConfig = (object: unknown): object is PackageConfig => {
   const objectAsPackageConfig = object as PackageConfig;
@@ -62,23 +61,20 @@ export class PackageStore {
     packageName: string,
     registryUrl?: string,
   ): Promise<PackageCreationResult | string> {
-    const packageInfo = await getPackageInfo(
-      packageName,
-      registryUrl ? registryUrl : this.npmRegistryUrl,
-    );
+    const adaptedRegistryUrl = registryUrl ? registryUrl : this.npmRegistryUrl;
+    const packageInfo = await getPackageInfo(packageName, adaptedRegistryUrl);
     if (typeof packageInfo === 'string') {
       return packageInfo;
     }
     const packageKey = getSha1(packageName);
     this.store.set(packageKey, {
       name: packageName,
-      registryUrl,
+      registryUrl: adaptedRegistryUrl,
       license: packageInfo.license,
       homePage: packageInfo.homePage,
       repository: packageInfo.repository,
       description: packageInfo.description,
       latest: packageInfo.latest,
-      tags: packageInfo.tags,
     });
     return {
       key: packageKey,

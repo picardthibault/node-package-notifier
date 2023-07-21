@@ -7,6 +7,7 @@ import {
 import { PackageStore } from '../store/PackageStore';
 import { mainWindow } from '../index';
 import log from 'electron-log';
+import { getPackageTags } from '../services/package/PackageService';
 
 ipcMain.on(
   PackageManagementChannel.CREATE,
@@ -65,3 +66,19 @@ ipcMain.on(PackageManagementChannel.GET, (event, packageId: string) => {
   log.debug('Received get package IPC');
   event.returnValue = PackageStore.get().getPackage(packageId);
 });
+
+ipcMain.on(
+  PackageManagementChannel.FETCH_TAGS,
+  async (event, packageId: string) => {
+    if (mainWindow) {
+      log.debug(`Received fetch tags of <${packageId}>`);
+
+      const fetchTagsResult = await getPackageTags(packageId);
+
+      mainWindow.webContents.send(
+        PackageManagementChannel.FETCH_TAGS_LISTENER,
+        fetchTagsResult,
+      );
+    }
+  },
+);

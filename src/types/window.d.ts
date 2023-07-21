@@ -29,6 +29,13 @@ declare global {
         ) => void,
       ) => () => void;
       get: (packageId: string) => PackageData;
+      fetchTags: (packageId: string) => void;
+      fetchTagsListener: (
+        listener: (
+          event: IpcRendererEvent,
+          fetchResult: Tags | string | undefined,
+        ) => void,
+      ) => () => void;
     };
   }
 }

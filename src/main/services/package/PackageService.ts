@@ -3,13 +3,17 @@ import { PackageStore, isPackageConfig } from '../../store/PackageStore';
 import { RegistryApi } from '../api/RegistryApi';
 import i18n from '../../i18n';
 
+export interface Tags {
+  [key: string]: string;
+}
+
 export interface PackageInfo {
   latest?: string;
   license?: string;
   homePage?: string;
   repository?: string;
   description?: string;
-  tags?: { [key: string]: string };
+  tags?: Tags;
 }
 
 export async function updatePackagesData(): Promise<string[]> {
@@ -72,7 +76,23 @@ export async function getPackageInfo(
           err,
         )}`,
       );
-      return i18n.t('package.creation.errors.unknownResponse');
+      return i18n.t('package.fetch.errors.unknownResponse');
     }
+  }
+}
+
+export async function getPackageTags(
+  packageId: string,
+): Promise<Tags | undefined | string> {
+  const savedPackageData = PackageStore.get().getPackage(packageId);
+  const packageInfo = await getPackageInfo(
+    savedPackageData.name,
+    savedPackageData.registryUrl,
+  );
+
+  if (typeof packageInfo === 'string') {
+    return packageInfo;
+  } else {
+    return packageInfo.tags;
   }
 }

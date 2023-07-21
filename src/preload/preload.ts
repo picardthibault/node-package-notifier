@@ -5,6 +5,7 @@ import {
 } from '../types/PackageManagement';
 import { PackageManagementChannel } from '../types/IpcChannel';
 import { PackageConfig } from '../main/store/PackageStore';
+import { PackageData, Tags } from '../types/PackageInfo';
 
 contextBridge.exposeInMainWorld('packageManagement', {
   create: (creationArgs: PackageCreationArgs) =>
@@ -58,6 +59,21 @@ contextBridge.exposeInMainWorld('packageManagement', {
         listener,
       );
   },
-  get: (packageId: string): { name: string } =>
+  get: (packageId: string): PackageData =>
     ipcRenderer.sendSync(PackageManagementChannel.GET, packageId),
+  fetchTags: (packageId: string) =>
+    ipcRenderer.send(PackageManagementChannel.FETCH_TAGS, packageId),
+  fetchTagsListener: (
+    listener: (
+      event: IpcRendererEvent,
+      fetchResult: Tags | string | undefined,
+    ) => void,
+  ) => {
+    ipcRenderer.on(PackageManagementChannel.FETCH_TAGS_LISTENER, listener);
+    return () =>
+      ipcRenderer.removeListener(
+        PackageManagementChannel.FETCH_TAGS_LISTENER,
+        listener,
+      );
+  },
 });

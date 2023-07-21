@@ -23,11 +23,11 @@ export class RegistryApi {
       case 200:
         return response.body;
       case 404:
-        throw new Error(i18n.t('package.creation.errors.notFound'));
+        throw new Error(i18n.t('package.fetch.errors.notFound'));
       case 503:
-        throw new Error(i18n.t('package.creation.errors.notAvailable'));
+        throw new Error(i18n.t('package.fetch.errors.notAvailable'));
       default:
-        throw new Error(i18n.t('package.creation.errors.unknownResponse'));
+        throw new Error(i18n.t('package.fetch.errors.unknownResponse'));
     }
   }
 

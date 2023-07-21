@@ -8,6 +8,8 @@ import { routePaths } from '../routes';
 import LinkButton from '../components/Button/LinkButton';
 import { useTranslation } from 'react-i18next';
 import { ColumnsType } from 'antd/es/table';
+import { Tags } from '../../types/PackageInfo';
+import { IpcRendererEvent } from 'electron';
 
 interface TableItemType {
   key: number;
@@ -38,20 +40,39 @@ const PackageDetails: FunctionComponent = () => {
       repository: packageInfo.repository,
       description: packageInfo.description,
     });
-    if (packageInfo.tags) {
-      const tags: TableItemType[] = Object.keys(packageInfo.tags).map(
-        (key, index) => ({
-          key: index,
-          tagName: key,
-          tagVersion: packageInfo.tags[key],
-        }),
-      );
-      setTags(tags);
-    } else {
-      setTags([]);
-    }
-    setIsLoading(false);
+    window.packageManagement.fetchTags(id);
   }, [id]);
+
+  useEffect(() => {
+    const fetchTagsListener = (
+      event: IpcRendererEvent,
+      fetchResult: Tags | string | undefined,
+    ) => {
+      setIsLoading(false);
+      if (fetchResult === undefined) {
+        setTags([]);
+      } else if (typeof fetchResult === 'string') {
+        // TODO : Gérer l'erreur
+        console.log('error');
+      } else {
+        const tags: TableItemType[] = Object.keys(fetchResult).map(
+          (key, index) => ({
+            key: index,
+            tagName: key,
+            tagVersion: fetchResult[key],
+          }),
+        );
+        setTags(tags);
+      }
+    };
+
+    const cleanListener =
+      window.packageManagement.fetchTagsListener(fetchTagsListener);
+
+    return () => {
+      cleanListener();
+    };
+  }, [setIsLoading, setTags]);
 
   const tableColumns: ColumnsType<TableItemType> = [
     {

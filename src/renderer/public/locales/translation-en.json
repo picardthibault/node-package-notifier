@@ -55,7 +55,7 @@
                     "error": "Unable to create package"
                 },
                 "description": {
-                    "error": "Unable to create package. {{cause}}"
+                    "error": "Error while fetching package tags: \"{{cause}}\""
                 }
             }
         },
@@ -73,6 +73,14 @@
                 "columns": {
                     "tags": "Tags",
                     "version": "Version"
+                }
+            },
+            "alert": {
+                "title": {
+                    "error": "Unable to fetch package tags"
+                },
+                "description": {
+                    "error": "Error occurred while fetching package tags: \" {{cause}}\""
                 }
             }
         }

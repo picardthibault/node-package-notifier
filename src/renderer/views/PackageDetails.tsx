@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { ColumnsType } from 'antd/es/table';
 import { Tags } from '../../types/PackageInfo';
 import { IpcRendererEvent } from 'electron';
+import { openAlert } from '../components/Alert/Alert';
 
 interface TableItemType {
   key: number;
@@ -52,8 +53,14 @@ const PackageDetails: FunctionComponent = () => {
       if (fetchResult === undefined) {
         setTags([]);
       } else if (typeof fetchResult === 'string') {
-        // TODO : Gérer l'erreur
-        console.log('error');
+        openAlert(
+          'error',
+          t('package.details.alert.title.error'),
+          t('package.details.alert.description.error', {
+            cause: fetchResult,
+          }),
+        );
+        setTags([]);
       } else {
         const tags: TableItemType[] = Object.keys(fetchResult).map(
           (key, index) => ({

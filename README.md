@@ -5,7 +5,7 @@ This repository holds the source code of the NPN application. It's a electronJS 
 This repository is under a GPL-3 licence, please read [LICENCE file](https://github.com/picardthibault/node-package-notifier/blob/main/LICENCE) for more information.
 
 ## Application distribution
-The application is available on the Windows [Microsoft Store](ms-windows-store://pdp/?ProductId=9PJL1B4F0JM0).
+The application is available on the Windows [Microsoft Store](https://apps.microsoft.com/store/detail/nodepackagenotifier/9PJL1B4F0JM0).
 
 ## Application architecture
 

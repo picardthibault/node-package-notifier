@@ -46,8 +46,7 @@
                 "registryUrl": "The base url of the registry on which the package is hosted. If not provided, the package will be fetched on the npm registry."
             },
             "buttons": {
-                "create": "Create",
-                "cancel": "Cancel"
+                "create": "Create"
             },
             "alert": {
                 "title": {

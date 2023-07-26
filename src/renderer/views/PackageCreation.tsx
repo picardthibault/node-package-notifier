@@ -7,6 +7,7 @@ import { IpcRendererEvent } from 'electron';
 import Title from '../components/Title/Title';
 import { routePaths } from '../routes';
 import { openAlert } from '../components/Alert/Alert';
+import LinkButton from '../components/Button/LinkButton';
 
 interface PackageFormField {
   packageName: string;
@@ -48,6 +49,11 @@ export const PackageCreation = (): JSX.Element => {
 
   return (
     <>
+      <LinkButton
+        to={routePaths.packageList.generate()}
+        label={t('common.back')}
+        isBack
+      />
       <Title content={t('package.creation.title')} />
       <Form
         name="packageCreationForm"
@@ -88,13 +94,6 @@ export const PackageCreation = (): JSX.Element => {
 
         <div style={{ textAlign: 'center' }}>
           <Space>
-            <ActionButton
-              type="default"
-              danger={true}
-              onClick={() => navigate('/')}
-            >
-              {t('package.creation.buttons.cancel')}
-            </ActionButton>
             <ActionButton type="primary" htmlType="submit">
               {t('package.creation.buttons.create')}
             </ActionButton>

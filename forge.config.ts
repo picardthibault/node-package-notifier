@@ -44,8 +44,8 @@ const config: ForgeConfig = {
         assets: './src/main/ressources/',
         makePri: 'true',
         publisher: 'Your Publisher DN',
-        devCert: 'Your Dev Cert Path'
-      }
+        devCert: 'Your Dev Cert Path',
+      },
     },
     new MakerZIP({}, ['darwin']),
     new MakerRpm({}),

@@ -1,45 +1,86 @@
 {
     "common": {
-        "na": "N/A"
+        "na": "N/A",
+        "back": "Back"
+    },
+    "sideMenu": {
+        "items": {
+            "packageList": "Package List",
+            "projectList": "Project List",
+            "addProject": "Add a new Project"
+        }
     },
     "package": {
-        "title": {
-            "list": "Package List",
-            "create": "Create Package",
-            "update": "Update Package"
-        },
-        "table": {
-            "columns": {
-                "name": "Name",
-                "license": "License",
-                "version": "Current version"
+        "list": {
+            "title": "Package List",
+            "table": {
+                "columns": {
+                    "name": "Name",
+                    "license": "License",
+                    "version": "Current version"
+                }
+            },
+            "tooltips": {
+                "createPackage": "Create new package",
+                "detailsPackage": "View package details",
+                "deletePackage": "Delete package"
             }
         },
-        "form": {
-            "fieldLabel": {
-                "name": "Package name"
+        "creation": {
+            "title": "Create Package",
+            "form": {
+                "field": {
+                    "name": "Package name",
+                    "registryUrl": "Registry"
+                },
+                "placeholder": {
+                    "name": "electron",
+                    "registryUrl": "https://registry.npmjs.org"
+                },
+                "rules": {
+                    "required": "This field is required",
+                    "url": "This field should be a valid url"
+                }
             },
-            "rules": {
-                "required": "This field is required"
+            "tooltip": {
+                "registryUrl": "The base url of the registry on which the package is hosted. If not provided, the package will be fetched on the npm registry."
+            },
+            "buttons": {
+                "create": "Create"
+            },
+            "alert": {
+                "title": {
+                    "success": "Package has been successfully created",
+                    "error": "Unable to create package"
+                },
+                "description": {
+                    "error": "Error while fetching package tags: \"{{cause}}\""
+                }
             }
         },
-        "button": {
-            "create": "Create",
-            "update": "Update",
-            "cancel": "Cancel"
-        },
-        "tooltips": {
-            "createPackage": "Create new package",
-            "updatePackage": "Update package",
-            "deletePackage": "Delete package"
-        },
-        "alert": {
-            "title": {
-                "create": "Unable to create package",
-                "update": "Unable to update package"
+        "details": {
+            "form": {
+                "field": {
+                    "registry": "Registry",
+                    "licence": "Licence",
+                    "homePage": "Home page",
+                    "repository": "Repository",
+                    "description": "Description"
+                }
             },
-            "description": {
-                "createOrUpdate": "NPM registry is not available or the package does not exist"
+            "table": {
+                "columns": {
+                    "tags": "Tags",
+                    "version": "Version"
+                }
+            },
+            "alert": {
+                "title": {
+                    "error": "Unable to fetch package tags"
+                },
+                "description": {
+                    "error": "Error occurred while fetching package tags: \" {{cause}}\""
+                }
             }
         }
     }

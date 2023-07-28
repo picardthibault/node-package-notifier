@@ -7,18 +7,20 @@ import {
 import { PackageStore } from '../store/PackageStore';
 import { mainWindow } from '../index';
 import log from 'electron-log';
+import { getPackageTags } from '../services/package/PackageService';
 
 ipcMain.on(
   PackageManagementChannel.CREATE,
   async (event, creationArgs: PackageCreationArgs) => {
     log.debug('Received create package IPC');
-    const isAdded = await PackageStore.get().addPackage({
-      name: creationArgs.packageName,
-    });
+    const errorMessage = await PackageStore.get().addPackage(
+      creationArgs.packageName,
+      creationArgs.registryUrl,
+    );
     if (mainWindow) {
       mainWindow.webContents.send(
         PackageManagementChannel.CREATE_LISTENER,
-        isAdded,
+        errorMessage,
       );
     }
   },
@@ -30,9 +32,8 @@ ipcMain.on(
     log.debug('Received update package IPC');
     const isUpdated = await PackageStore.get().updatePackage(
       updateArgs.packageId,
-      {
-        name: updateArgs.packageName,
-      },
+      updateArgs.packageName,
+      'https://registry.npmjs.org',
     );
     if (mainWindow) {
       mainWindow.webContents.send(
@@ -65,3 +66,19 @@ ipcMain.on(PackageManagementChannel.GET, (event, packageId: string) => {
   log.debug('Received get package IPC');
   event.returnValue = PackageStore.get().getPackage(packageId);
 });
+
+ipcMain.on(
+  PackageManagementChannel.FETCH_TAGS,
+  async (event, packageId: string) => {
+    if (mainWindow) {
+      log.debug(`Received fetch tags of <${packageId}>`);
+
+      const fetchTagsResult = await getPackageTags(packageId);
+
+      mainWindow.webContents.send(
+        PackageManagementChannel.FETCH_TAGS_LISTENER,
+        fetchTagsResult,
+      );
+    }
+  },
+);

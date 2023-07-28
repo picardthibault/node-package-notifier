@@ -1,0 +1,16 @@
+.linkButton {
+    display: inline-block;
+    color: $primary-color;
+    
+    a {
+        color: $primary-color;
+        padding-left: 3px;   
+    }
+}
+
+.linkButton:hover {
+    color: $secondary-color;
+    a {
+        color: $secondary-color;
+    }
+}

@@ -1,6 +1,7 @@
 import { PackageCreationArgs, PackageUpdateArgs } from './PackageManagement';
 import { IpcRendererEvent } from 'electron';
 import { PackageConfig } from '../main/store/PackageStore';
+import { PackageData } from './PackageInfo';
 
 export {};
 
@@ -9,7 +10,10 @@ declare global {
     packageManagement: {
       create: (creationArgs: PackageCreationArgs) => void;
       createListener: (
-        listener: (event: IpcRendererEvent, isAdded: boolean) => void,
+        listener: (
+          event: IpcRendererEvent,
+          errorMessage: string | undefined,
+        ) => void,
       ) => void;
       update: (updateArgs: PackageUpdateArgs) => void;
       updateListener: (
@@ -24,7 +28,14 @@ declare global {
           packages: { [key: string]: PackageConfig },
         ) => void,
       ) => () => void;
-      get: (packageId: string) => { name: string };
+      get: (packageId: string) => PackageData;
+      fetchTags: (packageId: string) => void;
+      fetchTagsListener: (
+        listener: (
+          event: IpcRendererEvent,
+          fetchResult: Tags | string | undefined,
+        ) => void,
+      ) => () => void;
     };
   }
 }

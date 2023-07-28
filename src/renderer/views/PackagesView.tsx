@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { PackageConfig } from '../../main/store/PackageStore';
 import { IpcRendererEvent } from 'electron';
 import { Space, Table } from 'antd';
-import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
+import { DeleteOutlined, PlusOutlined, EyeOutlined } from '@ant-design/icons';
 import { ColumnsType } from 'antd/es/table';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -13,6 +13,8 @@ import {
   updatePackageListPageConfig,
 } from '../stores/PackageListStore';
 import { useStore } from 'effector-react';
+import Title from '../components/Title/Title';
+import { routePaths } from '../routes';
 
 interface TableItemType {
   key: number;
@@ -81,19 +83,19 @@ export const PackagesView = (): JSX.Element => {
   const tableColumns: ColumnsType<TableItemType> = [
     {
       key: 'name',
-      title: t('package.table.columns.name'),
+      title: t('package.list.table.columns.name'),
       dataIndex: 'name',
       defaultSortOrder: 'ascend',
       sorter: (a, b) => a.name.localeCompare(b.name),
     },
     {
       key: 'license',
-      title: t('package.table.columns.license'),
+      title: t('package.list.table.columns.license'),
       dataIndex: 'license',
     },
     {
       key: 'version',
-      title: t('package.table.columns.version'),
+      title: t('package.list.table.columns.version'),
       dataIndex: 'version',
     },
     {
@@ -104,15 +106,15 @@ export const PackagesView = (): JSX.Element => {
         <Space>
           <ActionButton
             type="primary"
-            toolTip={t('package.tooltips.updatePackage')}
+            toolTip={t('package.list.tooltips.detailsPackage')}
             onClick={() => navigate(`/package/${tableItem.packageId}`)}
           >
-            <EditOutlined />
+            <EyeOutlined />
           </ActionButton>
           <ActionButton
             type="default"
             danger={true}
-            toolTip={t('package.tooltips.deletePackage')}
+            toolTip={t('package.list.tooltips.deletePackage')}
             onClick={() => window.packageManagement.delete(tableItem.packageId)}
           >
             <DeleteOutlined />
@@ -124,7 +126,7 @@ export const PackagesView = (): JSX.Element => {
 
   return (
     <>
-      <h1>{t('package.title.list')}</h1>
+      <Title content={t('package.list.title')} />
       <div
         style={{
           display: 'flex',
@@ -134,8 +136,8 @@ export const PackagesView = (): JSX.Element => {
       >
         <ActionButton
           type="primary"
-          toolTip={t('package.tooltips.createPackage')}
-          onClick={() => navigate('/package')}
+          toolTip={t('package.list.tooltips.createPackage')}
+          onClick={() => navigate(routePaths.packageCreation.generate())}
         >
           <PlusOutlined />
         </ActionButton>

@@ -4,6 +4,9 @@ This repository holds the source code of the NPN application. It's a electronJS 
 
 This repository is under a GPL-3 licence, please read [LICENCE file](https://github.com/picardthibault/node-package-notifier/blob/main/LICENCE) for more information.
 
+## Application distribution
+The application is available on the Windows [Microsoft Store](https://apps.microsoft.com/store/detail/nodepackagenotifier/9PJL1B4F0JM0).
+
 ## Application architecture
 
 NPN is an electronJS app written in Typescript. It use electron-forge with webpack to build the main and renderer process. The renderer process is a ReactJS app with Antdesign as UI library.
@@ -14,13 +17,13 @@ If you want to make some development on this projet you can run the command ``ya
 
 ## Build instruction
 
-At the moment only build of Windows MSI have been tested.
+At the moment only build of Windows builds have been tested (MSI and Appx).
 
 ### Windows MSI
 
 In order to build windows MSI you shall:
 
-- Install Wix toolkit v3 [[link]](https://wixtoolset.org/docs/wix3/)
+- Install [Wix toolkit v3](https://wixtoolset.org/docs/wix3/)
 - Add bin/ folder of the Wix toolkit in your path
 - Execute the command ``yarn make --targets=@electron-forge/maker-wix`` 
 

@@ -7,6 +7,9 @@ i18n
 .init({
     fallback: 'en',
     lng: 'en',
+    interpolation: {
+        escapeValue: false,
+    },
     backend: {
         loadPath: path.join(__dirname, 'ressources', 'locales', '{{lng}}.json'),
     },

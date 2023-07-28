@@ -1,0 +1,45 @@
+html {
+    height: 100%;
+}
+  
+body {
+    font-family: Heebo;
+    height: 100%;
+    margin: 0;
+    border: 0;
+}
+  
+#root {
+    height: 100%;
+
+    .ant-layout {
+        height: 100%;
+        overflow: auto;
+    }
+        
+    .ant-layout-sider {
+        height: 100vh;
+        overflow: auto;
+        padding-top: 50px;
+        background: $menu-color !important;
+    }
+
+    .ant-layout-sider-trigger {
+        padding: 0 10px 0 10px;
+        text-align: end;
+        top: 0 !important;
+    }
+
+    .ant-layout-sider-collapsed {
+        .ant-layout-sider-trigger {
+            text-align: center;
+        }    
+    }
+
+    .ant-layout-content {
+        height: 100vh;
+        overflow: auto;
+        padding: 10px 20px 0 20px;
+    }
+    
+}

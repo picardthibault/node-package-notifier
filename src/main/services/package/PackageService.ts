@@ -1,10 +1,19 @@
 import log from 'electron-log';
-import { PackageConfig, PackageStore } from '../../store/PackageStore';
-import { NpmRegistryApi } from '../api/NpmRegistryApi';
+import { PackageStore, isPackageConfig } from '../../store/PackageStore';
+import { RegistryApi } from '../api/RegistryApi';
+import i18n from '../../i18n';
+
+export interface Tags {
+  [key: string]: string;
+}
 
 export interface PackageInfo {
   latest?: string;
   license?: string;
+  homePage?: string;
+  repository?: string;
+  description?: string;
+  tags?: Tags;
 }
 
 export async function updatePackagesData(): Promise<string[]> {
@@ -14,21 +23,19 @@ export async function updatePackagesData(): Promise<string[]> {
   for (const key of Object.keys(packages)) {
     try {
       log.debug(`Update package "${packages[key].name}" start`);
-      const packageInfo = await getPackageInfo(packages[key].name);
-      if (packageInfo) {
-        const newPackageConfig: PackageConfig = {
-          ...packages[key],
-          latest: packageInfo.latest,
-          license: packageInfo.license,
-        };
-        if (packages[key].latest !== newPackageConfig.latest) {
+      const updatedResult = await PackageStore.get().updatePackage(
+        key,
+        packages[key].name,
+        packages[key].registryUrl,
+      );
+      if (isPackageConfig(updatedResult)) {
+        if (packages[key].latest !== updatedResult.latest) {
           packageWithNewVersion.push(key);
         }
-        await PackageStore.get().updatePackage(key, newPackageConfig);
         log.debug(`Update package "${packages[key].name}" end`);
       } else {
         log.warn(
-          `Unable to fetch "${packages[key].name}" package data. The package has not been updated`,
+          `Unable to update "${packages[key].name}" package data. Received error : ${updatedResult}`,
         );
       }
     } catch (err) {
@@ -44,15 +51,48 @@ export async function updatePackagesData(): Promise<string[]> {
 
 export async function getPackageInfo(
   packageName: string,
-): Promise<PackageInfo | undefined> {
+  registryUrl: string,
+): Promise<PackageInfo | string> {
   try {
-    const packageData = await NpmRegistryApi.getPackageInfo(packageName);
+    const packageData = await RegistryApi.getPackageInfo(
+      packageName,
+      registryUrl,
+    );
     return {
-      latest: packageData['dist-tags'].latest,
+      latest: packageData['dist-tags']?.latest,
       license: packageData.license,
+      homePage: packageData.homepage,
+      repository: packageData.repository?.url,
+      description: packageData.description,
+      tags: packageData['dist-tags'],
     };
-  } catch (ex) {
-    log.error(`Unable to fetch "${packageName}" info`, ex);
-    return undefined;
+  } catch (err) {
+    if (err instanceof Error) {
+      log.error(`Received an error while fetching "${packageName}" info.`, err);
+      return err.message;
+    } else {
+      log.error(
+        `Received an unknown error while fetching "${packageName}" info. Error : ${JSON.stringify(
+          err,
+        )}`,
+      );
+      return i18n.t('package.fetch.errors.unknownResponse');
+    }
+  }
+}
+
+export async function getPackageTags(
+  packageId: string,
+): Promise<Tags | undefined | string> {
+  const savedPackageData = PackageStore.get().getPackage(packageId);
+  const packageInfo = await getPackageInfo(
+    savedPackageData.name,
+    savedPackageData.registryUrl,
+  );
+
+  if (typeof packageInfo === 'string') {
+    return packageInfo;
+  } else {
+    return packageInfo.tags;
   }
 }

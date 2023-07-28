@@ -1,13 +1,37 @@
-import log from 'electron-log';
 import Store = require('electron-store');
 import { getSha1 } from '../helpers/HashHelper';
 import { getPackageInfo } from '../services/package/PackageService';
 
 export interface PackageConfig {
   name: string;
-  latest?: string;
+  registryUrl: string;
   license?: string;
+  homePage?: string;
+  repository?: string;
+  description?: string;
+  latest?: string;
 }
+export const isPackageConfig = (object: unknown): object is PackageConfig => {
+  const objectAsPackageConfig = object as PackageConfig;
+  return (
+    objectAsPackageConfig.name !== undefined &&
+    objectAsPackageConfig.registryUrl !== undefined
+  );
+};
+
+export interface PackageCreationResult {
+  key: string;
+  package: PackageConfig;
+}
+export const isPackageCreationResult = (
+  object: unknown,
+): object is PackageCreationResult => {
+  const objectAsPackageCreationResult = object as PackageCreationResult;
+  return (
+    objectAsPackageCreationResult.key !== undefined &&
+    isPackageConfig(objectAsPackageCreationResult.package)
+  );
+};
 
 export type IPackageStore = {
   // key is the SHA1 of the package name
@@ -24,6 +48,7 @@ export class PackageStore {
     return PackageStore.instance;
   }
 
+  private readonly npmRegistryUrl = 'https://registry.npmjs.org';
   private store: Store<IPackageStore>;
 
   constructor() {
@@ -33,36 +58,55 @@ export class PackageStore {
   }
 
   private async createPackage(
-    newPackage: PackageConfig,
-  ): Promise<string | undefined> {
-    const packageInfo = await getPackageInfo(newPackage.name);
-    if (packageInfo === undefined) {
-      log.error(`Error while fetching "${newPackage.name}" informations`);
-      return undefined;
+    packageName: string,
+    registryUrl?: string,
+  ): Promise<PackageCreationResult | string> {
+    const adaptedRegistryUrl = registryUrl ? registryUrl : this.npmRegistryUrl;
+    const packageInfo = await getPackageInfo(packageName, adaptedRegistryUrl);
+    if (typeof packageInfo === 'string') {
+      return packageInfo;
     }
-    const packageKey = getSha1(newPackage.name);
+    const packageKey = getSha1(packageName);
     this.store.set(packageKey, {
-      ...newPackage,
-      latest: packageInfo.latest,
+      name: packageName,
+      registryUrl: adaptedRegistryUrl,
       license: packageInfo.license,
+      homePage: packageInfo.homePage,
+      repository: packageInfo.repository,
+      description: packageInfo.description,
+      latest: packageInfo.latest,
     });
-    return packageKey;
+    return {
+      key: packageKey,
+      package: this.store.get(packageKey),
+    };
   }
 
-  async addPackage(newPackage: PackageConfig): Promise<boolean> {
-    const packageKey = await this.createPackage(newPackage);
-    return packageKey !== undefined;
+  async addPackage(
+    packageName: string,
+    registryUrl?: string,
+  ): Promise<string | undefined> {
+    const creationResult = await this.createPackage(packageName, registryUrl);
+    return isPackageCreationResult(creationResult) ? undefined : creationResult;
   }
 
   async updatePackage(
     packageId: string,
-    newPackage: PackageConfig,
-  ): Promise<boolean> {
-    const newPackageId = await this.createPackage(newPackage);
-    if (newPackageId !== undefined && newPackageId !== packageId) {
+    packageName: string,
+    registryUrl?: string,
+  ): Promise<PackageConfig | string> {
+    const updateResult = await this.createPackage(packageName, registryUrl);
+
+    if (
+      isPackageCreationResult(updateResult) &&
+      updateResult.key !== packageId
+    ) {
       this.store.delete(packageId);
     }
-    return newPackageId !== undefined;
+
+    return isPackageCreationResult(updateResult)
+      ? updateResult.package
+      : updateResult;
   }
 
   deletePackage(packageId: string): void {

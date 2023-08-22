@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { Form, Input, Space } from 'antd';
+import React, { useCallback, useEffect, useState } from 'react';
+import { AutoComplete, Form, Input, Space } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import ActionButton from '../components/Button/ActionButton';
@@ -17,6 +17,12 @@ export const PackageCreation = (): JSX.Element => {
   const { t } = useTranslation();
 
   const navigate = useNavigate();
+
+  const [suggestions, setSuggestions] = useState<
+    { label: string; value: string }[]
+  >([]);
+  const [suggestionTimeout, setSuggestionTimeout] =
+    useState<NodeJS.Timeout | null>(null);
 
   const [formInstance] = Form.useForm<PackageFormField>();
 
@@ -42,6 +48,38 @@ export const PackageCreation = (): JSX.Element => {
       window.packageManagement.createListener(createListener);
     return cleanListener;
   });
+
+  const fetchSuggestions = useCallback(() => {
+    const current = formInstance.getFieldValue('packageName');
+    window.packageManagement.getSuggestions(current);
+  }, [formInstance]);
+
+  useEffect(() => {
+    const suggestionListener = (
+      event: IpcRendererEvent,
+      fetchedSuggestions: string[] | string,
+    ) => {
+      if (typeof fetchedSuggestions === 'string') {
+        setSuggestions([
+          { label: fetchedSuggestions, value: fetchedSuggestions },
+        ]);
+      } else {
+        setSuggestions(
+          fetchedSuggestions.map((sug) => ({ label: sug, value: sug })),
+        );
+      }
+    };
+    const cleanListener =
+      window.packageManagement.getSuggestionsListener(suggestionListener);
+    return cleanListener;
+  });
+
+  const debounce = useCallback(() => {
+    if (suggestionTimeout) {
+      clearTimeout(suggestionTimeout);
+    }
+    setSuggestionTimeout(setTimeout(fetchSuggestions, 200));
+  }, [suggestionTimeout, setSuggestionTimeout]);
 
   const onFinish = () => {
     window.packageManagement.create(formInstance.getFieldsValue());
@@ -76,7 +114,11 @@ export const PackageCreation = (): JSX.Element => {
             },
           ]}
         >
-          <Input placeholder={t('package.creation.form.placeholder.name')} />
+          <AutoComplete
+            placeholder={t('package.creation.form.placeholder.name')}
+            onChange={() => debounce()}
+            options={suggestions}
+          />
         </Form.Item>
         <Form.Item
           label={t('package.creation.form.field.registryUrl')}

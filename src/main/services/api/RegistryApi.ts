@@ -15,6 +15,14 @@ interface PackageInfo {
   };
 }
 
+interface SearchObjects {
+  objects: {
+    package: {
+      name: string;
+    };
+  }[];
+}
+
 export class RegistryApi {
   static handleApiResponse<T>(url: string, response: ApiResponse<T>): T {
     log.debug(`Received response from <${url}> with status ${response.status}`);
@@ -38,6 +46,15 @@ export class RegistryApi {
     const url = `${registryUrl}/${packageName}`;
 
     const response = await RestApi.requestGet<PackageInfo>(url);
+
+    return RegistryApi.handleApiResponse(url, response);
+  }
+
+  static async getSuggestions(current: string): Promise<SearchObjects> {
+    // TODO : Build url with the user selected registry url 
+    const url = `https://registry.npmjs.com/-/v1/search?text=${current}&popularity=1.0&quality=0.0&maintenance=0.0`;
+
+    const response = await RestApi.requestGet<SearchObjects>(url);
 
     return RegistryApi.handleApiResponse(url, response);
   }

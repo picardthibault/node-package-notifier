@@ -76,4 +76,16 @@ contextBridge.exposeInMainWorld('packageManagement', {
         listener,
       );
   },
+  getSuggestions: (current: string) =>
+    ipcRenderer.send(PackageManagementChannel.GET_SUGGESTIONS, current),
+  getSuggestionsListener: (
+    listener: (event: IpcRendererEvent, suggestions: string[] | string) => void,
+  ) => {
+    ipcRenderer.on(PackageManagementChannel.GET_SUGGESTIONS_LISTENER, listener);
+    return () =>
+      ipcRenderer.removeListener(
+        PackageManagementChannel.GET_SUGGESTIONS_LISTENER,
+        listener,
+      );
+  },
 });

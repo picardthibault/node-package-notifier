@@ -96,3 +96,28 @@ export async function getPackageTags(
     return packageInfo.tags;
   }
 }
+
+export async function getPackageSuggestions(
+  current: string,
+): Promise<string[] | string> {
+  try {
+    const suggestions = await RegistryApi.getSuggestions(current);
+
+    return suggestions.objects.map((object) => object.package.name);
+  } catch (err) {
+    if (err instanceof Error) {
+      log.error(
+        `Received an error while fetching package suggestions for "${current}".`,
+        err,
+      );
+      return err.message;
+    } else {
+      log.error(
+        `Received an unknown error while fetching package suggestions. Error : ${JSON.stringify(
+          err,
+        )}`,
+      );
+      return i18n.t('package.fetch.errors.unknownResponse');
+    }
+  }
+}

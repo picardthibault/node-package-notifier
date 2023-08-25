@@ -50,9 +50,11 @@ export class RegistryApi {
     return RegistryApi.handleApiResponse(url, response);
   }
 
-  static async getSuggestions(current: string): Promise<SearchObjects> {
-    // TODO : Build url with the user selected registry url 
-    const url = `https://registry.npmjs.com/-/v1/search?text=${current}&popularity=1.0&quality=0.0&maintenance=0.0`;
+  static async getSuggestions(
+    current: string,
+    registryUrl: string,
+  ): Promise<SearchObjects> {
+    const url = `${registryUrl}/-/v1/search?text=${current}&popularity=1.0&quality=0.0&maintenance=0.0`;
 
     const response = await RestApi.requestGet<SearchObjects>(url);
 

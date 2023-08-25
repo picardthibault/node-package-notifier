@@ -51,7 +51,11 @@ export const PackageCreation = (): JSX.Element => {
 
   const fetchSuggestions = useCallback(() => {
     const current = formInstance.getFieldValue('packageName');
-    window.packageManagement.getSuggestions(current);
+    const registryUrl = formInstance.getFieldValue('registryUrl');
+    window.packageManagement.getSuggestions({
+      current,
+      registryUrl,
+    });
   }, [formInstance]);
 
   useEffect(() => {

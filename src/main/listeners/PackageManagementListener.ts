@@ -2,6 +2,7 @@ import { ipcMain } from 'electron';
 import { PackageManagementChannel } from '../../types/IpcChannel';
 import {
   PackageCreationArgs,
+  PackageSuggestionArgs,
   PackageUpdateArgs,
 } from '../../types/PackageManagement';
 import { PackageStore } from '../store/PackageStore';
@@ -88,11 +89,11 @@ ipcMain.on(
 
 ipcMain.on(
   PackageManagementChannel.GET_SUGGESTIONS,
-  async (event, current: string) => {
+  async (event, suggestionArgs: PackageSuggestionArgs) => {
     if (mainWindow) {
       log.debug('Received get package suggestions');
 
-      const suggestions = await getPackageSuggestions(current);
+      const suggestions = await getPackageSuggestions(suggestionArgs);
 
       mainWindow.webContents.send(
         PackageManagementChannel.GET_SUGGESTIONS_LISTENER,

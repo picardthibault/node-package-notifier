@@ -36,7 +36,7 @@ declare global {
           fetchResult: Tags | string | undefined,
         ) => void,
       ) => () => void;
-      getSuggestions: (current: string) => void;
+      getSuggestions: (suggestionArgs: PackageSuggestionArgs) => void;
       getSuggestionsListener: (
         listener: (
           event: IpcRendererEvent,

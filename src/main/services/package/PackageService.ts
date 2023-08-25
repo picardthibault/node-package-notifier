@@ -2,6 +2,7 @@ import log from 'electron-log';
 import { PackageStore, isPackageConfig } from '../../store/PackageStore';
 import { RegistryApi } from '../api/RegistryApi';
 import i18n from '../../i18n';
+import { PackageSuggestionArgs } from '../../../types/PackageManagement';
 
 export interface Tags {
   [key: string]: string;
@@ -15,6 +16,8 @@ export interface PackageInfo {
   description?: string;
   tags?: Tags;
 }
+
+export const npmRegistryUrl = 'https://registry.npmjs.org';
 
 export async function updatePackagesData(): Promise<string[]> {
   const packageWithNewVersion: string[] = [];
@@ -98,16 +101,22 @@ export async function getPackageTags(
 }
 
 export async function getPackageSuggestions(
-  current: string,
+  suggestionArgs: PackageSuggestionArgs,
 ): Promise<string[] | string> {
+  const registryUrl = suggestionArgs.registryUrl
+    ? suggestionArgs.registryUrl
+    : npmRegistryUrl;
   try {
-    const suggestions = await RegistryApi.getSuggestions(current);
+    const suggestions = await RegistryApi.getSuggestions(
+      suggestionArgs.current,
+      registryUrl,
+    );
 
     return suggestions.objects.map((object) => object.package.name);
   } catch (err) {
     if (err instanceof Error) {
       log.error(
-        `Received an error while fetching package suggestions for "${current}".`,
+        `Received an error while fetching package suggestions for "${suggestionArgs.current}" on ${registryUrl}.`,
         err,
       );
       return err.message;

@@ -1,6 +1,7 @@
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
 import {
   PackageCreationArgs,
+  PackageSuggestionArgs,
   PackageUpdateArgs,
 } from '../types/PackageManagement';
 import { PackageManagementChannel } from '../types/IpcChannel';
@@ -76,8 +77,8 @@ contextBridge.exposeInMainWorld('packageManagement', {
         listener,
       );
   },
-  getSuggestions: (current: string) =>
-    ipcRenderer.send(PackageManagementChannel.GET_SUGGESTIONS, current),
+  getSuggestions: (suggestionArgs: PackageSuggestionArgs) =>
+    ipcRenderer.send(PackageManagementChannel.GET_SUGGESTIONS, suggestionArgs),
   getSuggestionsListener: (
     listener: (event: IpcRendererEvent, suggestions: string[] | string) => void,
   ) => {

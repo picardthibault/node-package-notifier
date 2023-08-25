@@ -1,5 +1,10 @@
 # Changelog
 
+## V1.2.0
+
+### Added
+- Filters on package list table
+
 ## v1.1.0
 
 ### Added

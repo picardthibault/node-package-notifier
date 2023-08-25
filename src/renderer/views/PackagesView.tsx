@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { PackageConfig } from '../../main/store/PackageStore';
 import { IpcRendererEvent } from 'electron';
-import { Space, Table } from 'antd';
+import { Form, Input, Space, Table } from 'antd';
 import { DeleteOutlined, PlusOutlined, EyeOutlined } from '@ant-design/icons';
 import { ColumnsType } from 'antd/es/table';
 import { useNavigate } from 'react-router-dom';
@@ -30,8 +30,12 @@ export const PackagesView = (): JSX.Element => {
   const { t } = useTranslation();
 
   const [packages, setPackages] = useState<TableItemType[]>([]);
+  const [hasFilter, setHasFilter] = useState<boolean>(false);
+  const [filteredPackages, setFilteredPackages] = useState<TableItemType[]>([]);
 
   const { page, pageSize } = useStore<PackageListStore>(packageListStore);
+
+  const [formInstance] = Form.useForm();
 
   useEffect(() => {
     // Load packages
@@ -124,6 +128,20 @@ export const PackagesView = (): JSX.Element => {
     },
   ];
 
+  const onFilter = () => {
+    setHasFilter(true);
+    const packageNameFilter = formInstance.getFieldValue('packageNameFilter');
+    setFilteredPackages(
+      packages.filter((pack) => pack.name.includes(packageNameFilter)),
+    );
+  };
+
+  const onReset = () => {
+    setHasFilter(false);
+    setFilteredPackages([]);
+    formInstance.resetFields();
+  };
+
   return (
     <>
       <Title content={t('package.list.title')} />
@@ -142,10 +160,42 @@ export const PackagesView = (): JSX.Element => {
           <PlusOutlined />
         </ActionButton>
       </div>
+      <fieldset className="filtersForm">
+        <legend>{t('package.list.filters.legend')}</legend>
+        <Form name="filterForm" form={formInstance}>
+          <Form.Item
+            label={t('package.list.filters.fields.packageName')}
+            name="packageNameFilter"
+          >
+            <Input />
+          </Form.Item>
+          <div style={{ textAlign: 'right' }}>
+            <Space>
+              <ActionButton
+                type="default"
+                onClick={onReset}
+                toolTip={t('package.list.tooltips.resetFilters')}
+              >
+                {t('package.list.filters.buttons.reset')}
+              </ActionButton>
+              <ActionButton
+                type="primary"
+                onClick={onFilter}
+                toolTip={t('package.list.tooltips.filterPackages')}
+              >
+                {t('package.list.filters.buttons.filter')}
+              </ActionButton>
+            </Space>
+          </div>
+        </Form>
+      </fieldset>
       <Table
         bordered={true}
         columns={tableColumns}
-        dataSource={packages}
+        dataSource={hasFilter ? filteredPackages : packages}
+        style={{
+          padding: '6px 0 6px 0',
+        }}
         pagination={{
           current: page,
           defaultPageSize: pageSize,

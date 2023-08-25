@@ -13,6 +13,16 @@
     "package": {
         "list": {
             "title": "Package List",
+            "filters": {
+                "legend": "Filters",
+                "fields": {
+                    "packageName": "Package name"
+                },
+                "buttons": {
+                    "filter": "Filter",
+                    "reset": "Reset"
+                }
+            },
             "table": {
                 "columns": {
                     "name": "Name",
@@ -23,7 +33,9 @@
             "tooltips": {
                 "createPackage": "Create new package",
                 "detailsPackage": "View package details",
-                "deletePackage": "Delete package"
+                "deletePackage": "Delete package",
+                "filterPackages": "Filter list based on selected filters",
+                "resetFilters": "Remove selected filters"
             }
         },
         "creation": {

@@ -3,7 +3,7 @@ import React from 'react';
 
 interface ActionButtonProps {
   children: string | JSX.Element;
-  type: 'default' | 'primary' | 'ghost' | 'dashed' | 'link' | 'text';
+  type: 'default' | 'primary' | 'dashed' | 'link' | 'text';
   htmlType?: 'button' | 'submit' | 'reset';
   danger?: boolean;
   toolTip?: string;

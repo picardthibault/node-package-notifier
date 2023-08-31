@@ -2,12 +2,16 @@ import { ipcMain } from 'electron';
 import { PackageManagementChannel } from '../../types/IpcChannel';
 import {
   PackageCreationArgs,
+  PackageSuggestionArgs,
   PackageUpdateArgs,
 } from '../../types/PackageManagement';
 import { PackageStore } from '../store/PackageStore';
 import { mainWindow } from '../index';
 import log from 'electron-log';
-import { getPackageTags } from '../services/package/PackageService';
+import {
+  getPackageSuggestions,
+  getPackageTags,
+} from '../services/package/PackageService';
 
 ipcMain.on(
   PackageManagementChannel.CREATE,
@@ -78,6 +82,22 @@ ipcMain.on(
       mainWindow.webContents.send(
         PackageManagementChannel.FETCH_TAGS_LISTENER,
         fetchTagsResult,
+      );
+    }
+  },
+);
+
+ipcMain.on(
+  PackageManagementChannel.GET_SUGGESTIONS,
+  async (event, suggestionArgs: PackageSuggestionArgs) => {
+    if (mainWindow) {
+      log.debug('Received get package suggestions');
+
+      const suggestions = await getPackageSuggestions(suggestionArgs);
+
+      mainWindow.webContents.send(
+        PackageManagementChannel.GET_SUGGESTIONS_LISTENER,
+        suggestions,
       );
     }
   },

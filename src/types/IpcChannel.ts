@@ -10,4 +10,6 @@ export enum PackageManagementChannel {
   GET = 'packageManagementChannelGet',
   FETCH_TAGS = 'packageManagementChannelFetchTags',
   FETCH_TAGS_LISTENER = 'packageManagementChannelFetchTagsListener',
+  GET_SUGGESTIONS = 'packageManagementChannelGetSuggestion',
+  GET_SUGGESTIONS_LISTENER = 'packageManagementChannelGetSuggestionListener',
 }

@@ -1,6 +1,9 @@
 import Store = require('electron-store');
 import { getSha1 } from '../helpers/HashHelper';
-import { getPackageInfo } from '../services/package/PackageService';
+import {
+  getPackageInfo,
+  npmRegistryUrl,
+} from '../services/package/PackageService';
 
 export interface PackageConfig {
   name: string;
@@ -48,7 +51,6 @@ export class PackageStore {
     return PackageStore.instance;
   }
 
-  private readonly npmRegistryUrl = 'https://registry.npmjs.org';
   private store: Store<IPackageStore>;
 
   constructor() {
@@ -61,7 +63,7 @@ export class PackageStore {
     packageName: string,
     registryUrl?: string,
   ): Promise<PackageCreationResult | string> {
-    const adaptedRegistryUrl = registryUrl ? registryUrl : this.npmRegistryUrl;
+    const adaptedRegistryUrl = registryUrl ? registryUrl : npmRegistryUrl;
     const packageInfo = await getPackageInfo(packageName, adaptedRegistryUrl);
     if (typeof packageInfo === 'string') {
       return packageInfo;

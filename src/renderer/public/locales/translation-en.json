@@ -1,13 +1,18 @@
 {
     "common": {
         "na": "N/A",
-        "back": "Back"
+        "back": "Back",
+        "form": {
+            "rules": {
+                "required": "This field is required"
+            }
+        }
     },
     "sideMenu": {
         "items": {
             "packageList": "Package List",
             "projectList": "Project List",
-            "addProject": "Add a new Project"
+            "addProject": "Import a Project"
         }
     },
     "package": {
@@ -50,7 +55,6 @@
                     "registryUrl": "https://registry.npmjs.org"
                 },
                 "rules": {
-                    "required": "This field is required",
                     "url": "This field should be a valid url"
                 }
             },
@@ -93,6 +97,25 @@
                 "description": {
                     "error": "Error occurred while fetching package tags: \" {{cause}}\""
                 }
+            }
+        }
+    },
+    "project": {
+        "import": {
+            "title": "Import Project",
+            "form": {
+                "field": {
+                    "projectPath": "Project path"
+                },
+                "placeholder": {
+                    "projectPath": "C:\\MyAwesomeProject"
+                }
+            },
+            "tooltip": {
+                "projectPath": "The path to the directory where you \"package.json\" file lives"
+            },
+            "buttons": {
+                "import": "Import"
             }
         }
     }

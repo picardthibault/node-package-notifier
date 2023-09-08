@@ -1,16 +1,16 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import Title from '../components/Title/Title';
+import Title from '../../components/Title/Title';
 import { Form, Input, Table } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
-import Loading from '../components/Loading/Loading';
-import { routePaths } from '../routes';
-import LinkButton from '../components/Button/LinkButton';
+import Loading from '../../components/Loading/Loading';
+import { routePaths } from '../../routes';
+import LinkButton from '../../components/Button/LinkButton';
 import { useTranslation } from 'react-i18next';
 import { ColumnsType } from 'antd/es/table';
-import { Tags } from '../../types/PackageInfo';
+import { Tags } from '../../../types/PackageInfo';
 import { IpcRendererEvent } from 'electron';
-import { openAlert } from '../components/Alert/Alert';
+import { openAlert } from '../../components/Alert/Alert';
 
 interface TableItemType {
   key: number;

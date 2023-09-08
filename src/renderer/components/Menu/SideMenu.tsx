@@ -1,20 +1,20 @@
 import { Menu, MenuProps } from 'antd';
-import {
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-  PlusCircleOutlined,
-  ProjectOutlined,
-  UnorderedListOutlined,
-} from '@ant-design/icons';
+import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import { MenuItemType, SubMenuType } from 'antd/es/menu/hooks/useItems';
-import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import React, { FunctionComponent, useState } from 'react';
 import Sider from 'antd/es/layout/Sider';
 import { useNavigate } from 'react-router-dom';
 import { routePaths } from '../../routes';
 
-const SideMenu: React.FC = () => {
-  const { t } = useTranslation();
+export type SideMenuItem = MenuItemType | SubMenuType;
+
+interface SideMenuProps {
+  items: SideMenuItem[];
+}
+
+const SideMenu: FunctionComponent<SideMenuProps> = (props) => {
+  const { items } = props;
+
   const navigate = useNavigate();
 
   const [collapsed, setCollapsed] = useState<boolean>(false);
@@ -25,25 +25,6 @@ const SideMenu: React.FC = () => {
   const onClick: MenuProps['onClick'] = (menuItem) => {
     setSelectedKey(menuItem.key);
     navigate(menuItem.key);
-  };
-
-  const packageListItem: MenuItemType = {
-    key: routePaths.packageList.generate(),
-    label: t('sideMenu.items.packageList'),
-    icon: <UnorderedListOutlined />,
-  };
-
-  const projetListItem: SubMenuType = {
-    key: 'projectList',
-    label: t('sideMenu.items.projectList'),
-    icon: <ProjectOutlined />,
-    children: [
-      {
-        key: '/package',
-        label: t('sideMenu.items.addProject'),
-        icon: <PlusCircleOutlined />,
-      },
-    ],
   };
 
   return (
@@ -64,7 +45,7 @@ const SideMenu: React.FC = () => {
         onClick={onClick}
         selectedKeys={[selectedKey]}
         mode="inline"
-        items={[packageListItem /* projetListItem */]}
+        items={items}
         className="sideMenu"
       />
     </Sider>

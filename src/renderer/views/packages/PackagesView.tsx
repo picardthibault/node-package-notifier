@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { PackageConfig } from '../../main/store/PackageStore';
+import { PackageConfig } from '../../../main/store/PackageStore';
 import { IpcRendererEvent } from 'electron';
 import { Form, Input, Space, Table } from 'antd';
 import { DeleteOutlined, PlusOutlined, EyeOutlined } from '@ant-design/icons';
 import { ColumnsType } from 'antd/es/table';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import ActionButton from '../components/Button/ActionButton';
+import ActionButton from '../../components/Button/ActionButton';
 import {
   packageListStore,
   PackageListStore,
   updatePackageListPageConfig,
-} from '../stores/PackageListStore';
+} from '../../stores/PackageListStore';
 import { useStore } from 'effector-react';
-import Title from '../components/Title/Title';
-import { routePaths } from '../routes';
+import Title from '../../components/Title/Title';
+import { routePaths } from '../../routes';
 
 interface TableItemType {
   key: number;

@@ -2,7 +2,7 @@ import log from 'electron-log';
 import { PackageStore, isPackageConfig } from '../../store/PackageStore';
 import { RegistryApi } from '../api/RegistryApi';
 import i18n from '../../i18n';
-import { PackageSuggestionArgs } from '../../../types/PackageManagement';
+import { PackageSuggestionArgs } from '../../../types/PackageListenerArgs';
 
 export interface Tags {
   [key: string]: string;

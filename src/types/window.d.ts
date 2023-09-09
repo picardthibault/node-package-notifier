@@ -1,7 +1,8 @@
-import { PackageCreationArgs, PackageUpdateArgs } from './PackageManagement';
+import { PackageCreationArgs, PackageUpdateArgs } from './PackageListenerArgs';
 import { IpcRendererEvent } from 'electron';
 import { PackageConfig } from '../main/store/PackageStore';
 import { PackageData } from './PackageInfo';
+import { ProjectPathValidationResult } from './ProjectInfo';
 
 export {};
 
@@ -43,6 +44,9 @@ declare global {
           suggestions: string[] | string,
         ) => void,
       ) => () => void;
+    };
+    projectManagement: {
+      validateProjectPath: (projectPath: string) => ProjectPathValidationResult;
     };
   }
 }

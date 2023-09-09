@@ -15,7 +15,9 @@ const ProjectImport: FunctionComponent = () => {
       return Promise.resolve();
     }
 
-    // TODO : Made verification if the directory exist and if the directory contains a "package.json" file
+    const validationResult =
+      window.projectManagement.validateProjectPath(value);
+    // TODO : Management validationResult
 
     return Promise.resolve();
   };

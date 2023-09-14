@@ -1,15 +1,14 @@
 import { ipcMain } from 'electron';
 import { ProjectListenerChannel } from '../../types/IpcChannel';
+import log from 'electron-log';
+import { validateProjectPath } from '../services/project/ProjectService';
 
 ipcMain.on(
   ProjectListenerChannel.VALIDATE_PROJECT_PATH,
-  async (event, projectPath: string) => {
-    // TODO : Made verification if the directory exist and if the directory contains a "package.json" file
+  (event, projectPath: string) => {
+    log.info(`Validate projectPath "${projectPath}"`);
 
-    const validationResult = {
-      isDirectory: true,
-      hasPackageJson: true,
-    };
+    const validationResult = validateProjectPath(projectPath);
 
     event.returnValue = validationResult;
   },

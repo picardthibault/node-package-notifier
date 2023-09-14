@@ -10,7 +10,6 @@ import {
 } from '../types/IpcChannel';
 import { PackageConfig } from '../main/store/PackageStore';
 import { PackageData, Tags } from '../types/PackageInfo';
-import { ProjectPathValidationResult } from '../types/ProjectInfo';
 
 contextBridge.exposeInMainWorld('packageManagement', {
   create: (creationArgs: PackageCreationArgs) =>

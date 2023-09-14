@@ -17,7 +17,14 @@ const ProjectImport: FunctionComponent = () => {
 
     const validationResult =
       window.projectManagement.validateProjectPath(value);
-    // TODO : Management validationResult
+
+    if (!validationResult.isDirectory) {
+      return Promise.reject(t('project.import.form.errors.notDirectory'));
+    }
+
+    if (!validationResult.hasPackageJson) {
+      return Promise.reject(t('project.import.form.errors.noPackageJson'));
+    }
 
     return Promise.resolve();
   };

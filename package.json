@@ -11,7 +11,7 @@
     "publish": "electron-forge publish",
     "format": "prettier --parser typescript --write *.ts src/**/*.ts src/**/*.tsx",
     "check:format": "prettier --parser typescript --list-different *.ts src/**/*.ts src/**/*.tsx",
-    "check:types": "tsc --noEmit",
+    "check:types": "tsc --skipLibCheck --noEmit",
     "check:lint": "eslint --ext .ts,.tsx ."
   },
   "keywords": [],

@@ -4,15 +4,15 @@ import { ProjectPathValidationResult } from '../../../types/ProjectInfo';
 
 const packageJsonFileName = 'package.json';
 
-export const validateProjectPath = (
+export const validateProjectPath = async (
   projectPath: string,
-): ProjectPathValidationResult => {
-  const isDir = isDirectory(projectPath);
+): Promise<ProjectPathValidationResult> => {
+  const isDir = await isDirectory(projectPath);
 
   let hasPackageJson: boolean = false;
   if (isDir) {
     try {
-      hasPackageJson = hasFiles(projectPath, [packageJsonFileName]);
+      hasPackageJson = await hasFiles(projectPath, [packageJsonFileName]);
     } catch (err) {
       log.error(
         `Error while checking presence of "${packageJsonFileName}" file in "${projectPath}".`,

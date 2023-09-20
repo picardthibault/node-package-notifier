@@ -1,20 +1,20 @@
 import log from 'electron-log';
-import { statSync, readdirSync } from 'fs';
+import { stat, readdir } from 'fs/promises';
 
-export const isDirectory = (path: string): boolean => {
+export const isDirectory = async (path: string): Promise<boolean> => {
   try {
-    const statResult = statSync(path);
+    const statResult = await stat(path);
     return statResult.isDirectory();
   } catch (err) {
     return false;
   }
 };
 
-export const readFiles = (path: string): string[] => {
+export const readFiles = async (path: string): Promise<string[]> => {
   const isDir = isDirectory(path);
   if (isDir) {
     try {
-      const files = readdirSync(path);
+      const files = await readdir(path);
       return files;
     } catch (err) {
       log.error(`An error occurred while reading "${path}" files.`, err);
@@ -25,8 +25,11 @@ export const readFiles = (path: string): string[] => {
   }
 };
 
-export const hasFiles = (path: string, fileNames: string[]): boolean => {
-  const files = readFiles(path);
+export const hasFiles = async (
+  path: string,
+  fileNames: string[],
+): Promise<boolean> => {
+  const files = await readFiles(path);
 
   return fileNames.reduce(
     (previous, curr) => previous && files.includes(curr),

@@ -10,6 +10,7 @@ import {
 } from '../types/IpcChannel';
 import { PackageConfig } from '../main/store/PackageStore';
 import { PackageData, Tags } from '../types/PackageInfo';
+import { ProjectPathValidationResult } from '../types/ProjectInfo';
 
 contextBridge.exposeInMainWorld('packageManagement', {
   create: (creationArgs: PackageCreationArgs) =>
@@ -96,8 +97,21 @@ contextBridge.exposeInMainWorld('packageManagement', {
 
 contextBridge.exposeInMainWorld('projectManagement', {
   validateProjectPath: (projectPath: string) =>
-    ipcRenderer.sendSync(
-      ProjectListenerChannel.VALIDATE_PROJECT_PATH,
-      projectPath,
-    ),
+    ipcRenderer.send(ProjectListenerChannel.VALIDATE_PROJECT_PATH, projectPath),
+  validateProjectPathListener: (
+    listener: (
+      event: IpcRendererEvent,
+      validationResult: ProjectPathValidationResult,
+    ) => void,
+  ) => {
+    ipcRenderer.on(
+      ProjectListenerChannel.VALIDATE_PROJECT_PATH_LISTENER,
+      listener,
+    );
+    return () =>
+      ipcRenderer.removeListener(
+        ProjectListenerChannel.VALIDATE_PROJECT_PATH_LISTENER,
+        listener,
+      );
+  },
 });

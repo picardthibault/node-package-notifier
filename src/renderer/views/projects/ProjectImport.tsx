@@ -1,33 +1,33 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Title from '../../components/Title/Title';
 import { useForm } from 'antd/es/form/Form';
 import { Form, Input, Space } from 'antd';
 import ActionButton from '../../components/Button/ActionButton';
+import { IpcRendererEvent } from 'electron';
+import { ProjectPathValidationResult } from '../../../types/ProjectInfo';
 
 const ProjectImport: FunctionComponent = () => {
   const { t } = useTranslation();
 
   const [formInstance] = useForm();
 
-  const projectPathValidation = (value: string): Promise<void> => {
-    if (!value) {
-      return Promise.resolve();
-    }
+  const [projectPathValidationResult, setProjectPathValidationResult] =
+    useState<ProjectPathValidationResult | undefined>(undefined);
 
-    const validationResult =
-      window.projectManagement.validateProjectPath(value);
+  useEffect(() => {
+    const listener = (
+      event: IpcRendererEvent,
+      validationResult: ProjectPathValidationResult,
+    ) => {
+      setProjectPathValidationResult(validationResult);
+    };
 
-    if (!validationResult.isDirectory) {
-      return Promise.reject(t('project.import.form.errors.notDirectory'));
-    }
+    const cleanListener =
+      window.projectManagement.validateProjectPathListener(listener);
 
-    if (!validationResult.hasPackageJson) {
-      return Promise.reject(t('project.import.form.errors.noPackageJson'));
-    }
-
-    return Promise.resolve();
-  };
+    return cleanListener;
+  });
 
   const onFinish = () => {
     console.log('Finished');
@@ -45,26 +45,62 @@ const ProjectImport: FunctionComponent = () => {
         labelAlign="left"
         labelCol={{ lg: 5, xl: 3 }}
         onFinish={onFinish}
+        validateTrigger="onSubmit"
       >
         <Form.Item
           label={t('project.import.form.field.projectPath')}
           name="projectPath"
           tooltip={t('project.import.tooltip.projectPath')}
-          validateTrigger="onBlur"
           rules={[
             {
               required: true,
               message: t('common.form.rules.required'),
             },
             () => ({
-              validator(_, value) {
-                return projectPathValidation(value);
+              validator() {
+                if (projectPathValidationResult === undefined) {
+                  return Promise.resolve();
+                }
+
+                if (!projectPathValidationResult.isDirectory) {
+                  return Promise.reject(
+                    t('project.import.form.errors.notDirectory'),
+                  );
+                }
+
+                if (!projectPathValidationResult.hasPackageJson) {
+                  return Promise.reject(
+                    t('project.import.form.errors.noPackageJson'),
+                  );
+                }
+
+                return Promise.resolve();
               },
             }),
           ]}
         >
           <Input
             placeholder={t('project.import.form.placeholder.projectPath')}
+            onChange={() => {
+              const fieldErrors = formInstance.getFieldError('projectPath');
+              if (fieldErrors.length > 0) {
+                // Reset field errors
+                formInstance.setFields([
+                  {
+                    name: 'projectPath',
+                    value: formInstance.getFieldValue('projectPath'),
+                    errors: [],
+                  },
+                ]);
+              }
+            }}
+            onBlur={() => {
+              const projectPath = formInstance.getFieldValue('projectPath');
+              if (projectPath) {
+                // Launch project path validation
+                window.projectManagement.validateProjectPath(projectPath);
+              }
+            }}
           />
         </Form.Item>
 

@@ -46,7 +46,13 @@ declare global {
       ) => () => void;
     };
     projectManagement: {
-      validateProjectPath: (projectPath: string) => ProjectPathValidationResult;
+      validateProjectPath: (projectPath: string) => void;
+      validateProjectPathListener: (
+        listener: (
+          event: IpcRendererEvent,
+          validationResult: ProjectPathValidationResult,
+        ) => void,
+      ) => () => void;
     };
   }
 }

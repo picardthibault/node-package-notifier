@@ -15,6 +15,10 @@ export enum PackageListenerChannel {
 }
 
 export enum ProjectListenerChannel {
+  VALIDATE_PROJECT_NAME = 'projectChannelValidateProjectName',
+  VALIDATE_PROJECT_NAME_LISTENER = 'projectChannelValidateProjectNameListener',
   VALIDATE_PROJECT_PATH = 'projectChannelValidateProjectPath',
   VALIDATE_PROJECT_PATH_LISTENER = 'projectChannelValidateProjectPathListener',
+  IMPORT_PROJECT = 'projectChannelImportProject',
+  IMPORT_PROJECT_LISTENER = 'projectChannelImportProjectListener',
 }

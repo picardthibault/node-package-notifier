@@ -2,7 +2,6 @@ import { PackageCreationArgs, PackageUpdateArgs } from './PackageListenerArgs';
 import { IpcRendererEvent } from 'electron';
 import { PackageConfig } from '../main/store/PackageStore';
 import { PackageData } from './PackageInfo';
-import { ProjectPathValidationResult } from './ProjectInfo';
 
 export {};
 
@@ -46,12 +45,23 @@ declare global {
       ) => () => void;
     };
     projectManagement: {
+      validateProjectName: (projectName: string) => void;
+      validateProjectNameListener: (
+        listener: (
+          event: IpcRendererEvent,
+          validationResult: string | undefined,
+        ) => void,
+      ) => () => void;
       validateProjectPath: (projectPath: string) => void;
       validateProjectPathListener: (
         listener: (
           event: IpcRendererEvent,
-          validationResult: ProjectPathValidationResult,
+          validationResult: string | undefined,
         ) => void,
+      ) => () => void;
+      projectImport: (projectImportArgs: ProjectImportArgs) => void;
+      projectImportListener: (
+        listener: (event: IpcRendererEvent, projectKey: string) => void,
       ) => () => void;
     };
   }

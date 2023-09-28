@@ -1,4 +1,4 @@
-export interface ProjectPathValidationResult {
-  isDirectory: boolean;
-  hasPackageJson: boolean;
+export interface ProjectImportArgs {
+  name: string;
+  path: string;
 }

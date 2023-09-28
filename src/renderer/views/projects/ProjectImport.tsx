@@ -5,21 +5,32 @@ import { useForm } from 'antd/es/form/Form';
 import { Form, Input, Space } from 'antd';
 import ActionButton from '../../components/Button/ActionButton';
 import { IpcRendererEvent } from 'electron';
-import { ProjectPathValidationResult } from '../../../types/ProjectInfo';
+import { ProjectImportArgs } from '../../../types/ProjectInfo';
 
 const ProjectImport: FunctionComponent = () => {
   const { t } = useTranslation();
 
   const [formInstance] = useForm();
 
+  const [projectNameValidationResult, setProjectNameValidationResult] =
+    useState<string | undefined>(undefined);
+
   const [projectPathValidationResult, setProjectPathValidationResult] =
-    useState<ProjectPathValidationResult | undefined>(undefined);
+    useState<string | undefined>(undefined);
 
   useEffect(() => {
-    const listener = (
-      event: IpcRendererEvent,
-      validationResult: ProjectPathValidationResult,
-    ) => {
+    const listener = (event: IpcRendererEvent, validationResult: string) => {
+      setProjectNameValidationResult(validationResult);
+    };
+
+    const cleanListener =
+      window.projectManagement.validateProjectNameListener(listener);
+
+    return cleanListener;
+  });
+
+  useEffect(() => {
+    const listener = (event: IpcRendererEvent, validationResult: string) => {
       setProjectPathValidationResult(validationResult);
     };
 
@@ -29,8 +40,27 @@ const ProjectImport: FunctionComponent = () => {
     return cleanListener;
   });
 
+  const resetFieldError = (fieldName: string) => {
+    const fieldErrors = formInstance.getFieldError(fieldName);
+    if (fieldErrors.length > 0) {
+      // Reset field errors
+      formInstance.setFields([
+        {
+          name: fieldName,
+          value: formInstance.getFieldValue(fieldName),
+          errors: [],
+        },
+      ]);
+    }
+  };
+
   const onFinish = () => {
-    console.log('Finished');
+    const projectImportArgs: ProjectImportArgs = {
+      name: formInstance.getFieldValue('projectName'),
+      path: formInstance.getFieldValue('projectPath'),
+    };
+
+    window.projectManagement.projectImport(projectImportArgs);
   };
 
   return (
@@ -48,6 +78,39 @@ const ProjectImport: FunctionComponent = () => {
         validateTrigger="onSubmit"
       >
         <Form.Item
+          label={t('project.import.form.field.projectName')}
+          name="projectName"
+          tooltip={t('project.import.tooltip.projectName')}
+          rules={[
+            {
+              required: true,
+              message: t('common.form.rules.required'),
+            },
+            () => ({
+              validator() {
+                if (projectNameValidationResult) {
+                  return Promise.reject(projectNameValidationResult);
+                } else {
+                  return Promise.resolve();
+                }
+              },
+            }),
+          ]}
+        >
+          <Input
+            placeholder={t('project.import.form.placeholder.projectName')}
+            onChange={() => resetFieldError('projectName')}
+            onBlur={() => {
+              const projectPath = formInstance.getFieldValue('projectName');
+              if (projectPath) {
+                // Launch project name validation
+                window.projectManagement.validateProjectName(projectPath);
+              }
+            }}
+          />
+        </Form.Item>
+
+        <Form.Item
           label={t('project.import.form.field.projectPath')}
           name="projectPath"
           tooltip={t('project.import.tooltip.projectPath')}
@@ -58,42 +121,18 @@ const ProjectImport: FunctionComponent = () => {
             },
             () => ({
               validator() {
-                if (projectPathValidationResult === undefined) {
+                if (projectPathValidationResult) {
+                  return Promise.reject(projectPathValidationResult);
+                } else {
                   return Promise.resolve();
                 }
-
-                if (!projectPathValidationResult.isDirectory) {
-                  return Promise.reject(
-                    t('project.import.form.errors.notDirectory'),
-                  );
-                }
-
-                if (!projectPathValidationResult.hasPackageJson) {
-                  return Promise.reject(
-                    t('project.import.form.errors.noPackageJson'),
-                  );
-                }
-
-                return Promise.resolve();
               },
             }),
           ]}
         >
           <Input
             placeholder={t('project.import.form.placeholder.projectPath')}
-            onChange={() => {
-              const fieldErrors = formInstance.getFieldError('projectPath');
-              if (fieldErrors.length > 0) {
-                // Reset field errors
-                formInstance.setFields([
-                  {
-                    name: 'projectPath',
-                    value: formInstance.getFieldValue('projectPath'),
-                    errors: [],
-                  },
-                ]);
-              }
-            }}
+            onChange={() => resetFieldError('projectPath')}
             onBlur={() => {
               const projectPath = formInstance.getFieldValue('projectPath');
               if (projectPath) {

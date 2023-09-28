@@ -105,17 +105,16 @@
             "title": "Import Project",
             "form": {
                 "field": {
+                    "projectName": "Project name",
                     "projectPath": "Project path"
                 },
                 "placeholder": {
+                    "projectName": "My Awesome Project",
                     "projectPath": "C:\\MyAwesomeProject"
-                },
-                "errors": {
-                    "notDirectory": "The selected path does not correspond to an existing directory",
-                    "noPackageJson": "The selected path corresponds to a directory which does not contain a \"package.json\" file"
                 }
             },
             "tooltip": {
+                "projectName": "The name that will be used in NPN for the project",
                 "projectPath": "The path to the directory where you \"package.json\" file lives"
             },
             "buttons": {

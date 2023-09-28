@@ -10,7 +10,7 @@ import {
 } from '../types/IpcChannel';
 import { PackageConfig } from '../main/store/PackageStore';
 import { PackageData, Tags } from '../types/PackageInfo';
-import { ProjectPathValidationResult } from '../types/ProjectInfo';
+import { ProjectImportArgs } from '../types/ProjectInfo';
 
 contextBridge.exposeInMainWorld('packageManagement', {
   create: (creationArgs: PackageCreationArgs) =>
@@ -96,12 +96,30 @@ contextBridge.exposeInMainWorld('packageManagement', {
 });
 
 contextBridge.exposeInMainWorld('projectManagement', {
+  validateProjectName: (projectName: string) =>
+    ipcRenderer.send(ProjectListenerChannel.VALIDATE_PROJECT_NAME, projectName),
+  validateProjectNameListener: (
+    listener: (
+      event: IpcRendererEvent,
+      validationResult: string | undefined,
+    ) => void,
+  ) => {
+    ipcRenderer.on(
+      ProjectListenerChannel.VALIDATE_PROJECT_NAME_LISTENER,
+      listener,
+    );
+    return () =>
+      ipcRenderer.removeListener(
+        ProjectListenerChannel.VALIDATE_PROJECT_NAME_LISTENER,
+        listener,
+      );
+  },
   validateProjectPath: (projectPath: string) =>
     ipcRenderer.send(ProjectListenerChannel.VALIDATE_PROJECT_PATH, projectPath),
   validateProjectPathListener: (
     listener: (
       event: IpcRendererEvent,
-      validationResult: ProjectPathValidationResult,
+      validationResult: string | undefined,
     ) => void,
   ) => {
     ipcRenderer.on(
@@ -111,6 +129,18 @@ contextBridge.exposeInMainWorld('projectManagement', {
     return () =>
       ipcRenderer.removeListener(
         ProjectListenerChannel.VALIDATE_PROJECT_PATH_LISTENER,
+        listener,
+      );
+  },
+  projectImport: (projectImportArgs: ProjectImportArgs) =>
+    ipcRenderer.send(ProjectListenerChannel.IMPORT_PROJECT, projectImportArgs),
+  projectImportListener: (
+    listener: (event: IpcRendererEvent, projectKey: string) => void,
+  ) => {
+    ipcRenderer.on(ProjectListenerChannel.IMPORT_PROJECT_LISTENER, listener);
+    return () =>
+      ipcRenderer.removeListener(
+        ProjectListenerChannel.IMPORT_PROJECT_LISTENER,
         listener,
       );
   },

@@ -2,12 +2,12 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { AutoComplete, Form, Input, Space } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import ActionButton from '../components/Button/ActionButton';
+import ActionButton from '../../components/Button/ActionButton';
 import { IpcRendererEvent } from 'electron';
-import Title from '../components/Title/Title';
-import { routePaths } from '../routes';
-import { openAlert } from '../components/Alert/Alert';
-import LinkButton from '../components/Button/LinkButton';
+import Title from '../../components/Title/Title';
+import { routePaths } from '../../routes';
+import { openAlert } from '../../components/Alert/Alert';
+import LinkButton from '../../components/Button/LinkButton';
 
 interface PackageFormField {
   packageName: string;
@@ -114,7 +114,7 @@ export const PackageCreation = (): JSX.Element => {
           rules={[
             {
               required: true,
-              message: t('package.creation.form.rules.required'),
+              message: t('common.form.rules.required'),
             },
           ]}
         >

@@ -3,89 +3,147 @@ import {
   PackageCreationArgs,
   PackageSuggestionArgs,
   PackageUpdateArgs,
-} from '../types/PackageManagement';
-import { PackageManagementChannel } from '../types/IpcChannel';
+} from '../types/PackageListenerArgs';
+import {
+  PackageListenerChannel,
+  ProjectListenerChannel,
+} from '../types/IpcChannel';
 import { PackageConfig } from '../main/store/PackageStore';
 import { PackageData, Tags } from '../types/PackageInfo';
+import { ProjectImportArgs, ProjectImportResult } from '../types/ProjectListenerArgs';
 
 contextBridge.exposeInMainWorld('packageManagement', {
   create: (creationArgs: PackageCreationArgs) =>
-    ipcRenderer.send(PackageManagementChannel.CREATE, creationArgs),
+    ipcRenderer.send(PackageListenerChannel.CREATE, creationArgs),
   createListener: (
     listener: (
       event: IpcRendererEvent,
       errorMessage: string | undefined,
     ) => void,
   ) => {
-    ipcRenderer.on(PackageManagementChannel.CREATE_LISTENER, listener);
+    ipcRenderer.on(PackageListenerChannel.CREATE_LISTENER, listener);
     return () =>
       ipcRenderer.removeListener(
-        PackageManagementChannel.CREATE_LISTENER,
+        PackageListenerChannel.CREATE_LISTENER,
         listener,
       );
   },
   update: (updateArgs: PackageUpdateArgs) =>
-    ipcRenderer.send(PackageManagementChannel.UPDATE, updateArgs),
+    ipcRenderer.send(PackageListenerChannel.UPDATE, updateArgs),
   updateListener: (
     listener: (event: IpcRendererEvent, isUpdated: boolean) => void,
   ) => {
-    ipcRenderer.on(PackageManagementChannel.UPDATE_LISTENER, listener);
+    ipcRenderer.on(PackageListenerChannel.UPDATE_LISTENER, listener);
     return () =>
       ipcRenderer.removeListener(
-        PackageManagementChannel.UPDATE_LISTENER,
+        PackageListenerChannel.UPDATE_LISTENER,
         listener,
       );
   },
   delete: (packageId: string) =>
-    ipcRenderer.send(PackageManagementChannel.DELETE, packageId),
+    ipcRenderer.send(PackageListenerChannel.DELETE, packageId),
   deleteListener: (listener: () => void) => {
-    ipcRenderer.on(PackageManagementChannel.DELETE_LISTENER, listener);
+    ipcRenderer.on(PackageListenerChannel.DELETE_LISTENER, listener);
     return () =>
       ipcRenderer.removeListener(
-        PackageManagementChannel.DELETE_LISTENER,
+        PackageListenerChannel.DELETE_LISTENER,
         listener,
       );
   },
-  getAll: () => ipcRenderer.send(PackageManagementChannel.GET_ALL),
+  getAll: () => ipcRenderer.send(PackageListenerChannel.GET_ALL),
   getAllListener: (
     listener: (
       event: IpcRendererEvent,
       args: { [key: string]: PackageConfig },
     ) => void,
   ) => {
-    ipcRenderer.on(PackageManagementChannel.GET_ALL_LISTENER, listener);
+    ipcRenderer.on(PackageListenerChannel.GET_ALL_LISTENER, listener);
     return () =>
       ipcRenderer.removeListener(
-        PackageManagementChannel.GET_ALL_LISTENER,
+        PackageListenerChannel.GET_ALL_LISTENER,
         listener,
       );
   },
   get: (packageId: string): PackageData =>
-    ipcRenderer.sendSync(PackageManagementChannel.GET, packageId),
+    ipcRenderer.sendSync(PackageListenerChannel.GET, packageId),
   fetchTags: (packageId: string) =>
-    ipcRenderer.send(PackageManagementChannel.FETCH_TAGS, packageId),
+    ipcRenderer.send(PackageListenerChannel.FETCH_TAGS, packageId),
   fetchTagsListener: (
     listener: (
       event: IpcRendererEvent,
       fetchResult: Tags | string | undefined,
     ) => void,
   ) => {
-    ipcRenderer.on(PackageManagementChannel.FETCH_TAGS_LISTENER, listener);
+    ipcRenderer.on(PackageListenerChannel.FETCH_TAGS_LISTENER, listener);
     return () =>
       ipcRenderer.removeListener(
-        PackageManagementChannel.FETCH_TAGS_LISTENER,
+        PackageListenerChannel.FETCH_TAGS_LISTENER,
         listener,
       );
   },
   getSuggestions: (suggestionArgs: PackageSuggestionArgs) =>
-    ipcRenderer.send(PackageManagementChannel.GET_SUGGESTIONS, suggestionArgs),
+    ipcRenderer.send(PackageListenerChannel.GET_SUGGESTIONS, suggestionArgs),
   getSuggestionsListener: (
     listener: (event: IpcRendererEvent, suggestions: string[] | string) => void,
   ) => {
-    ipcRenderer.on(PackageManagementChannel.GET_SUGGESTIONS_LISTENER, listener);
+    ipcRenderer.on(PackageListenerChannel.GET_SUGGESTIONS_LISTENER, listener);
     return () =>
       ipcRenderer.removeListener(
-        PackageManagementChannel.GET_SUGGESTIONS_LISTENER,
+        PackageListenerChannel.GET_SUGGESTIONS_LISTENER,
+        listener,
+      );
+  },
+});
+
+contextBridge.exposeInMainWorld('projectManagement', {
+  validateProjectName: (projectName: string) =>
+    ipcRenderer.send(ProjectListenerChannel.VALIDATE_PROJECT_NAME, projectName),
+  validateProjectNameListener: (
+    listener: (
+      event: IpcRendererEvent,
+      validationResult: string | undefined,
+    ) => void,
+  ) => {
+    ipcRenderer.on(
+      ProjectListenerChannel.VALIDATE_PROJECT_NAME_LISTENER,
+      listener,
+    );
+    return () =>
+      ipcRenderer.removeListener(
+        ProjectListenerChannel.VALIDATE_PROJECT_NAME_LISTENER,
+        listener,
+      );
+  },
+  validateProjectPath: (projectPath: string) =>
+    ipcRenderer.send(ProjectListenerChannel.VALIDATE_PROJECT_PATH, projectPath),
+  validateProjectPathListener: (
+    listener: (
+      event: IpcRendererEvent,
+      validationResult: string | undefined,
+    ) => void,
+  ) => {
+    ipcRenderer.on(
+      ProjectListenerChannel.VALIDATE_PROJECT_PATH_LISTENER,
+      listener,
+    );
+    return () =>
+      ipcRenderer.removeListener(
+        ProjectListenerChannel.VALIDATE_PROJECT_PATH_LISTENER,
+        listener,
+      );
+  },
+  projectImport: (projectImportArgs: ProjectImportArgs) =>
+    ipcRenderer.send(ProjectListenerChannel.IMPORT_PROJECT, projectImportArgs),
+  projectImportListener: (
+    listener: (
+      event: IpcRendererEvent,
+      importResult: ProjectImportResult,
+    ) => void,
+  ) => {
+    ipcRenderer.on(ProjectListenerChannel.IMPORT_PROJECT_LISTENER, listener);
+    return () =>
+      ipcRenderer.removeListener(
+        ProjectListenerChannel.IMPORT_PROJECT_LISTENER,
         listener,
       );
   },

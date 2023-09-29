@@ -2,7 +2,7 @@ import { PackageCreationArgs, PackageUpdateArgs } from './PackageListenerArgs';
 import { IpcRendererEvent } from 'electron';
 import { PackageConfig } from '../main/store/PackageStore';
 import { PackageData } from './PackageInfo';
-import { ProjectImportArgs, ProjectImportResult } from './ProjectInfo';
+import { ProjectImportArgs, ProjectImportResult } from './ProjectListenerArgs';
 
 export {};
 

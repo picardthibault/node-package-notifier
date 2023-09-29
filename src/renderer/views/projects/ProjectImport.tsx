@@ -5,11 +5,8 @@ import { useForm } from 'antd/es/form/Form';
 import { Form, Input, Space } from 'antd';
 import ActionButton from '../../components/Button/ActionButton';
 import { IpcRendererEvent } from 'electron';
-import {
-  ProjectImportArgs,
-  ProjectImportResult,
-} from '../../../types/ProjectInfo';
 import { openAlert } from '../../components/Alert/Alert';
+import { ProjectImportArgs, ProjectImportResult } from '../../../types/ProjectListenerArgs';
 
 const ProjectImport: FunctionComponent = () => {
   const { t } = useTranslation();

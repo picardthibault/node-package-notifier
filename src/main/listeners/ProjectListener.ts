@@ -1,6 +1,6 @@
 import { ipcMain } from 'electron';
 import { ProjectListenerChannel } from '../../types/IpcChannel';
-import { ProjectImportArgs } from '../../types/ProjectInfo';
+import { ProjectImportArgs } from '../../types/ProjectListenerArgs';
 import log from 'electron-log';
 import {
   validateProjectPath,

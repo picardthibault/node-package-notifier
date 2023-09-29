@@ -1,3 +1,9 @@
 export interface ProjectImportArgs {
-  projectPath: string;
+  name: string;
+  path: string;
+}
+
+export interface ProjectImportResult {
+  projectKey: string;
+  error: string;
 }

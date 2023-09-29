@@ -43,18 +43,28 @@ ipcMain.on(
 
 ipcMain.on(
   ProjectListenerChannel.IMPORT_PROJECT,
-  (event, projectImportArgs: ProjectImportArgs) => {
+  async (event, projectImportArgs: ProjectImportArgs) => {
     log.debug('Received project import validation IPC');
 
-    const projectKey = importProject(
-      projectImportArgs.name,
-      projectImportArgs.path,
-    );
+    let projectKey: string | undefined;
+    let importError: string | undefined;
+    try {
+      projectKey = await importProject(
+        projectImportArgs.name,
+        projectImportArgs.path,
+      );
+    } catch (err) {
+      log.error(`Unable to import project. ${err.message}`);
+      importError = err.message;
+    }
 
     if (mainWindow) {
       mainWindow.webContents.send(
         ProjectListenerChannel.IMPORT_PROJECT_LISTENER,
-        projectKey,
+        {
+          projectKey: projectKey,
+          error: importError,
+        },
       );
     }
   },

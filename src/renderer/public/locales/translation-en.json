@@ -117,6 +117,11 @@
                 "projectName": "The name that will be used in NPN for the project",
                 "projectPath": "The path to the directory where you \"package.json\" file lives"
             },
+            "alert": {
+                "title": {
+                    "error": "Unable to import project"
+                }
+            },
             "buttons": {
                 "import": "Import"
             }

@@ -5,7 +5,11 @@ import { useForm } from 'antd/es/form/Form';
 import { Form, Input, Space } from 'antd';
 import ActionButton from '../../components/Button/ActionButton';
 import { IpcRendererEvent } from 'electron';
-import { ProjectImportArgs } from '../../../types/ProjectInfo';
+import {
+  ProjectImportArgs,
+  ProjectImportResult,
+} from '../../../types/ProjectInfo';
+import { openAlert } from '../../components/Alert/Alert';
 
 const ProjectImport: FunctionComponent = () => {
   const { t } = useTranslation();
@@ -40,6 +44,29 @@ const ProjectImport: FunctionComponent = () => {
     return cleanListener;
   });
 
+  useEffect(() => {
+    const listener = (
+      event: IpcRendererEvent,
+      importResult: ProjectImportResult,
+    ) => {
+      if (importResult.error) {
+        openAlert(
+          'error',
+          t('project.import.alert.title.error'),
+          importResult.error,
+        );
+      } else {
+        // TODO : Open project view
+        console.log('end');
+      }
+    };
+
+    const cleanListener =
+      window.projectManagement.projectImportListener(listener);
+
+    return cleanListener;
+  });
+
   const resetFieldError = (fieldName: string) => {
     const fieldErrors = formInstance.getFieldError(fieldName);
     if (fieldErrors.length > 0) {
@@ -55,6 +82,8 @@ const ProjectImport: FunctionComponent = () => {
   };
 
   const onFinish = () => {
+    // TODO : Set up a loading
+
     const projectImportArgs: ProjectImportArgs = {
       name: formInstance.getFieldValue('projectName'),
       path: formInstance.getFieldValue('projectPath'),

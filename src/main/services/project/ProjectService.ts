@@ -46,20 +46,20 @@ export const validateProjectName = (
   return undefined;
 };
 
-export const importProject = (
+export const importProject = async (
   projectName: string,
   projectPath: string,
-): string => {
+): Promise<string> => {
   log.info(`Importing project with name "${projectName}"`);
 
   const isProjectNameValid = validateProjectName(projectName);
-  if (!isProjectNameValid) {
-    // todo
+  if (isProjectNameValid) {
+    throw new Error(isProjectNameValid);
   }
 
-  const isProjectPathValid = validateProjectPath(projectPath);
-  if (!isProjectPathValid) {
-    // todo
+  const isProjectPathValid = await validateProjectPath(projectPath);
+  if (isProjectPathValid) {
+    throw new Error(isProjectPathValid);
   }
 
   const projectKey = ProjectStore.get().createProject(projectName, projectPath);

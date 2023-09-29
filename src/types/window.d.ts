@@ -2,6 +2,7 @@ import { PackageCreationArgs, PackageUpdateArgs } from './PackageListenerArgs';
 import { IpcRendererEvent } from 'electron';
 import { PackageConfig } from '../main/store/PackageStore';
 import { PackageData } from './PackageInfo';
+import { ProjectImportArgs, ProjectImportResult } from './ProjectInfo';
 
 export {};
 
@@ -61,7 +62,10 @@ declare global {
       ) => () => void;
       projectImport: (projectImportArgs: ProjectImportArgs) => void;
       projectImportListener: (
-        listener: (event: IpcRendererEvent, projectKey: string) => void,
+        listener: (
+          event: IpcRendererEvent,
+          importResult: ProjectImportResult,
+        ) => void,
       ) => () => void;
     };
   }

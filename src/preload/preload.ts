@@ -10,7 +10,7 @@ import {
 } from '../types/IpcChannel';
 import { PackageConfig } from '../main/store/PackageStore';
 import { PackageData, Tags } from '../types/PackageInfo';
-import { ProjectImportArgs } from '../types/ProjectInfo';
+import { ProjectImportArgs, ProjectImportResult } from '../types/ProjectInfo';
 
 contextBridge.exposeInMainWorld('packageManagement', {
   create: (creationArgs: PackageCreationArgs) =>
@@ -135,7 +135,10 @@ contextBridge.exposeInMainWorld('projectManagement', {
   projectImport: (projectImportArgs: ProjectImportArgs) =>
     ipcRenderer.send(ProjectListenerChannel.IMPORT_PROJECT, projectImportArgs),
   projectImportListener: (
-    listener: (event: IpcRendererEvent, projectKey: string) => void,
+    listener: (
+      event: IpcRendererEvent,
+      importResult: ProjectImportResult,
+    ) => void,
   ) => {
     ipcRenderer.on(ProjectListenerChannel.IMPORT_PROJECT_LISTENER, listener);
     return () =>

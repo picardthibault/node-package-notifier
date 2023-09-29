@@ -8,10 +8,11 @@ interface ActionButtonProps {
   danger?: boolean;
   toolTip?: string;
   onClick?: () => void;
+  loading?: boolean;
 }
 
 const ActionButton = (props: ActionButtonProps): JSX.Element => {
-  const { children, type, htmlType, danger, toolTip, onClick } = props;
+  const { children, type, htmlType, danger, toolTip, onClick, loading } = props;
 
   return (
     <Tooltip title={toolTip} placement="topLeft">
@@ -24,6 +25,7 @@ const ActionButton = (props: ActionButtonProps): JSX.Element => {
           paddingRight: '10px',
           paddingLeft: '10px',
         }}
+        loading={loading}
       >
         {children}
       </Button>

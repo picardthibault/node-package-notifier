@@ -16,6 +16,8 @@ const ProjectImport: FunctionComponent = () => {
 
   const [formInstance] = useForm();
 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const [projectNameValidationResult, setProjectNameValidationResult] =
     useState<string | undefined>(undefined);
 
@@ -49,6 +51,7 @@ const ProjectImport: FunctionComponent = () => {
       event: IpcRendererEvent,
       importResult: ProjectImportResult,
     ) => {
+      setIsLoading(false);
       if (importResult.error) {
         openAlert(
           'error',
@@ -56,8 +59,11 @@ const ProjectImport: FunctionComponent = () => {
           importResult.error,
         );
       } else {
+        openAlert(
+          'success',
+          t('project.import.alert.title.success'),
+        );
         // TODO : Open project view
-        console.log('end');
       }
     };
 
@@ -82,7 +88,7 @@ const ProjectImport: FunctionComponent = () => {
   };
 
   const onFinish = () => {
-    // TODO : Set up a loading
+    setIsLoading(true);
 
     const projectImportArgs: ProjectImportArgs = {
       name: formInstance.getFieldValue('projectName'),
@@ -174,7 +180,7 @@ const ProjectImport: FunctionComponent = () => {
 
         <div style={{ textAlign: 'center' }}>
           <Space>
-            <ActionButton type="primary" htmlType="submit">
+            <ActionButton type="primary" loading={isLoading} htmlType="submit">
               {t('project.import.buttons.import')}
             </ActionButton>
           </Space>

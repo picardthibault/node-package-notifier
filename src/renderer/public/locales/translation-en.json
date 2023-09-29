@@ -119,6 +119,7 @@
             },
             "alert": {
                 "title": {
+                    "success": "Project has been successufuly imported",
                     "error": "Unable to import project"
                 }
             },

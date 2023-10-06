@@ -10,9 +10,13 @@ import {
   ProjectImportArgs,
   ProjectImportResult,
 } from '../../../types/ProjectListenerArgs';
+import { useNavigate } from 'react-router-dom';
+import { routePaths } from '../../routes';
 
 const ProjectImport: FunctionComponent = () => {
   const { t } = useTranslation();
+
+  const navigate = useNavigate();
 
   const [formInstance] = useForm();
 
@@ -61,7 +65,7 @@ const ProjectImport: FunctionComponent = () => {
       } else {
         openAlert('success', t('project.import.alert.title.success'));
         window.projectManagement.getProjectsDataForMenu();
-        // TODO : Open project view
+        navigate(routePaths.projectDetails.generate(importResult.projectKey));
       }
     };
 

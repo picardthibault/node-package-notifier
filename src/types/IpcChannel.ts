@@ -21,4 +21,6 @@ export enum ProjectListenerChannel {
   VALIDATE_PROJECT_PATH_LISTENER = 'projectChannelValidateProjectPathListener',
   IMPORT_PROJECT = 'projectChannelImportProject',
   IMPORT_PROJECT_LISTENER = 'projectChannelImportProjectListener',
+  GET_PROJECTS_DATA_FOR_MENU = 'projectChannelGetProjectDataForMenu',
+  GET_PROJECTS_DATA_FOR_MENU_LISTENER = 'projectChannelGetProjectDataForMenuListener',
 }

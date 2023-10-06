@@ -41,4 +41,8 @@ export class ProjectStore {
     });
     return projectKey;
   }
+
+  getProjects(): IProjectStore {
+    return this.store.store;
+  }
 }

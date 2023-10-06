@@ -2,6 +2,7 @@ import log from 'electron-log';
 import { hasFiles, isDirectory } from '../file/FileSystemService';
 import { ProjectStore } from '../../store/ProjectStore';
 import i18n from '../../i18n';
+import { ProjectDataForMenu } from '../../../types/ProjectListenerArgs';
 
 const packageJsonFileName = 'package.json';
 
@@ -65,4 +66,13 @@ export const importProject = async (
   const projectKey = ProjectStore.get().createProject(projectName, projectPath);
 
   return projectKey;
+};
+
+export const getProjectsDataForMenu = (): ProjectDataForMenu[] => {
+  const projects = ProjectStore.get().getProjects();
+
+  return Object.keys(projects).map((key) => ({
+    projectKey: key,
+    name: projects[key].name,
+  }));
 };

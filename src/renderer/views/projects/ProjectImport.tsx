@@ -6,7 +6,10 @@ import { Form, Input, Space } from 'antd';
 import ActionButton from '../../components/Button/ActionButton';
 import { IpcRendererEvent } from 'electron';
 import { openAlert } from '../../components/Alert/Alert';
-import { ProjectImportArgs, ProjectImportResult } from '../../../types/ProjectListenerArgs';
+import {
+  ProjectImportArgs,
+  ProjectImportResult,
+} from '../../../types/ProjectListenerArgs';
 
 const ProjectImport: FunctionComponent = () => {
   const { t } = useTranslation();
@@ -56,10 +59,8 @@ const ProjectImport: FunctionComponent = () => {
           importResult.error,
         );
       } else {
-        openAlert(
-          'success',
-          t('project.import.alert.title.success'),
-        );
+        openAlert('success', t('project.import.alert.title.success'));
+        window.projectManagement.getProjectsDataForMenu();
         // TODO : Open project view
       }
     };

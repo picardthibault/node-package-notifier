@@ -2,7 +2,11 @@ import { PackageCreationArgs, PackageUpdateArgs } from './PackageListenerArgs';
 import { IpcRendererEvent } from 'electron';
 import { PackageConfig } from '../main/store/PackageStore';
 import { PackageData } from './PackageInfo';
-import { ProjectImportArgs, ProjectImportResult } from './ProjectListenerArgs';
+import {
+  ProjectDataForMenu,
+  ProjectImportArgs,
+  ProjectImportResult,
+} from './ProjectListenerArgs';
 
 export {};
 
@@ -66,6 +70,10 @@ declare global {
           event: IpcRendererEvent,
           importResult: ProjectImportResult,
         ) => void,
+      ) => () => void;
+      getProjectsDataForMenu: () => void;
+      getProjectsDataForMenuListener: (
+        listener: (event: IpcRendererEvent, keys: ProjectDataForMenu[]) => void,
       ) => () => void;
     };
   }

@@ -6,6 +6,7 @@ import {
   validateProjectPath,
   importProject,
   validateProjectName,
+  getProjectsDataForMenu,
 } from '../services/project/ProjectService';
 import { mainWindow } from '..';
 
@@ -69,3 +70,13 @@ ipcMain.on(
     }
   },
 );
+
+ipcMain.on(ProjectListenerChannel.GET_PROJECTS_DATA_FOR_MENU, () => {
+  const projectsDataForMenu = getProjectsDataForMenu();
+  if (mainWindow) {
+    mainWindow.webContents.send(
+      ProjectListenerChannel.GET_PROJECTS_DATA_FOR_MENU_LISTENER,
+      projectsDataForMenu,
+    );
+  }
+});

@@ -108,7 +108,7 @@ const PackageDetails: FunctionComponent = () => {
             isBack
           />
           <Title content={title} />
-          <div className="packageDetailsForm">
+          <div className="detailsForm">
             <Form
               name="PackageDetails"
               form={formInstance}

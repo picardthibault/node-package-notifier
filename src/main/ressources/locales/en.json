@@ -19,6 +19,15 @@
                 "noPackageJson": "The selected path corresponds to a directory which does not contain a \"package.json\" file",
                 "nameAlreadyUsed": "The selected name is already used for another project."
             }
+        },
+        "parse": {
+            "unknownError": "Unable to parse project \"package.json\" file"
+        }
+    },
+    "fileSystem": {
+        "errors": {
+            "fileDoesNotExist": "Path \"{{path}}\" doesn't correspond to an existing file",
+            "errorWhileReadingFile": "An error occurred while reading \"{{path}}\". Please verify the existance of the file and its read right"
         }
     }
 }

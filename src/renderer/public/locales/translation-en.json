@@ -95,7 +95,7 @@
                     "error": "Unable to fetch package tags"
                 },
                 "description": {
-                    "error": "Error occurred while fetching package tags: \" {{cause}}\""
+                    "error": "An error occurred while fetching package tags: \"{{cause}}\""
                 }
             }
         }
@@ -125,6 +125,35 @@
             },
             "buttons": {
                 "import": "Import"
+            }
+        },
+        "details": {
+            "form": {
+               "field": {
+                "projectPath": "Project path",
+                "version": "Version",
+                "description": "Description"
+               } 
+            },
+            "tabs": {
+                "label": {
+                    "dependencies": "Dependencies",
+                    "devDependencies": "Dev dependencies"
+                }
+            },
+            "table": {
+                "columns": {
+                    "name": "Name",
+                    "currentVersion": "Current version"
+                }
+            },
+            "alert": {
+                "title": {
+                    "error": "Unable to load project details"
+                },
+                "description": {
+                    "error": "An error occurred while loading project details: \"{{cause}}\""
+                }
             }
         }
     }

@@ -1,5 +1,6 @@
 import log from 'electron-log';
-import { stat, readdir } from 'fs/promises';
+import { stat, readdir, readFile } from 'fs/promises';
+import i18n from '../../i18n';
 
 export const isDirectory = async (path: string): Promise<boolean> => {
   try {
@@ -35,4 +36,31 @@ export const hasFiles = async (
     (previous, curr) => previous && files.includes(curr),
     true,
   );
+};
+
+export const isFile = async (path: string): Promise<boolean> => {
+  try {
+    const statResult = await stat(path);
+    return statResult.isFile();
+  } catch (err) {
+    return false;
+  }
+};
+
+export const readFileContent = async (path: string): Promise<Buffer> => {
+  log.info(`Read content of file "${path}"`);
+  const exist = await isFile(path);
+  if (!exist) {
+    log.error(`Unable to read file with "${path}", it's not an existing file`);
+    throw new Error(i18n.t('fileSystem.errors.fileDoesNotExist', { path }));
+  }
+
+  try {
+    return readFile(path);
+  } catch (err) {
+    log.error(`Error while reading file with "${path}"`, err);
+    throw new Error(
+      i18n.t('fileSystem.errors.errorWhileReadingFile', { path }),
+    );
+  }
 };

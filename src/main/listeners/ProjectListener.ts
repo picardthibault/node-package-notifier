@@ -7,6 +7,8 @@ import {
   importProject,
   validateProjectName,
   getProjectsDataForMenu,
+  parseProject,
+  getProjectDetails,
 } from '../services/project/ProjectService';
 import { mainWindow } from '..';
 
@@ -72,6 +74,8 @@ ipcMain.on(
 );
 
 ipcMain.on(ProjectListenerChannel.GET_PROJECTS_DATA_FOR_MENU, () => {
+  log.debug('Received get projects data for menu IPC');
+
   const projectsDataForMenu = getProjectsDataForMenu();
   if (mainWindow) {
     mainWindow.webContents.send(
@@ -80,3 +84,21 @@ ipcMain.on(ProjectListenerChannel.GET_PROJECTS_DATA_FOR_MENU, () => {
     );
   }
 });
+
+ipcMain.handle(
+  ProjectListenerChannel.GET_PROJECT_DETAILS,
+  (event, projectKey: string) => {
+    log.debug(
+      `Received get project details IPC with projectKey "${projectKey}"`,
+    );
+    return getProjectDetails(projectKey);
+  },
+);
+
+ipcMain.handle(
+  ProjectListenerChannel.PARSE_PROJECT,
+  async (event, projectKey: string) => {
+    log.debug(`Received parse project IPC with projectKey "${projectKey}"`);
+    return parseProject(projectKey);
+  },
+);

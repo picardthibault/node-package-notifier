@@ -6,6 +6,8 @@ import {
   ProjectDataForMenu,
   ProjectImportArgs,
   ProjectImportResult,
+  ProjectDetails,
+  ParsedProject,
 } from './ProjectListenerArgs';
 
 export {};
@@ -75,6 +77,8 @@ declare global {
       getProjectsDataForMenuListener: (
         listener: (event: IpcRendererEvent, keys: ProjectDataForMenu[]) => void,
       ) => () => void;
+      getProjectDetails: (projectKey: string) => Promise<ProjectDetails>;
+      parseProject: (projectKey: string) => Promise<ParsedProject>;
     };
   }
 }

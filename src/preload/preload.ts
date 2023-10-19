@@ -14,6 +14,8 @@ import {
   ProjectDataForMenu,
   ProjectImportArgs,
   ProjectImportResult,
+  ProjectDetails,
+  ParsedProject,
 } from '../types/ProjectListenerArgs';
 
 contextBridge.exposeInMainWorld('packageManagement', {
@@ -169,4 +171,8 @@ contextBridge.exposeInMainWorld('projectManagement', {
         listener,
       );
   },
+  getProjectDetails: (projectKey: string): Promise<ProjectDetails> =>
+    ipcRenderer.invoke(ProjectListenerChannel.GET_PROJECT_DETAILS, projectKey),
+  parseProject: (projectKey: string): Promise<ParsedProject> =>
+    ipcRenderer.invoke(ProjectListenerChannel.PARSE_PROJECT, projectKey),
 });

@@ -1,8 +1,30 @@
 import log from 'electron-log';
-import { hasFiles, isDirectory } from '../file/FileSystemService';
+import {
+  hasFiles,
+  isDirectory,
+  readFileContent,
+} from '../file/FileSystemService';
 import { ProjectStore } from '../../store/ProjectStore';
 import i18n from '../../i18n';
-import { ProjectDataForMenu } from '../../../types/ProjectListenerArgs';
+import {
+  ProjectDataForMenu,
+  ParsedDependency,
+  ParsedProject,
+  ProjectDetails,
+} from '../../../types/ProjectListenerArgs';
+import path from 'path';
+import { getPackageInfo, npmRegistryUrl } from '../package/PackageService';
+
+interface Dependencies {
+  [key: string]: string;
+}
+
+interface PackageJson {
+  version: string;
+  description?: string;
+  dependencies: Dependencies;
+  devDependencies: Dependencies;
+}
 
 const packageJsonFileName = 'package.json';
 
@@ -69,6 +91,7 @@ export const importProject = async (
 };
 
 export const getProjectsDataForMenu = (): ProjectDataForMenu[] => {
+  log.info('Retrieve projects data for menu');
   const projects = ProjectStore.get().getProjects();
 
   return Object.keys(projects).map((key) => ({
@@ -76,3 +99,103 @@ export const getProjectsDataForMenu = (): ProjectDataForMenu[] => {
     name: projects[key].name,
   }));
 };
+
+export const getProjectDetails = (projectKey: string): ProjectDetails => {
+  log.info(`Retrieve project "${projectKey}" details`);
+
+  const projectSavedData = ProjectStore.get().getProject(projectKey);
+  return {
+    name: projectSavedData.name,
+    path: projectSavedData.path,
+  };
+};
+
+export const parseProject = async (
+  projectKey: string,
+): Promise<ParsedProject | string> => {
+  log.info(`Parse project "${projectKey}"`);
+
+  const projectData = ProjectStore.get().getProject(projectKey);
+  let packageJson: PackageJson;
+  try {
+    packageJson = await parsePackageJson(projectData.path);
+  } catch (err) {
+    log.error(
+      `Unable to parse project package.json from "${projectData.path}"`,
+      err,
+    );
+    if (err instanceof Error) {
+      return err.message;
+    } else {
+      return i18n.t('project.parse.unknownError');
+    }
+  }
+
+  const dependencies = await parseProjectDependencies(packageJson);
+  const devDepencies = await parseProjectDevDependencies(packageJson);
+
+  return {
+    name: projectData.name,
+    path: projectData.path,
+    version: packageJson.version,
+    description: packageJson.description,
+    dependencies: dependencies,
+    devDependencies: devDepencies,
+  };
+};
+
+const parsePackageJson = async (projectPath: string): Promise<PackageJson> => {
+  const packageJsonPath = path.join(projectPath, packageJsonFileName);
+  log.info(`Parse package.json project file "${packageJsonPath}"`);
+  const packageJsonContent = await readFileContent(packageJsonPath);
+  return JSON.parse(packageJsonContent.toString());
+};
+
+const parseProjectDependencies = async (
+  packageJson: PackageJson,
+): Promise<ParsedDependency[]> => {
+  log.info('Parse project dependencies');
+  return parseDependencies(packageJson.dependencies);
+};
+
+const parseProjectDevDependencies = async (
+  packageJson: PackageJson,
+): Promise<ParsedDependency[]> => {
+  log.info('Parse project devDepencies');
+  return parseDependencies(packageJson.devDependencies);
+};
+
+const parseDependencies = (dependencies: Dependencies): ParsedDependency[] => {
+  return Object.keys(dependencies).map((key) => ({
+    name: key,
+    currentVersion: dependencies[key],
+  }));
+};
+
+// TODO : Set up fethcing of project latest version
+/* const parseDependencies = async (dependencies: Dependencies): Promise<ProjectDependency[]> => {
+  const parsedDependencies: ProjectDependency[] = [];
+
+  const dependencyNames = Object.keys(dependencies);
+  for(const dependencyName of dependencyNames) {
+    log.debug(`Parsing project dependency "${dependencyName}"`);
+
+    // TODO : Handle a registry url
+    const dependencyDetails = await getPackageInfo(dependencyName, npmRegistryUrl);
+    let latestVersion: string;
+    if (typeof dependencyDetails === 'string') {
+      log.error(`Unable to fetch "${dependencyName}" dependency details. Cause : ${dependencyDetails}`);
+      latestVersion = "Unable to fetch";
+    } else {
+      latestVersion = dependencyDetails.latest;
+    }
+
+    parsedDependencies.push({
+      name: dependencyName,
+      currentVersion: dependencies[dependencyName],
+      latestVersion: latestVersion,
+    });
+  }
+
+  return parsedDependencies;
+} */

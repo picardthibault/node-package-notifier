@@ -152,7 +152,7 @@
                     "error": "Unable to load project details"
                 },
                 "description": {
-                    "error": "An error occurred while loading project details: \"{{cause}}\""
+                    "error": "An error occurred while loading project details: {{cause}}"
                 }
             }
         }

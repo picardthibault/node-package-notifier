@@ -29,6 +29,12 @@ const ProjectDetails: FunctionComponent = () => {
   const [pageNumber, setPageNumber] = useState<number>(1);
 
   useEffect(() => {
+    formInstance.resetFields();
+    setDependencies([]);
+    setDevDependencies([]);
+  }, [id]);
+
+  useEffect(() => {
     window.projectManagement.getProjectDetails(id).then((details) => {
       setTitle(details.name);
       formInstance.setFieldValue('projectPath', details.path);
@@ -39,11 +45,12 @@ const ProjectDetails: FunctionComponent = () => {
   useEffect(() => {
     window.projectManagement.parseProject(id).then((parsedProject) => {
       if (typeof parsedProject === 'string') {
-        // TODO : Validate error display
         openAlert(
           'error',
           t('project.details.alert.title.error'),
-          t('project.details.alert.description.error'),
+          t('project.details.alert.description.error', {
+            cause: parsedProject,
+          }),
         );
       } else {
         formInstance.setFieldsValue({

@@ -6,10 +6,17 @@ import { Form, Input, Space } from 'antd';
 import ActionButton from '../../components/Button/ActionButton';
 import { IpcRendererEvent } from 'electron';
 import { openAlert } from '../../components/Alert/Alert';
-import { ProjectImportArgs, ProjectImportResult } from '../../../types/ProjectListenerArgs';
+import {
+  ProjectImportArgs,
+  ProjectImportResult,
+} from '../../../types/ProjectListenerArgs';
+import { useNavigate } from 'react-router-dom';
+import { routePaths } from '../../routes';
 
 const ProjectImport: FunctionComponent = () => {
   const { t } = useTranslation();
+
+  const navigate = useNavigate();
 
   const [formInstance] = useForm();
 
@@ -56,11 +63,9 @@ const ProjectImport: FunctionComponent = () => {
           importResult.error,
         );
       } else {
-        openAlert(
-          'success',
-          t('project.import.alert.title.success'),
-        );
-        // TODO : Open project view
+        openAlert('success', t('project.import.alert.title.success'));
+        window.projectManagement.getProjectsDataForMenu();
+        navigate(routePaths.projectDetails.generate(importResult.projectKey));
       }
     };
 

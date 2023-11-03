@@ -2,7 +2,13 @@ import { PackageCreationArgs, PackageUpdateArgs } from './PackageListenerArgs';
 import { IpcRendererEvent } from 'electron';
 import { PackageConfig } from '../main/store/PackageStore';
 import { PackageData } from './PackageInfo';
-import { ProjectImportArgs, ProjectImportResult } from './ProjectListenerArgs';
+import {
+  ProjectDataForMenu,
+  ProjectImportArgs,
+  ProjectImportResult,
+  ProjectDetails,
+  ParsedProject,
+} from './ProjectListenerArgs';
 
 export {};
 
@@ -67,6 +73,15 @@ declare global {
           importResult: ProjectImportResult,
         ) => void,
       ) => () => void;
+      getProjectsDataForMenu: () => void;
+      getProjectsDataForMenuListener: (
+        listener: (event: IpcRendererEvent, keys: ProjectDataForMenu[]) => void,
+      ) => () => void;
+      getProjectDetails: (projectKey: string) => Promise<ProjectDetails>;
+      parseProject: (projectKey: string) => Promise<ParsedProject>;
+      fetchLatestVersions: (
+        projectDependencies: string[],
+      ) => Promise<Map<string, string>>;
     };
   }
 }

@@ -11,4 +11,7 @@ export const routePaths = {
   projectImport: {
     generate: () => '/project/import',
   },
+  projectDetails: {
+    generate: (projectKey: string) => `/project/details/${projectKey}`,
+  },
 };

@@ -41,4 +41,12 @@ export class ProjectStore {
     });
     return projectKey;
   }
+
+  getProjects(): IProjectStore {
+    return this.store.store;
+  }
+
+  getProject(projectKey: string): ProjectConfig {
+    return this.store.get(projectKey);
+  }
 }

@@ -6,6 +6,10 @@ import {
   validateProjectPath,
   importProject,
   validateProjectName,
+  getProjectsDataForMenu,
+  parseProject,
+  getProjectDetails,
+  fetchLatestsVersions,
 } from '../services/project/ProjectService';
 import { mainWindow } from '..';
 
@@ -67,5 +71,43 @@ ipcMain.on(
         },
       );
     }
+  },
+);
+
+ipcMain.on(ProjectListenerChannel.GET_PROJECTS_DATA_FOR_MENU, () => {
+  log.debug('Received get projects data for menu IPC');
+
+  const projectsDataForMenu = getProjectsDataForMenu();
+  if (mainWindow) {
+    mainWindow.webContents.send(
+      ProjectListenerChannel.GET_PROJECTS_DATA_FOR_MENU_LISTENER,
+      projectsDataForMenu,
+    );
+  }
+});
+
+ipcMain.handle(
+  ProjectListenerChannel.GET_PROJECT_DETAILS,
+  (event, projectKey: string) => {
+    log.debug(
+      `Received get project details IPC with projectKey "${projectKey}"`,
+    );
+    return getProjectDetails(projectKey);
+  },
+);
+
+ipcMain.handle(
+  ProjectListenerChannel.PARSE_PROJECT,
+  async (event, projectKey: string) => {
+    log.debug(`Received parse project IPC with projectKey "${projectKey}"`);
+    return parseProject(projectKey);
+  },
+);
+
+ipcMain.handle(
+  ProjectListenerChannel.FETCH_LATEST_VERSIONS,
+  async (event, projectDependencies: string[]) => {
+    log.debug('Received fetch latest versions IPC');
+    return fetchLatestsVersions(projectDependencies);
   },
 );

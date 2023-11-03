@@ -175,4 +175,9 @@ contextBridge.exposeInMainWorld('projectManagement', {
     ipcRenderer.invoke(ProjectListenerChannel.GET_PROJECT_DETAILS, projectKey),
   parseProject: (projectKey: string): Promise<ParsedProject> =>
     ipcRenderer.invoke(ProjectListenerChannel.PARSE_PROJECT, projectKey),
+  fetchLatestVersions: (projectDependencies: string[]) =>
+    ipcRenderer.invoke(
+      ProjectListenerChannel.FETCH_LATEST_VERSIONS,
+      projectDependencies,
+    ),
 });

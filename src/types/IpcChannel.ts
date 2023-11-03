@@ -25,4 +25,5 @@ export enum ProjectListenerChannel {
   GET_PROJECTS_DATA_FOR_MENU_LISTENER = 'projectChannelGetProjectDataForMenuListener',
   GET_PROJECT_DETAILS = 'projectChannelGetProjectDetails',
   PARSE_PROJECT = 'projectChannelParseProject',
+  FETCH_LATEST_VERSIONS = 'projectChannelFetchLatestVersions',
 }

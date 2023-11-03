@@ -9,6 +9,7 @@ import {
   getProjectsDataForMenu,
   parseProject,
   getProjectDetails,
+  fetchLatestsVersions,
 } from '../services/project/ProjectService';
 import { mainWindow } from '..';
 
@@ -100,5 +101,13 @@ ipcMain.handle(
   async (event, projectKey: string) => {
     log.debug(`Received parse project IPC with projectKey "${projectKey}"`);
     return parseProject(projectKey);
+  },
+);
+
+ipcMain.handle(
+  ProjectListenerChannel.FETCH_LATEST_VERSIONS,
+  async (event, projectDependencies: string[]) => {
+    log.debug('Received fetch latest versions IPC');
+    return fetchLatestsVersions(projectDependencies);
   },
 );

@@ -144,15 +144,21 @@
             "table": {
                 "columns": {
                     "name": "Name",
-                    "currentVersion": "Current version"
+                    "currentVersion": "Current version",
+                    "latestVersion": "Latest version"
+                },
+                "values": {
+                    "unableToFetch": "Unable to fetch"
                 }
             },
             "alert": {
                 "title": {
-                    "error": "Unable to load project details"
+                    "loadProjectError": "Unable to load project details",
+                    "fetchLatestVerionError": "Unable to fetch latest version"
                 },
                 "description": {
-                    "error": "An error occurred while loading project details: {{cause}}"
+                    "loadProjectError": "An error occurred while loading project details: {{cause}}",
+                    "fetchLatestVerionError": "An error occurred while fetching latest version of \"{{package}}\""
                 }
             }
         }

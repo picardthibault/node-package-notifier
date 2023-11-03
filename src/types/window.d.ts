@@ -79,6 +79,9 @@ declare global {
       ) => () => void;
       getProjectDetails: (projectKey: string) => Promise<ProjectDetails>;
       parseProject: (projectKey: string) => Promise<ParsedProject>;
+      fetchLatestVersions: (
+        projectDependencies: string[],
+      ) => Promise<Map<string, string>>;
     };
   }
 }

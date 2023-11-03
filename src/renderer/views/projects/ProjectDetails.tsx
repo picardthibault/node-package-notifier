@@ -7,7 +7,10 @@ import { useTranslation } from 'react-i18next';
 import TextArea from 'antd/es/input/TextArea';
 import { openAlert } from '../../components/Alert/Alert';
 import { ParsedDependency } from '../../../types/ProjectListenerArgs';
-import { ColumnsType } from 'antd/es/table';
+import DependenciesTable from './details/DependenciesTable';
+
+const dependenciesTabKey = 'dependencies';
+const devDepenciesTabKey = 'devDependencies';
 
 const ProjectDetails: FunctionComponent = () => {
   const { id } = useParams<{ id: string }>();
@@ -29,26 +32,29 @@ const ProjectDetails: FunctionComponent = () => {
   const [pageNumber, setPageNumber] = useState<number>(1);
 
   useEffect(() => {
+    // Reset fields and tables
     formInstance.resetFields();
     setDependencies([]);
     setDevDependencies([]);
   }, [id]);
 
   useEffect(() => {
+    // Fetch project details
     window.projectManagement.getProjectDetails(id).then((details) => {
       setTitle(details.name);
       formInstance.setFieldValue('projectPath', details.path);
       setIsLoading(false);
     });
-  });
+  }, [id]);
 
   useEffect(() => {
+    // Parse project data
     window.projectManagement.parseProject(id).then((parsedProject) => {
       if (typeof parsedProject === 'string') {
         openAlert(
           'error',
-          t('project.details.alert.title.error'),
-          t('project.details.alert.description.error', {
+          t('project.details.alert.title.loadProjectError'),
+          t('project.details.alert.description.loadProjectError', {
             cause: parsedProject,
           }),
         );
@@ -64,60 +70,16 @@ const ProjectDetails: FunctionComponent = () => {
     });
   }, [id]);
 
-  const dependenciesTableColumns: ColumnsType<ParsedDependency> = [
-    {
-      title: t('project.details.table.columns.name'),
-      dataIndex: 'name',
-      key: 'name',
-      defaultSortOrder: 'ascend',
-      sorter: (a, b) => a.name.localeCompare(b.name),
-    },
-    {
-      title: t('project.details.table.columns.currentVersion'),
-      dataIndex: 'currentVersion',
-      key: 'name',
-    },
-  ];
-
-  // TODO : Improve to avoid duplication
   const tabItems: TabsProps['items'] = [
     {
-      key: 'dependencies',
+      key: dependenciesTabKey,
       label: t('project.details.tabs.label.dependencies'),
-      children: (
-        <Table
-          columns={dependenciesTableColumns}
-          dataSource={dependencies.map((dependency) => ({
-            ...dependency,
-            key: dependency.name,
-          }))}
-          pagination={{
-            position: ['bottomCenter'],
-            showSizeChanger: true,
-            current: pageNumber,
-            onChange: (pageNumber) => setPageNumber(pageNumber),
-          }}
-        />
-      ),
+      children: <DependenciesTable dependencies={dependencies} />,
     },
     {
-      key: 'devDependencies',
+      key: devDepenciesTabKey,
       label: t('project.details.tabs.label.devDependencies'),
-      children: (
-        <Table
-          columns={dependenciesTableColumns}
-          dataSource={devDependencies.map((dependency) => ({
-            ...dependency,
-            key: dependency.name,
-          }))}
-          pagination={{
-            position: ['bottomCenter'],
-            showSizeChanger: true,
-            current: pageNumber,
-            onChange: (pageNumber, pageSize) => setPageNumber(pageNumber),
-          }}
-        />
-      ),
+      children: <DependenciesTable dependencies={devDependencies} />,
     },
   ];
 
@@ -155,7 +117,7 @@ const ProjectDetails: FunctionComponent = () => {
               </Form.Item>
             </Form>
           </div>
-          <Tabs defaultActiveKey="dependencies" items={tabItems} />
+          <Tabs defaultActiveKey={dependenciesTabKey} items={tabItems} />
         </>
       )}
     </>

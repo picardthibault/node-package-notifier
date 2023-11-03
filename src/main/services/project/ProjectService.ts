@@ -172,30 +172,24 @@ const parseDependencies = (dependencies: Dependencies): ParsedDependency[] => {
   }));
 };
 
-// TODO : Set up fethcing of project latest version
-/* const parseDependencies = async (dependencies: Dependencies): Promise<ProjectDependency[]> => {
-  const parsedDependencies: ProjectDependency[] = [];
+export const fetchLatestsVersions = async (
+  dependencies: string[],
+): Promise<Map<string, string | undefined>> => {
+  const dependencyWithLatestVersion = new Map<string, string | undefined>();
 
-  const dependencyNames = Object.keys(dependencies);
-  for(const dependencyName of dependencyNames) {
-    log.debug(`Parsing project dependency "${dependencyName}"`);
-
-    // TODO : Handle a registry url
-    const dependencyDetails = await getPackageInfo(dependencyName, npmRegistryUrl);
-    let latestVersion: string;
-    if (typeof dependencyDetails === 'string') {
-      log.error(`Unable to fetch "${dependencyName}" dependency details. Cause : ${dependencyDetails}`);
-      latestVersion = "Unable to fetch";
+  for (const dependency of dependencies) {
+    log.debug(`Fetch latest version of package "${dependency}"`);
+    // TODO : Handle registry url
+    const packageDetails = await getPackageInfo(dependency, npmRegistryUrl);
+    if (typeof packageDetails === 'string') {
+      log.warn(
+        `Error while fetching package "${dependencies}" details. Cause: ${packageDetails}`,
+      );
+      dependencyWithLatestVersion.set(dependency, undefined);
     } else {
-      latestVersion = dependencyDetails.latest;
+      dependencyWithLatestVersion.set(dependency, packageDetails.latest);
     }
-
-    parsedDependencies.push({
-      name: dependencyName,
-      currentVersion: dependencies[dependencyName],
-      latestVersion: latestVersion,
-    });
   }
 
-  return parsedDependencies;
-} */
+  return dependencyWithLatestVersion;
+};

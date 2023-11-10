@@ -2,7 +2,6 @@ import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
 import {
   PackageCreationArgs,
   PackageSuggestionArgs,
-  PackageUpdateArgs,
 } from '../types/PackageListenerArgs';
 import {
   PackageListenerChannel,
@@ -31,18 +30,6 @@ contextBridge.exposeInMainWorld('packageManagement', {
     return () =>
       ipcRenderer.removeListener(
         PackageListenerChannel.CREATE_LISTENER,
-        listener,
-      );
-  },
-  update: (updateArgs: PackageUpdateArgs) =>
-    ipcRenderer.send(PackageListenerChannel.UPDATE, updateArgs),
-  updateListener: (
-    listener: (event: IpcRendererEvent, isUpdated: boolean) => void,
-  ) => {
-    ipcRenderer.on(PackageListenerChannel.UPDATE_LISTENER, listener);
-    return () =>
-      ipcRenderer.removeListener(
-        PackageListenerChannel.UPDATE_LISTENER,
         listener,
       );
   },

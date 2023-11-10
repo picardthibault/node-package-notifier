@@ -3,13 +3,14 @@ import { PackageListenerChannel } from '../../types/IpcChannel';
 import {
   PackageCreationArgs,
   PackageSuggestionArgs,
-  PackageUpdateArgs,
 } from '../../types/PackageListenerArgs';
 import { PackageStore } from '../store/PackageStore';
 import { mainWindow } from '../index';
 import log from 'electron-log';
 import {
-  getPackageSuggestions,
+  createPackage,
+  deletePackage,
+  fetchPackageSuggestions,
   getPackageTags,
 } from '../services/package/PackageService';
 
@@ -17,7 +18,7 @@ ipcMain.on(
   PackageListenerChannel.CREATE,
   async (event, creationArgs: PackageCreationArgs) => {
     log.debug('Received create package IPC');
-    const errorMessage = await PackageStore.get().addPackage(
+    const errorMessage = await createPackage(
       creationArgs.packageName,
       creationArgs.registryUrl,
     );
@@ -30,27 +31,9 @@ ipcMain.on(
   },
 );
 
-ipcMain.on(
-  PackageListenerChannel.UPDATE,
-  async (event, updateArgs: PackageUpdateArgs) => {
-    log.debug('Received update package IPC');
-    const isUpdated = await PackageStore.get().updatePackage(
-      updateArgs.packageId,
-      updateArgs.packageName,
-      'https://registry.npmjs.org',
-    );
-    if (mainWindow) {
-      mainWindow.webContents.send(
-        PackageListenerChannel.UPDATE_LISTENER,
-        isUpdated,
-      );
-    }
-  },
-);
-
 ipcMain.on(PackageListenerChannel.DELETE, (event, packageId: string) => {
   log.debug('Received delete package IPC');
-  PackageStore.get().deletePackage(packageId);
+  deletePackage(packageId);
   if (mainWindow) {
     mainWindow.webContents.send(PackageListenerChannel.DELETE_LISTENER);
   }
@@ -93,7 +76,7 @@ ipcMain.on(
     if (mainWindow) {
       log.debug('Received get package suggestions');
 
-      const suggestions = await getPackageSuggestions(suggestionArgs);
+      const suggestions = await fetchPackageSuggestions(suggestionArgs);
 
       mainWindow.webContents.send(
         PackageListenerChannel.GET_SUGGESTIONS_LISTENER,

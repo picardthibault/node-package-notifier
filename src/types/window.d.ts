@@ -1,4 +1,4 @@
-import { PackageCreationArgs, PackageUpdateArgs } from './PackageListenerArgs';
+import { PackageCreationArgs } from './PackageListenerArgs';
 import { IpcRendererEvent } from 'electron';
 import { PackageConfig } from '../main/store/PackageStore';
 import { PackageData } from './PackageInfo';
@@ -21,10 +21,6 @@ declare global {
           event: IpcRendererEvent,
           errorMessage: string | undefined,
         ) => void,
-      ) => void;
-      update: (updateArgs: PackageUpdateArgs) => void;
-      updateListener: (
-        listener: (event: IpcRendererEvent, isUpdated: boolean) => void,
       ) => void;
       delete: (packageId: string) => void;
       deleteListener: (listener: () => void) => () => void;

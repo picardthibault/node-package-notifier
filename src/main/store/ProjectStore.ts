@@ -11,7 +11,7 @@ export type IProjectStore = {
 };
 
 export class ProjectStore {
-  static instance: ProjectStore | undefined;
+  private static instance: ProjectStore | undefined;
 
   static get(): ProjectStore {
     if (ProjectStore.instance === undefined) {

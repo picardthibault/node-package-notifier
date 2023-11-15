@@ -13,7 +13,7 @@ import {
   ProjectDetails,
 } from '../../../types/ProjectListenerArgs';
 import path from 'path';
-import { fetchPackageInfo, npmRegistryUrl } from '../package/PackageService';
+import { fetchPackageDetails, npmRegistryUrl } from '../package/PackageService';
 
 interface Dependencies {
   [key: string]: string;
@@ -180,7 +180,10 @@ export const fetchLatestsVersions = async (
   for (const dependency of dependencies) {
     log.debug(`Fetch latest version of package "${dependency}"`);
     // TODO : Handle registry url
-    const packageDetails = await fetchPackageInfo(dependency, npmRegistryUrl);
+    const packageDetails = await fetchPackageDetails(
+      dependency,
+      npmRegistryUrl,
+    );
     if (typeof packageDetails === 'string') {
       log.warn(
         `Error while fetching package "${dependencies}" details. Cause: ${packageDetails}`,

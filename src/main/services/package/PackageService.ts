@@ -1,19 +1,22 @@
 import log from 'electron-log';
 import { PackageStore } from '../../store/PackageStore';
-import { RegistryApi } from '../api/RegistryApi';
+import { PackageInfo, RegistryApi } from '../api/RegistryApi';
 import i18n from '../../i18n';
 import { PackageSuggestionArgs } from '../../../types/PackageListenerArgs';
+import { PackageCache } from '../../caches/PackageCache';
 
 export interface Tags {
   [key: string]: string;
 }
 
-export interface PackageInfo {
-  latest?: string;
+export interface PackageDetails {
+  name: string;
+  registryUrl: string;
   license?: string;
   homePage?: string;
   repository?: string;
   description?: string;
+  latest?: string;
   tags?: Tags;
 }
 
@@ -23,19 +26,20 @@ function adaptRegistryUrl(registryUrl?: string) {
   return registryUrl ? registryUrl : npmRegistryUrl;
 }
 
-function mapPackageInfoToPackageConfig(
-  packageName: string,
+function mapPackageInfoToPackageDetails(
   registryUrl: string,
+  packageName: string,
   packageInfo: PackageInfo,
-) {
+): PackageDetails {
   return {
     name: packageName,
     registryUrl: registryUrl,
     license: packageInfo.license,
-    homePage: packageInfo.homePage,
-    repository: packageInfo.repository,
+    homePage: packageInfo.homepage,
+    repository: packageInfo.repository.url,
     description: packageInfo.description,
-    latest: packageInfo.latest,
+    latest: packageInfo['dist-tags']?.latest,
+    tags: packageInfo['dist-tags'],
   };
 }
 
@@ -51,16 +55,15 @@ export async function createPackage(
   registryUrl?: string,
 ): Promise<string | undefined> {
   const adaptedRegistryUrl = adaptRegistryUrl(registryUrl);
-  const packageInfo = await fetchPackageInfo(packageName, adaptedRegistryUrl);
-  if (typeof packageInfo === 'string') {
-    return packageInfo;
-  }
-  const packageConfig = mapPackageInfoToPackageConfig(
-    packageName,
+  const packageDetails = await fetchPackageDetails(
     adaptedRegistryUrl,
-    packageInfo,
+    packageName,
+    true,
   );
-  PackageStore.get().addPackage(packageConfig);
+  if (typeof packageDetails === 'string') {
+    return packageDetails;
+  }
+  PackageStore.get().addPackage(packageDetails);
 }
 
 /**
@@ -77,25 +80,21 @@ export async function updateAllStoredPackages(): Promise<string[]> {
     try {
       log.debug(`Update package "${packageToUpdate.name}" start`);
       const adaptedRegistryUrl = adaptRegistryUrl(packageToUpdate.registryUrl);
-      const newPackageInfo = await fetchPackageInfo(
-        packageToUpdate.name,
+      const newPackageDetails = await fetchPackageDetails(
         adaptedRegistryUrl,
+        packageToUpdate.name,
+        true,
       );
-      if (typeof newPackageInfo === 'string') {
+      if (typeof newPackageDetails === 'string') {
         log.warn(
-          `Unable to update "${packageToUpdate.name}" package data. Received error : ${newPackageInfo}`,
+          `Unable to update "${packageToUpdate.name}" package data. Received error : ${newPackageDetails}`,
         );
       } else {
-        const newPackageConfig = mapPackageInfoToPackageConfig(
-          packageToUpdate.name,
-          adaptedRegistryUrl,
-          newPackageInfo,
-        );
         const newPackageKey = PackageStore.get().updatePackage(
           key,
-          newPackageConfig,
+          newPackageDetails,
         );
-        if (packageToUpdate.latest !== newPackageConfig.latest) {
+        if (packageToUpdate.latest !== newPackageDetails.latest) {
           packageWithNewVersion.push(newPackageKey);
         }
         log.debug(`Update package "${packageToUpdate.name}" end`);
@@ -122,27 +121,37 @@ export function deletePackage(packageKey: string) {
 /**
  * Fetch information about a package on a registry
  *
- * @param packageName the name of the package for which info will be fetched
  * @param registryUrl the url of the registry on which info will be fetched
+ * @param packageName the name of the package for which info will be fetched
+ * @param refresh indicates if cache value (if it exists) should be refreshed
  * @returns the information about the package fetched on the registry
  */
-export async function fetchPackageInfo(
-  packageName: string,
+export async function fetchPackageDetails(
   registryUrl: string,
-): Promise<PackageInfo | string> {
+  packageName: string,
+  refresh = false,
+): Promise<PackageDetails | string> {
+  // Search package info in PackageCache
+  if (!refresh) {
+    const packageInfo = PackageCache.get().get(registryUrl, packageName);
+    if (packageInfo !== undefined) {
+      return packageInfo;
+    }
+  }
+
+  // Fetch package info if necessary
   try {
     const packageData = await RegistryApi.getPackageInfo(
       packageName,
       registryUrl,
     );
-    return {
-      latest: packageData['dist-tags']?.latest,
-      license: packageData.license,
-      homePage: packageData.homepage,
-      repository: packageData.repository?.url,
-      description: packageData.description,
-      tags: packageData['dist-tags'],
-    };
+    const packageDetails = mapPackageInfoToPackageDetails(
+      registryUrl,
+      packageName,
+      packageData,
+    );
+    await PackageCache.get().set(registryUrl, packageName, packageDetails);
+    return packageDetails;
   } catch (err) {
     if (err instanceof Error) {
       log.error(`Received an error while fetching "${packageName}" info.`, err);
@@ -162,15 +171,16 @@ export async function getPackageTags(
   packageId: string,
 ): Promise<Tags | undefined | string> {
   const savedPackageData = PackageStore.get().getPackage(packageId);
-  const packageInfo = await fetchPackageInfo(
-    savedPackageData.name,
+  const packageDetails = await fetchPackageDetails(
     savedPackageData.registryUrl,
+    savedPackageData.name,
+    false,
   );
 
-  if (typeof packageInfo === 'string') {
-    return packageInfo;
+  if (typeof packageDetails === 'string') {
+    return packageDetails;
   } else {
-    return packageInfo.tags;
+    return packageDetails.tags;
   }
 }
 

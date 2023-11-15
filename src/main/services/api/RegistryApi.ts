@@ -2,7 +2,7 @@ import log from 'electron-log';
 import i18n from '../../i18n';
 import { ApiResponse, RestApi } from './RestApi';
 
-interface PackageInfo {
+export interface PackageInfo {
   description: string;
   'dist-tags': {
     latest: string;

@@ -57,6 +57,7 @@
   "dependencies": {
     "@ant-design/icons": "5.2.5",
     "antd": "5.8.5",
+    "cache-manager": "5.2.4",
     "cron": "2.4.3",
     "effector": "22.8.6",
     "effector-react": "22.5.3",

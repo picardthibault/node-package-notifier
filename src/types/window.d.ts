@@ -15,7 +15,7 @@ export {};
 declare global {
   interface Window {
     packageManagement: {
-      create: (creationArgs: PackageCreationArgs) => void;
+      create: (creationArgs: PackageCreationArgs) => Promise<string | undefined>;
       createListener: (
         listener: (
           event: IpcRendererEvent,

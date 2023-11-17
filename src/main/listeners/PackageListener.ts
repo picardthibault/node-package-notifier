@@ -17,20 +17,14 @@ import {
   getPackage,
 } from '../services/package/PackageService';
 
-ipcMain.on(
+ipcMain.handle(
   PackageListenerChannel.CREATE,
-  async (event, creationArgs: PackageCreationArgs) => {
+  async (event, creationArgs: PackageCreationArgs): Promise<string | undefined> => {
     log.debug('Received create package IPC');
-    const errorMessage = await createPackage(
+    return createPackage(
       creationArgs.packageName,
       creationArgs.registryUrl,
     );
-    if (mainWindow) {
-      mainWindow.webContents.send(
-        PackageListenerChannel.CREATE_LISTENER,
-        errorMessage,
-      );
-    }
   },
 );
 

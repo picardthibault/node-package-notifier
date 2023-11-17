@@ -19,21 +19,8 @@ import {
 } from '../types/ProjectListenerArgs';
 
 contextBridge.exposeInMainWorld('packageManagement', {
-  create: (creationArgs: PackageCreationArgs) =>
-    ipcRenderer.send(PackageListenerChannel.CREATE, creationArgs),
-  createListener: (
-    listener: (
-      event: IpcRendererEvent,
-      errorMessage: string | undefined,
-    ) => void,
-  ) => {
-    ipcRenderer.on(PackageListenerChannel.CREATE_LISTENER, listener);
-    return () =>
-      ipcRenderer.removeListener(
-        PackageListenerChannel.CREATE_LISTENER,
-        listener,
-      );
-  },
+  create: (creationArgs: PackageCreationArgs): Promise<string | undefined> =>
+    ipcRenderer.invoke(PackageListenerChannel.CREATE, creationArgs),
   delete: (packageId: string) =>
     ipcRenderer.send(PackageListenerChannel.DELETE, packageId),
   deleteListener: (listener: () => void) => {

@@ -1,6 +1,5 @@
 export enum PackageListenerChannel {
   CREATE = 'packageChannelCreate',
-  CREATE_LISTENER = 'packageChannelCreateListener',
   DELETE = 'packageChannelDelete',
   DELETE_LISTENER = 'packageChannelDeleteListener',
   GET_PACKAGES = 'packageChannelGetPackages',

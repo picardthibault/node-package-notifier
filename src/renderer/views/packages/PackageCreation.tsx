@@ -26,29 +26,6 @@ export const PackageCreation = (): JSX.Element => {
 
   const [formInstance] = Form.useForm<PackageFormField>();
 
-  useEffect(() => {
-    const createListener = (
-      event: IpcRendererEvent,
-      errorMessage: string | undefined,
-    ) => {
-      if (!errorMessage) {
-        openAlert('success', t('package.creation.alert.title.success'));
-        navigate(routePaths.packageList.generate());
-      } else {
-        openAlert(
-          'error',
-          t('package.creation.alert.title.error'),
-          t('package.creation.alert.description.error', {
-            cause: errorMessage,
-          }),
-        );
-      }
-    };
-    const cleanListener =
-      window.packageManagement.createListener(createListener);
-    return cleanListener;
-  });
-
   const fetchSuggestions = useCallback(() => {
     const current = formInstance.getFieldValue('packageName');
     const registryUrl = formInstance.getFieldValue('registryUrl');
@@ -86,7 +63,21 @@ export const PackageCreation = (): JSX.Element => {
   }, [suggestionTimeout, setSuggestionTimeout]);
 
   const onFinish = () => {
-    window.packageManagement.create(formInstance.getFieldsValue());
+    window.packageManagement.create(formInstance.getFieldsValue())
+      .then((errorMessage: string | undefined) => {
+        if (!errorMessage) {
+          openAlert('success', t('package.creation.alert.title.success'));
+          navigate(routePaths.packageList.generate());
+        } else {
+          openAlert(
+            'error',
+            t('package.creation.alert.title.error'),
+            t('package.creation.alert.description.error', {
+              cause: errorMessage,
+            }),
+          );
+        }
+      });
   };
 
   return (

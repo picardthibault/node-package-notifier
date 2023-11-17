@@ -1,24 +1,13 @@
 import log from 'electron-log';
-import { PackageStore } from '../../store/PackageStore';
+import { PackageConfig, PackageStore } from '../../store/PackageStore';
 import { PackageInfo, RegistryApi } from '../api/RegistryApi';
 import i18n from '../../i18n';
-import { PackageSuggestionArgs } from '../../../types/PackageListenerArgs';
+import {
+  PackageDetails,
+  PackageSuggestionArgs,
+  Tags,
+} from '../../../types/PackageListenerArgs';
 import { PackageCache } from '../../caches/PackageCache';
-
-export interface Tags {
-  [key: string]: string;
-}
-
-export interface PackageDetails {
-  name: string;
-  registryUrl: string;
-  license?: string;
-  homePage?: string;
-  repository?: string;
-  description?: string;
-  latest?: string;
-  tags?: Tags;
-}
 
 export const npmRegistryUrl = 'https://registry.npmjs.org';
 
@@ -131,6 +120,7 @@ export async function fetchPackageDetails(
   packageName: string,
   refresh = false,
 ): Promise<PackageDetails | string> {
+  log.debug(`Fetch package "${packageName} details`);
   // Search package info in PackageCache
   if (!refresh) {
     const packageInfo = PackageCache.get().get(registryUrl, packageName);
@@ -164,6 +154,30 @@ export async function fetchPackageDetails(
       );
       return i18n.t('package.fetch.errors.unknownResponse');
     }
+  }
+}
+
+/**
+ * Get package details
+ *
+ * @param packageConfig The package to fetch details
+ * @returns The details of the package
+ */
+export async function getPackage(
+  packageConfig: PackageConfig,
+): Promise<PackageDetails> {
+  log.debug(`Get package "${packageConfig.name}" details`);
+  const packageDetails = await fetchPackageDetails(
+    packageConfig.registryUrl,
+    packageConfig.name,
+  );
+  if (typeof packageDetails === 'string') {
+    log.warn(
+      `Unable to fetch package "${packageConfig.name}" details. Received error : ${packageDetails}`,
+    );
+    return { ...packageConfig };
+  } else {
+    return packageDetails;
   }
 }
 

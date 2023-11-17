@@ -1,7 +1,9 @@
 import { ipcMain } from 'electron';
 import { PackageListenerChannel } from '../../types/IpcChannel';
 import {
+  GetPackagesResult,
   PackageCreationArgs,
+  PackageDetails,
   PackageSuggestionArgs,
 } from '../../types/PackageListenerArgs';
 import { PackageStore } from '../store/PackageStore';
@@ -12,6 +14,7 @@ import {
   deletePackage,
   fetchPackageSuggestions,
   getPackageTags,
+  getPackage,
 } from '../services/package/PackageService';
 
 ipcMain.on(
@@ -39,15 +42,18 @@ ipcMain.on(PackageListenerChannel.DELETE, (event, packageId: string) => {
   }
 });
 
-ipcMain.on(PackageListenerChannel.GET_ALL, () => {
-  if (mainWindow) {
-    log.debug('Received get all package IPC');
-    mainWindow.webContents.send(
-      PackageListenerChannel.GET_ALL_LISTENER,
-      PackageStore.get().getPackages(),
-    );
-  }
-});
+ipcMain.handle(
+  PackageListenerChannel.GET_PACKAGES,
+  async (): Promise<GetPackagesResult> => {
+    log.debug('Received get packages IPC');
+    const packages = PackageStore.get().getPackages();
+    const result: { [key: string]: PackageDetails } = {};
+    for (const key of Object.keys(packages)) {
+      result[key] = await getPackage(packages[key]);
+    }
+    return result;
+  },
+);
 
 ipcMain.on(PackageListenerChannel.GET, (event, packageId: string) => {
   log.debug('Received get package IPC');

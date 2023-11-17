@@ -1,5 +1,6 @@
 import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
 import {
+  GetPackagesResult,
   PackageCreationArgs,
   PackageSuggestionArgs,
 } from '../types/PackageListenerArgs';
@@ -43,20 +44,8 @@ contextBridge.exposeInMainWorld('packageManagement', {
         listener,
       );
   },
-  getAll: () => ipcRenderer.send(PackageListenerChannel.GET_ALL),
-  getAllListener: (
-    listener: (
-      event: IpcRendererEvent,
-      args: { [key: string]: PackageConfig },
-    ) => void,
-  ) => {
-    ipcRenderer.on(PackageListenerChannel.GET_ALL_LISTENER, listener);
-    return () =>
-      ipcRenderer.removeListener(
-        PackageListenerChannel.GET_ALL_LISTENER,
-        listener,
-      );
-  },
+  getPackages: (): Promise<GetPackagesResult> =>
+    ipcRenderer.invoke(PackageListenerChannel.GET_PACKAGES),
   get: (packageId: string): PackageData =>
     ipcRenderer.sendSync(PackageListenerChannel.GET, packageId),
   fetchTags: (packageId: string) =>

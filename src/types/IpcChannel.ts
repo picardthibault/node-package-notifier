@@ -2,9 +2,7 @@ export enum PackageListenerChannel {
   CREATE = 'packageChannelCreate',
   DELETE = 'packageChannelDelete',
   GET_PACKAGES = 'packageChannelGetPackages',
-  GET = 'packageChannelGet',
-  FETCH_TAGS = 'packageChannelFetchTags',
-  FETCH_TAGS_LISTENER = 'packageChannelFetchTagsListener',
+  GET_PACKAGE = 'packageChannelGetPackage',
   GET_SUGGESTIONS = 'packageChannelGetSuggestion',
   GET_SUGGESTIONS_LISTENER = 'packageChannelGetSuggestionListener',
 }

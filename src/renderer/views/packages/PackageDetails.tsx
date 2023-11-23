@@ -8,8 +8,6 @@ import { routePaths } from '../../routes';
 import LinkButton from '../../components/Button/LinkButton';
 import { useTranslation } from 'react-i18next';
 import { ColumnsType } from 'antd/es/table';
-import { Tags } from '../../../types/PackageInfo';
-import { IpcRendererEvent } from 'electron';
 import { openAlert } from '../../components/Alert/Alert';
 
 interface TableItemType {
@@ -30,56 +28,52 @@ const PackageDetails: FunctionComponent = () => {
   const [formInstance] = Form.useForm();
 
   useEffect(() => {
-    const packageInfo = window.packageManagement.get(id);
-    setTitle(
-      packageInfo.name.charAt(0).toUpperCase() + packageInfo.name.slice(1),
-    );
-    formInstance.setFieldsValue({
-      registryUrl: packageInfo.registryUrl,
-      licence: packageInfo.license,
-      homePage: packageInfo.homePage,
-      repository: packageInfo.repository,
-      description: packageInfo.description,
-    });
-    window.packageManagement.fetchTags(id);
-  }, [id]);
+    setIsLoading(true);
+    window.packageManagement.getPackage(id).then((getPackageResult) => {
+      setTitle(
+        getPackageResult.packageDetails.name.charAt(0).toUpperCase() +
+          getPackageResult.packageDetails.name.slice(1),
+      );
 
-  useEffect(() => {
-    const fetchTagsListener = (
-      event: IpcRendererEvent,
-      fetchResult: Tags | string | undefined,
-    ) => {
-      setIsLoading(false);
-      if (fetchResult === undefined) {
+      if (getPackageResult.error) {
+        formInstance.resetFields();
         setTags([]);
-      } else if (typeof fetchResult === 'string') {
+        formInstance.setFieldValue(
+          'registryUrl',
+          getPackageResult.packageDetails.registryUrl,
+        );
         openAlert(
           'error',
           t('package.details.alert.title.error'),
           t('package.details.alert.description.error', {
-            cause: fetchResult,
+            cause: getPackageResult.error,
           }),
         );
-        setTags([]);
       } else {
-        const tags: TableItemType[] = Object.keys(fetchResult).map(
-          (key, index) => ({
-            key: index,
-            tagName: key,
-            tagVersion: fetchResult[key],
-          }),
-        );
+        formInstance.setFieldsValue({
+          registryUrl: getPackageResult.packageDetails.registryUrl,
+          licence: getPackageResult.packageDetails.license,
+          homePage: getPackageResult.packageDetails.homePage,
+          repository: getPackageResult.packageDetails.repository,
+          description: getPackageResult.packageDetails.description,
+        });
+
+        const tags: TableItemType[] = [];
+        if (getPackageResult.packageDetails.tags) {
+          Object.keys(getPackageResult.packageDetails.tags).forEach(
+            (key, index) =>
+              tags.push({
+                key: index,
+                tagName: key,
+                tagVersion: getPackageResult.packageDetails.tags[key],
+              }),
+          );
+        }
         setTags(tags);
       }
-    };
-
-    const cleanListener =
-      window.packageManagement.fetchTagsListener(fetchTagsListener);
-
-    return () => {
-      cleanListener();
-    };
-  }, [setIsLoading, setTags]);
+      setIsLoading(false);
+    });
+  }, [id]);
 
   const tableColumns: ColumnsType<TableItemType> = [
     {

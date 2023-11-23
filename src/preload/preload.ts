@@ -2,14 +2,13 @@ import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
 import {
   GetPackagesResult,
   PackageCreationArgs,
+  GetPackageResult,
   PackageSuggestionArgs,
 } from '../types/PackageListenerArgs';
 import {
   PackageListenerChannel,
   ProjectListenerChannel,
 } from '../types/IpcChannel';
-import { PackageConfig } from '../main/store/PackageStore';
-import { PackageData, Tags } from '../types/PackageInfo';
 import {
   ProjectDataForMenu,
   ProjectImportArgs,
@@ -25,23 +24,8 @@ contextBridge.exposeInMainWorld('packageManagement', {
     ipcRenderer.invoke(PackageListenerChannel.DELETE, packageId),
   getPackages: (): Promise<GetPackagesResult> =>
     ipcRenderer.invoke(PackageListenerChannel.GET_PACKAGES),
-  get: (packageId: string): PackageData =>
-    ipcRenderer.sendSync(PackageListenerChannel.GET, packageId),
-  fetchTags: (packageId: string) =>
-    ipcRenderer.send(PackageListenerChannel.FETCH_TAGS, packageId),
-  fetchTagsListener: (
-    listener: (
-      event: IpcRendererEvent,
-      fetchResult: Tags | string | undefined,
-    ) => void,
-  ) => {
-    ipcRenderer.on(PackageListenerChannel.FETCH_TAGS_LISTENER, listener);
-    return () =>
-      ipcRenderer.removeListener(
-        PackageListenerChannel.FETCH_TAGS_LISTENER,
-        listener,
-      );
-  },
+  getPackage: (packageId: string): Promise<GetPackageResult> =>
+    ipcRenderer.invoke(PackageListenerChannel.GET_PACKAGE, packageId),
   getSuggestions: (suggestionArgs: PackageSuggestionArgs) =>
     ipcRenderer.send(PackageListenerChannel.GET_SUGGESTIONS, suggestionArgs),
   getSuggestionsListener: (

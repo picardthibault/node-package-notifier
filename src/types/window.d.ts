@@ -1,4 +1,8 @@
-import { PackageCreationArgs, GetPackagesResult } from './PackageListenerArgs';
+import {
+  PackageCreationArgs,
+  GetPackagesResult,
+  GetPackageResult,
+} from './PackageListenerArgs';
 import { IpcRendererEvent } from 'electron';
 import { PackageConfig } from '../main/store/PackageStore';
 import { PackageData } from './PackageInfo';
@@ -26,14 +30,7 @@ declare global {
       ) => void;
       delete: (packageId: string) => Promise<void>;
       getPackages: () => Promise<GetPackagesResult>;
-      get: (packageId: string) => PackageData;
-      fetchTags: (packageId: string) => void;
-      fetchTagsListener: (
-        listener: (
-          event: IpcRendererEvent,
-          fetchResult: Tags | string | undefined,
-        ) => void,
-      ) => () => void;
+      getPackage: (packageId: string) => Promise<GetPackageResult>;
       getSuggestions: (suggestionArgs: PackageSuggestionArgs) => void;
       getSuggestionsListener: (
         listener: (

@@ -12,6 +12,11 @@ export interface GetPackagesResult {
   [key: string]: PackageDetails;
 }
 
+export interface GetPackageResult {
+  error?: string;
+  packageDetails: PackageDetails;
+}
+
 export interface PackageDetails {
   name: string;
   registryUrl: string;

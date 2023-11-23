@@ -1,6 +1,7 @@
 import { ipcMain } from 'electron';
 import { PackageListenerChannel } from '../../types/IpcChannel';
 import {
+  GetPackageResult,
   GetPackagesResult,
   PackageCreationArgs,
   PackageDetails,
@@ -13,7 +14,6 @@ import {
   createPackage,
   deletePackage,
   fetchPackageSuggestions,
-  getPackageTags,
   getPackage,
 } from '../services/package/PackageService';
 
@@ -43,29 +43,37 @@ ipcMain.handle(
     const packages = PackageStore.get().getPackages();
     const result: { [key: string]: PackageDetails } = {};
     for (const key of Object.keys(packages)) {
-      result[key] = await getPackage(packages[key]);
+      const packageDetails = await getPackage(packages[key]);
+      if (typeof packageDetails === 'string') {
+        log.warn(
+          `Unable to fetch package "${packages[key].name}" details. Received error : ${packageDetails}`,
+        );
+        result[key] = { ...packages[key] };
+      } else {
+        result[key] = packageDetails;
+      }
     }
     return result;
   },
 );
 
-ipcMain.on(PackageListenerChannel.GET, (event, packageId: string) => {
-  log.debug('Received get package IPC');
-  event.returnValue = PackageStore.get().getPackage(packageId);
-});
-
-ipcMain.on(
-  PackageListenerChannel.FETCH_TAGS,
-  async (event, packageId: string) => {
-    if (mainWindow) {
-      log.debug(`Received fetch tags of <${packageId}>`);
-
-      const fetchTagsResult = await getPackageTags(packageId);
-
-      mainWindow.webContents.send(
-        PackageListenerChannel.FETCH_TAGS_LISTENER,
-        fetchTagsResult,
-      );
+ipcMain.handle(
+  PackageListenerChannel.GET_PACKAGE,
+  async (event, packageId: string): Promise<GetPackageResult> => {
+    log.debug('Received get package IPC');
+    const packageConfig = PackageStore.get().getPackage(packageId);
+    const packageDetails = await getPackage(packageConfig);
+    if (typeof packageDetails === 'string') {
+      return {
+        error: packageDetails,
+        packageDetails: {
+          ...packageConfig,
+        },
+      };
+    } else {
+      return {
+        packageDetails: packageDetails,
+      };
     }
   },
 );

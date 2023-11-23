@@ -161,41 +161,17 @@ export async function fetchPackageDetails(
  * Get package details
  *
  * @param packageConfig The package to fetch details
- * @returns The details of the package
+ * @returns The details of the package or an error message
  */
 export async function getPackage(
   packageConfig: PackageConfig,
-): Promise<PackageDetails> {
+): Promise<PackageDetails | string> {
   log.debug(`Get package "${packageConfig.name}" details`);
   const packageDetails = await fetchPackageDetails(
     packageConfig.registryUrl,
     packageConfig.name,
   );
-  if (typeof packageDetails === 'string') {
-    log.warn(
-      `Unable to fetch package "${packageConfig.name}" details. Received error : ${packageDetails}`,
-    );
-    return { ...packageConfig };
-  } else {
-    return packageDetails;
-  }
-}
-
-export async function getPackageTags(
-  packageId: string,
-): Promise<Tags | undefined | string> {
-  const savedPackageData = PackageStore.get().getPackage(packageId);
-  const packageDetails = await fetchPackageDetails(
-    savedPackageData.registryUrl,
-    savedPackageData.name,
-    false,
-  );
-
-  if (typeof packageDetails === 'string') {
-    return packageDetails;
-  } else {
-    return packageDetails.tags;
-  }
+  return packageDetails;
 }
 
 /**

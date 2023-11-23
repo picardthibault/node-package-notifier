@@ -22,15 +22,7 @@ contextBridge.exposeInMainWorld('packageManagement', {
   create: (creationArgs: PackageCreationArgs): Promise<string | undefined> =>
     ipcRenderer.invoke(PackageListenerChannel.CREATE, creationArgs),
   delete: (packageId: string) =>
-    ipcRenderer.send(PackageListenerChannel.DELETE, packageId),
-  deleteListener: (listener: () => void) => {
-    ipcRenderer.on(PackageListenerChannel.DELETE_LISTENER, listener);
-    return () =>
-      ipcRenderer.removeListener(
-        PackageListenerChannel.DELETE_LISTENER,
-        listener,
-      );
-  },
+    ipcRenderer.invoke(PackageListenerChannel.DELETE, packageId),
   getPackages: (): Promise<GetPackagesResult> =>
     ipcRenderer.invoke(PackageListenerChannel.GET_PACKAGES),
   get: (packageId: string): PackageData =>

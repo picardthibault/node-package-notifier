@@ -63,7 +63,8 @@ export const PackageCreation = (): JSX.Element => {
   }, [suggestionTimeout, setSuggestionTimeout]);
 
   const onFinish = () => {
-    window.packageManagement.create(formInstance.getFieldsValue())
+    window.packageManagement
+      .create(formInstance.getFieldsValue())
       .then((errorMessage: string | undefined) => {
         if (!errorMessage) {
           openAlert('success', t('package.creation.alert.title.success'));

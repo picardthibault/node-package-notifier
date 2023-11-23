@@ -15,15 +15,16 @@ export {};
 declare global {
   interface Window {
     packageManagement: {
-      create: (creationArgs: PackageCreationArgs) => Promise<string | undefined>;
+      create: (
+        creationArgs: PackageCreationArgs,
+      ) => Promise<string | undefined>;
       createListener: (
         listener: (
           event: IpcRendererEvent,
           errorMessage: string | undefined,
         ) => void,
       ) => void;
-      delete: (packageId: string) => void;
-      deleteListener: (listener: () => void) => () => void;
+      delete: (packageId: string) => Promise<void>;
       getPackages: () => Promise<GetPackagesResult>;
       get: (packageId: string) => PackageData;
       fetchTags: (packageId: string) => void;

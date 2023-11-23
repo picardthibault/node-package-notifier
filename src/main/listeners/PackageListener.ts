@@ -19,22 +19,22 @@ import {
 
 ipcMain.handle(
   PackageListenerChannel.CREATE,
-  async (event, creationArgs: PackageCreationArgs): Promise<string | undefined> => {
+  async (
+    event,
+    creationArgs: PackageCreationArgs,
+  ): Promise<string | undefined> => {
     log.debug('Received create package IPC');
-    return createPackage(
-      creationArgs.packageName,
-      creationArgs.registryUrl,
-    );
+    return createPackage(creationArgs.packageName, creationArgs.registryUrl);
   },
 );
 
-ipcMain.on(PackageListenerChannel.DELETE, (event, packageId: string) => {
-  log.debug('Received delete package IPC');
-  deletePackage(packageId);
-  if (mainWindow) {
-    mainWindow.webContents.send(PackageListenerChannel.DELETE_LISTENER);
-  }
-});
+ipcMain.handle(
+  PackageListenerChannel.DELETE,
+  (event, packageId: string): Promise<void> => {
+    log.debug('Received delete package IPC');
+    return Promise.resolve(deletePackage(packageId));
+  },
+);
 
 ipcMain.handle(
   PackageListenerChannel.GET_PACKAGES,

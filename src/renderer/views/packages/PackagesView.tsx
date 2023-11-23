@@ -60,17 +60,9 @@ export const PackagesView = (): JSX.Element => {
     fetchPackages();
   }, []);
 
-  useEffect(() => {
-    const deletePackageListener = () => fetchPackages();
-
-    const cleanListener = window.packageManagement.deleteListener(
-      deletePackageListener,
-    );
-
-    return () => {
-      cleanListener();
-    };
-  });
+  const deletePackage = (packageId: string) => {
+    window.packageManagement.delete(packageId).then(() => fetchPackages());
+  };
 
   const tableColumns: ColumnsType<TableItemType> = [
     {
@@ -107,7 +99,7 @@ export const PackagesView = (): JSX.Element => {
             type="default"
             danger={true}
             toolTip={t('package.list.tooltips.deletePackage')}
-            onClick={() => window.packageManagement.delete(tableItem.packageId)}
+            onClick={() => deletePackage(tableItem.packageId)}
           >
             <DeleteOutlined />
           </ActionButton>

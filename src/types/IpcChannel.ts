@@ -4,7 +4,6 @@ export enum PackageListenerChannel {
   GET_PACKAGES = 'packageChannelGetPackages',
   GET_PACKAGE = 'packageChannelGetPackage',
   GET_SUGGESTIONS = 'packageChannelGetSuggestion',
-  GET_SUGGESTIONS_LISTENER = 'packageChannelGetSuggestionListener',
 }
 
 export enum ProjectListenerChannel {

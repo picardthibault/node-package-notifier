@@ -31,7 +31,9 @@ declare global {
       delete: (packageId: string) => Promise<void>;
       getPackages: () => Promise<GetPackagesResult>;
       getPackage: (packageId: string) => Promise<GetPackageResult>;
-      getSuggestions: (suggestionArgs: PackageSuggestionArgs) => void;
+      getSuggestions: (
+        suggestionArgs: PackageSuggestionArgs,
+      ) => Promise<string[] | string>;
       getSuggestionsListener: (
         listener: (
           event: IpcRendererEvent,

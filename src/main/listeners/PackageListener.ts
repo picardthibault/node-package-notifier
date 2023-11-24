@@ -8,7 +8,6 @@ import {
   PackageSuggestionArgs,
 } from '../../types/PackageListenerArgs';
 import { PackageStore } from '../store/PackageStore';
-import { mainWindow } from '../index';
 import log from 'electron-log';
 import {
   createPackage,
@@ -32,7 +31,8 @@ ipcMain.handle(
   PackageListenerChannel.DELETE,
   (event, packageId: string): Promise<void> => {
     log.debug('Received delete package IPC');
-    return Promise.resolve(deletePackage(packageId));
+    deletePackage(packageId);
+    return Promise.resolve();
   },
 );
 
@@ -78,18 +78,13 @@ ipcMain.handle(
   },
 );
 
-ipcMain.on(
+ipcMain.handle(
   PackageListenerChannel.GET_SUGGESTIONS,
-  async (event, suggestionArgs: PackageSuggestionArgs) => {
-    if (mainWindow) {
-      log.debug('Received get package suggestions');
-
-      const suggestions = await fetchPackageSuggestions(suggestionArgs);
-
-      mainWindow.webContents.send(
-        PackageListenerChannel.GET_SUGGESTIONS_LISTENER,
-        suggestions,
-      );
-    }
+  (
+    event,
+    suggestionArgs: PackageSuggestionArgs,
+  ): Promise<string[] | string> => {
+    log.debug('Received get package suggestions');
+    return fetchPackageSuggestions(suggestionArgs);
   },
 );

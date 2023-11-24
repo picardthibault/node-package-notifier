@@ -26,18 +26,10 @@ contextBridge.exposeInMainWorld('packageManagement', {
     ipcRenderer.invoke(PackageListenerChannel.GET_PACKAGES),
   getPackage: (packageId: string): Promise<GetPackageResult> =>
     ipcRenderer.invoke(PackageListenerChannel.GET_PACKAGE, packageId),
-  getSuggestions: (suggestionArgs: PackageSuggestionArgs) =>
-    ipcRenderer.send(PackageListenerChannel.GET_SUGGESTIONS, suggestionArgs),
-  getSuggestionsListener: (
-    listener: (event: IpcRendererEvent, suggestions: string[] | string) => void,
-  ) => {
-    ipcRenderer.on(PackageListenerChannel.GET_SUGGESTIONS_LISTENER, listener);
-    return () =>
-      ipcRenderer.removeListener(
-        PackageListenerChannel.GET_SUGGESTIONS_LISTENER,
-        listener,
-      );
-  },
+  getSuggestions: (
+    suggestionArgs: PackageSuggestionArgs,
+  ): Promise<string[] | string> =>
+    ipcRenderer.invoke(PackageListenerChannel.GET_SUGGESTIONS, suggestionArgs),
 });
 
 contextBridge.exposeInMainWorld('projectManagement', {

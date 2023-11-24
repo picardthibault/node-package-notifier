@@ -1,4 +1,4 @@
-export interface PackageData {
+export interface PackageDetails {
   name: string;
   registryUrl: string;
   license?: string;
@@ -6,6 +6,7 @@ export interface PackageData {
   repository?: string;
   description?: string;
   latest?: string;
+  tags?: Tags;
 }
 
 export interface Tags {

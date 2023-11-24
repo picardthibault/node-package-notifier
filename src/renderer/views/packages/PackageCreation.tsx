@@ -1,9 +1,8 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { AutoComplete, Form, Input, Space } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import ActionButton from '../../components/Button/ActionButton';
-import { IpcRendererEvent } from 'electron';
 import Title from '../../components/Title/Title';
 import { routePaths } from '../../routes';
 import { openAlert } from '../../components/Alert/Alert';
@@ -26,57 +25,26 @@ export const PackageCreation = (): JSX.Element => {
 
   const [formInstance] = Form.useForm<PackageFormField>();
 
-  useEffect(() => {
-    const createListener = (
-      event: IpcRendererEvent,
-      errorMessage: string | undefined,
-    ) => {
-      if (!errorMessage) {
-        openAlert('success', t('package.creation.alert.title.success'));
-        navigate(routePaths.packageList.generate());
-      } else {
-        openAlert(
-          'error',
-          t('package.creation.alert.title.error'),
-          t('package.creation.alert.description.error', {
-            cause: errorMessage,
-          }),
-        );
-      }
-    };
-    const cleanListener =
-      window.packageManagement.createListener(createListener);
-    return cleanListener;
-  });
-
   const fetchSuggestions = useCallback(() => {
     const current = formInstance.getFieldValue('packageName');
     const registryUrl = formInstance.getFieldValue('registryUrl');
-    window.packageManagement.getSuggestions({
-      current,
-      registryUrl,
-    });
+    window.packageManagement
+      .getSuggestions({
+        current,
+        registryUrl,
+      })
+      .then((fetchedSuggestions) => {
+        if (typeof fetchedSuggestions === 'string') {
+          setSuggestions([
+            { label: fetchedSuggestions, value: fetchedSuggestions },
+          ]);
+        } else {
+          setSuggestions(
+            fetchedSuggestions.map((sug) => ({ label: sug, value: sug })),
+          );
+        }
+      });
   }, [formInstance]);
-
-  useEffect(() => {
-    const suggestionListener = (
-      event: IpcRendererEvent,
-      fetchedSuggestions: string[] | string,
-    ) => {
-      if (typeof fetchedSuggestions === 'string') {
-        setSuggestions([
-          { label: fetchedSuggestions, value: fetchedSuggestions },
-        ]);
-      } else {
-        setSuggestions(
-          fetchedSuggestions.map((sug) => ({ label: sug, value: sug })),
-        );
-      }
-    };
-    const cleanListener =
-      window.packageManagement.getSuggestionsListener(suggestionListener);
-    return cleanListener;
-  });
 
   const debounce = useCallback(() => {
     if (suggestionTimeout) {
@@ -86,7 +54,22 @@ export const PackageCreation = (): JSX.Element => {
   }, [suggestionTimeout, setSuggestionTimeout]);
 
   const onFinish = () => {
-    window.packageManagement.create(formInstance.getFieldsValue());
+    window.packageManagement
+      .create(formInstance.getFieldsValue())
+      .then((errorMessage: string | undefined) => {
+        if (!errorMessage) {
+          openAlert('success', t('package.creation.alert.title.success'));
+          navigate(routePaths.packageList.generate());
+        } else {
+          openAlert(
+            'error',
+            t('package.creation.alert.title.error'),
+            t('package.creation.alert.description.error', {
+              cause: errorMessage,
+            }),
+          );
+        }
+      });
   };
 
   return (

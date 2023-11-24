@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { openAlert } from '../../../components/Alert/Alert';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import Loading from '../../../components/Loading/Loading';
 import ErrorIcon from '../../../components/Icon/ErrorIcon';

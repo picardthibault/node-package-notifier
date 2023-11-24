@@ -92,10 +92,10 @@
             },
             "alert": {
                 "title": {
-                    "error": "Unable to fetch package tags"
+                    "error": "Unable to fetch package details"
                 },
                 "description": {
-                    "error": "An error occurred while fetching package tags: \"{{cause}}\""
+                    "error": "An error occurred while fetching package details: \"{{cause}}\""
                 }
             }
         }

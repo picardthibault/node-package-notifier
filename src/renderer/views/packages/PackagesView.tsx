@@ -1,6 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { PackageConfig } from '../../../main/store/PackageStore';
-import { IpcRendererEvent } from 'electron';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Form, Input, Space, Table } from 'antd';
 import { DeleteOutlined, PlusOutlined, EyeOutlined } from '@ant-design/icons';
 import { ColumnsType } from 'antd/es/table';
@@ -37,16 +35,8 @@ export const PackagesView = (): JSX.Element => {
 
   const [formInstance] = Form.useForm();
 
-  useEffect(() => {
-    // Load packages
-    window.packageManagement.getAll();
-  }, []);
-
-  useEffect(() => {
-    const packagesListener = (
-      event: IpcRendererEvent,
-      packages: { [key: string]: PackageConfig },
-    ) => {
+  const fetchPackages = useCallback(() => {
+    window.packageManagement.getPackages().then((packages) => {
       const tableItems: TableItemType[] = Object.keys(packages).map(
         (packageId, index) => ({
           key: index,
@@ -62,27 +52,17 @@ export const PackagesView = (): JSX.Element => {
       );
 
       setPackages(tableItems);
-    };
-
-    const cleanListener =
-      window.packageManagement.getAllListener(packagesListener);
-
-    return () => {
-      cleanListener();
-    };
-  }, [setPackages]);
+    });
+  }, []);
 
   useEffect(() => {
-    const deletePackageListener = () => window.packageManagement.getAll();
+    // Load packages
+    fetchPackages();
+  }, []);
 
-    const cleanListener = window.packageManagement.deleteListener(
-      deletePackageListener,
-    );
-
-    return () => {
-      cleanListener();
-    };
-  });
+  const deletePackage = (packageId: string) => {
+    window.packageManagement.delete(packageId).then(() => fetchPackages());
+  };
 
   const tableColumns: ColumnsType<TableItemType> = [
     {
@@ -119,7 +99,7 @@ export const PackagesView = (): JSX.Element => {
             type="default"
             danger={true}
             toolTip={t('package.list.tooltips.deletePackage')}
-            onClick={() => window.packageManagement.delete(tableItem.packageId)}
+            onClick={() => deletePackage(tableItem.packageId)}
           >
             <DeleteOutlined />
           </ActionButton>

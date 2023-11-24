@@ -1,6 +1,6 @@
 import { CronJob } from 'cron';
 import { nativeImage, Notification } from 'electron';
-import { updatePackagesData } from '../services/package/PackageService';
+import { updateAllStoredPackages } from '../services/package/PackageService';
 import { PackageStore } from '../store/PackageStore';
 import * as path from 'path';
 import { ressourcePathFolder } from '..';
@@ -12,7 +12,7 @@ export function launchUpdatePackageJob() {
     '0 0 */1 * * *',
     async function () {
       log.info('Update package job - start');
-      const packagesWithNewVersion = await updatePackagesData();
+      const packagesWithNewVersion = await updateAllStoredPackages();
       packagesWithNewVersion.forEach((packageId) => {
         const packageData = PackageStore.get().getPackage(packageId);
         new Notification({

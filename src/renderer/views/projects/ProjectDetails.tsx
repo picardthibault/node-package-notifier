@@ -2,7 +2,7 @@ import React, { FunctionComponent, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Title from '../../components/Title/Title';
 import Loading from '../../components/Loading/Loading';
-import { Form, Input, Table, Tabs, TabsProps } from 'antd';
+import { Form, Input, Tabs, TabsProps } from 'antd';
 import { useTranslation } from 'react-i18next';
 import TextArea from 'antd/es/input/TextArea';
 import { openAlert } from '../../components/Alert/Alert';
@@ -28,8 +28,6 @@ const ProjectDetails: FunctionComponent = () => {
   const [devDependencies, setDevDependencies] = useState<ParsedDependency[]>(
     [],
   );
-
-  const [pageNumber, setPageNumber] = useState<number>(1);
 
   useEffect(() => {
     // Reset fields and tables

@@ -1,104 +1,92 @@
 import { ipcMain } from 'electron';
 import { PackageListenerChannel } from '../../types/IpcChannel';
 import {
+  GetPackageResult,
+  GetPackagesResult,
   PackageCreationArgs,
   PackageSuggestionArgs,
-  PackageUpdateArgs,
 } from '../../types/PackageListenerArgs';
+import {
+  PackageDetails,
+} from '../../types/PackageInfo';
 import { PackageStore } from '../store/PackageStore';
-import { mainWindow } from '../index';
 import log from 'electron-log';
 import {
-  getPackageSuggestions,
-  getPackageTags,
+  createPackage,
+  deletePackage,
+  fetchPackageSuggestions,
+  getPackage,
 } from '../services/package/PackageService';
 
-ipcMain.on(
+ipcMain.handle(
   PackageListenerChannel.CREATE,
-  async (event, creationArgs: PackageCreationArgs) => {
+  async (
+    event,
+    creationArgs: PackageCreationArgs,
+  ): Promise<string | undefined> => {
     log.debug('Received create package IPC');
-    const errorMessage = await PackageStore.get().addPackage(
-      creationArgs.packageName,
-      creationArgs.registryUrl,
-    );
-    if (mainWindow) {
-      mainWindow.webContents.send(
-        PackageListenerChannel.CREATE_LISTENER,
-        errorMessage,
-      );
+    return createPackage(creationArgs.packageName, creationArgs.registryUrl);
+  },
+);
+
+ipcMain.handle(
+  PackageListenerChannel.DELETE,
+  (event, packageId: string): Promise<void> => {
+    log.debug('Received delete package IPC');
+    deletePackage(packageId);
+    return Promise.resolve();
+  },
+);
+
+ipcMain.handle(
+  PackageListenerChannel.GET_PACKAGES,
+  async (): Promise<GetPackagesResult> => {
+    log.debug('Received get packages IPC');
+    const packages = PackageStore.get().getPackages();
+    const result: { [key: string]: PackageDetails } = {};
+    for (const key of Object.keys(packages)) {
+      const packageDetails = await getPackage(packages[key]);
+      if (typeof packageDetails === 'string') {
+        log.warn(
+          `Unable to fetch package "${packages[key].name}" details. Received error : ${packageDetails}`,
+        );
+        result[key] = { ...packages[key] };
+      } else {
+        result[key] = packageDetails;
+      }
+    }
+    return result;
+  },
+);
+
+ipcMain.handle(
+  PackageListenerChannel.GET_PACKAGE,
+  async (event, packageId: string): Promise<GetPackageResult> => {
+    log.debug('Received get package IPC');
+    const packageConfig = PackageStore.get().getPackage(packageId);
+    const packageDetails = await getPackage(packageConfig);
+    if (typeof packageDetails === 'string') {
+      return {
+        error: packageDetails,
+        packageDetails: {
+          ...packageConfig,
+        },
+      };
+    } else {
+      return {
+        packageDetails: packageDetails,
+      };
     }
   },
 );
 
-ipcMain.on(
-  PackageListenerChannel.UPDATE,
-  async (event, updateArgs: PackageUpdateArgs) => {
-    log.debug('Received update package IPC');
-    const isUpdated = await PackageStore.get().updatePackage(
-      updateArgs.packageId,
-      updateArgs.packageName,
-      'https://registry.npmjs.org',
-    );
-    if (mainWindow) {
-      mainWindow.webContents.send(
-        PackageListenerChannel.UPDATE_LISTENER,
-        isUpdated,
-      );
-    }
-  },
-);
-
-ipcMain.on(PackageListenerChannel.DELETE, (event, packageId: string) => {
-  log.debug('Received delete package IPC');
-  PackageStore.get().deletePackage(packageId);
-  if (mainWindow) {
-    mainWindow.webContents.send(PackageListenerChannel.DELETE_LISTENER);
-  }
-});
-
-ipcMain.on(PackageListenerChannel.GET_ALL, () => {
-  if (mainWindow) {
-    log.debug('Received get all package IPC');
-    mainWindow.webContents.send(
-      PackageListenerChannel.GET_ALL_LISTENER,
-      PackageStore.get().getPackages(),
-    );
-  }
-});
-
-ipcMain.on(PackageListenerChannel.GET, (event, packageId: string) => {
-  log.debug('Received get package IPC');
-  event.returnValue = PackageStore.get().getPackage(packageId);
-});
-
-ipcMain.on(
-  PackageListenerChannel.FETCH_TAGS,
-  async (event, packageId: string) => {
-    if (mainWindow) {
-      log.debug(`Received fetch tags of <${packageId}>`);
-
-      const fetchTagsResult = await getPackageTags(packageId);
-
-      mainWindow.webContents.send(
-        PackageListenerChannel.FETCH_TAGS_LISTENER,
-        fetchTagsResult,
-      );
-    }
-  },
-);
-
-ipcMain.on(
+ipcMain.handle(
   PackageListenerChannel.GET_SUGGESTIONS,
-  async (event, suggestionArgs: PackageSuggestionArgs) => {
-    if (mainWindow) {
-      log.debug('Received get package suggestions');
-
-      const suggestions = await getPackageSuggestions(suggestionArgs);
-
-      mainWindow.webContents.send(
-        PackageListenerChannel.GET_SUGGESTIONS_LISTENER,
-        suggestions,
-      );
-    }
+  (
+    event,
+    suggestionArgs: PackageSuggestionArgs,
+  ): Promise<string[] | string> => {
+    log.debug('Received get package suggestions');
+    return fetchPackageSuggestions(suggestionArgs);
   },
 );

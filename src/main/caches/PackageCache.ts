@@ -1,5 +1,6 @@
 import { MemoryCache, caching } from 'cache-manager';
-import { PackageDetails } from '../services/package/PackageService';
+import { PackageDetails } from '../../types/PackageInfo';
+
 
 export class PackageCache {
   private static instance: PackageCache;
@@ -13,7 +14,7 @@ export class PackageCache {
 
   // TTL = 1hour
   private readonly cacheTtl = 3600 * 1000;
-  private readonly registryCache = new Map<String, MemoryCache>();
+  private readonly registryCache = new Map<string, MemoryCache>();
 
   private async createCache(): Promise<MemoryCache> {
     return caching('memory', {

@@ -4,9 +4,11 @@ import {
   GetPackageResult,
   GetPackagesResult,
   PackageCreationArgs,
-  PackageDetails,
   PackageSuggestionArgs,
 } from '../../types/PackageListenerArgs';
+import {
+  PackageDetails,
+} from '../../types/PackageInfo';
 import { PackageStore } from '../store/PackageStore';
 import log from 'electron-log';
 import {

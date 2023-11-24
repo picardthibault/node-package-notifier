@@ -4,8 +4,6 @@ import {
   GetPackageResult,
 } from './PackageListenerArgs';
 import { IpcRendererEvent } from 'electron';
-import { PackageConfig } from '../main/store/PackageStore';
-import { PackageData } from './PackageInfo';
 import {
   ProjectDataForMenu,
   ProjectImportArgs,

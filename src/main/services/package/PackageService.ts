@@ -3,10 +3,9 @@ import { PackageConfig, PackageStore } from '../../store/PackageStore';
 import { PackageInfo, RegistryApi } from '../api/RegistryApi';
 import i18n from '../../i18n';
 import {
-  PackageDetails,
   PackageSuggestionArgs,
-  Tags,
 } from '../../../types/PackageListenerArgs';
+import { PackageDetails } from '../../../types/PackageInfo'
 import { PackageCache } from '../../caches/PackageCache';
 
 export const npmRegistryUrl = 'https://registry.npmjs.org';

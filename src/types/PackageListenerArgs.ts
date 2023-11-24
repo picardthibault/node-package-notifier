@@ -1,3 +1,5 @@
+import { PackageDetails } from "./PackageInfo";
+
 export interface PackageCreationArgs {
   packageName: string;
   registryUrl?: string;
@@ -15,19 +17,4 @@ export interface GetPackagesResult {
 export interface GetPackageResult {
   error?: string;
   packageDetails: PackageDetails;
-}
-
-export interface PackageDetails {
-  name: string;
-  registryUrl: string;
-  license?: string;
-  homePage?: string;
-  repository?: string;
-  description?: string;
-  latest?: string;
-  tags?: Tags;
-}
-
-export interface Tags {
-  [key: string]: string;
 }

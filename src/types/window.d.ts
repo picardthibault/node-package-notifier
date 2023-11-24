@@ -20,12 +20,6 @@ declare global {
       create: (
         creationArgs: PackageCreationArgs,
       ) => Promise<string | undefined>;
-      createListener: (
-        listener: (
-          event: IpcRendererEvent,
-          errorMessage: string | undefined,
-        ) => void,
-      ) => void;
       delete: (packageId: string) => Promise<void>;
       getPackages: () => Promise<GetPackagesResult>;
       getPackage: (packageId: string) => Promise<GetPackageResult>;

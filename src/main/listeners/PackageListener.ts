@@ -6,9 +6,7 @@ import {
   PackageCreationArgs,
   PackageSuggestionArgs,
 } from '../../types/PackageListenerArgs';
-import {
-  PackageDetails,
-} from '../../types/PackageInfo';
+import { PackageDetails } from '../../types/PackageInfo';
 import { PackageStore } from '../store/PackageStore';
 import log from 'electron-log';
 import {

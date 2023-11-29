@@ -34,13 +34,7 @@ declare global {
       ) => () => void;
     };
     projectManagement: {
-      validateProjectName: (projectName: string) => void;
-      validateProjectNameListener: (
-        listener: (
-          event: IpcRendererEvent,
-          validationResult: string | undefined,
-        ) => void,
-      ) => () => void;
+      isProjectNameUsed: (projectName: string) => Promise<boolean>;
       validateProjectPath: (projectPath: string) => void;
       validateProjectPathListener: (
         listener: (

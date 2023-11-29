@@ -8,6 +8,17 @@
             }
         }
     },
+    "form": {
+        "field": {
+            "registryUrl": "Registry"
+        },
+        "placeholder": {
+            "registryUrl": "https://registry.npmjs.org"
+        },
+        "rules": {
+            "url": "This field should be a valid url"
+        }
+    },
     "sideMenu": {
         "items": {
             "packageList": "Package List",
@@ -47,19 +58,14 @@
             "title": "Create Package",
             "form": {
                 "field": {
-                    "name": "Package name",
-                    "registryUrl": "Registry"
+                    "name": "Package name"
                 },
                 "placeholder": {
-                    "name": "electron",
-                    "registryUrl": "https://registry.npmjs.org"
-                },
-                "rules": {
-                    "url": "This field should be a valid url"
+                    "name": "electron"
                 }
             },
             "tooltip": {
-                "registryUrl": "The base url of the registry on which the package is hosted. If not provided, the package will be fetched on the npm registry."
+                "registryUrl": "The base url of the registry on which the package is hosted. If not provided, the npm registry will be used."
             },
             "buttons": {
                 "create": "Create"
@@ -111,11 +117,15 @@
                 "placeholder": {
                     "projectName": "My Awesome Project",
                     "projectPath": "C:\\MyAwesomeProject"
+                },
+                "rules": {
+                    "projectName": "This name is already used by another project."
                 }
             },
             "tooltip": {
                 "projectName": "The name that will be used in NPN for the project",
-                "projectPath": "The path to the directory where you \"package.json\" file lives"
+                "projectPath": "The path to the directory where you \"package.json\" file lives",
+                "registryUrl": "The base url of the registry on which the project fetch its packages. If not provided, the npm registry will be used."
             },
             "alert": {
                 "title": {

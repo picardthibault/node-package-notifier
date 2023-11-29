@@ -1,4 +1,4 @@
-import { PackageDetails } from "./PackageInfo";
+import { PackageDetails } from './PackageInfo';
 
 export interface PackageCreationArgs {
   packageName: string;

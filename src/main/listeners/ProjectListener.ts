@@ -5,27 +5,19 @@ import log from 'electron-log';
 import {
   validateProjectPath,
   importProject,
-  validateProjectName,
   getProjectsDataForMenu,
   parseProject,
   getProjectDetails,
   fetchLatestsVersions,
+  isProjectNameUsed,
 } from '../services/project/ProjectService';
 import { mainWindow } from '..';
 
-ipcMain.on(
-  ProjectListenerChannel.VALIDATE_PROJECT_NAME,
-  async (event, projectName: string) => {
-    log.debug('Received projectName validation IPC');
-
-    const validationResult = validateProjectName(projectName);
-
-    if (mainWindow) {
-      mainWindow.webContents.send(
-        ProjectListenerChannel.VALIDATE_PROJECT_NAME_LISTENER,
-        validationResult,
-      );
-    }
+ipcMain.handle(
+  ProjectListenerChannel.IS_PROJECT_NAME_USED,
+  (event, projectName: string): Promise<boolean> => {
+    log.debug('Received project name is already used IPC');
+    return Promise.resolve(isProjectNameUsed(projectName));
   },
 );
 

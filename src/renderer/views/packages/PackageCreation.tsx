@@ -7,6 +7,7 @@ import Title from '../../components/Title/Title';
 import { routePaths } from '../../routes';
 import { openAlert } from '../../components/Alert/Alert';
 import LinkButton from '../../components/Button/LinkButton';
+import RegistryField from '../../components/Form/RegistryField';
 
 interface PackageFormField {
   packageName: string;
@@ -107,19 +108,7 @@ export const PackageCreation = (): JSX.Element => {
             options={suggestions}
           />
         </Form.Item>
-        <Form.Item
-          label={t('package.creation.form.field.registryUrl')}
-          name="registryUrl"
-          tooltip={t('package.creation.tooltip.registryUrl')}
-          validateTrigger="onBlur"
-          rules={[
-            { type: 'url', message: t('package.creation.form.rules.url') },
-          ]}
-        >
-          <Input
-            placeholder={t('package.creation.form.placeholder.registryUrl')}
-          />
-        </Form.Item>
+        <RegistryField toolTip={t('package.creation.tooltip.registryUrl')} />
 
         <div style={{ textAlign: 'center' }}>
           <Space>

@@ -28,6 +28,18 @@ interface PackageJson {
 
 const packageJsonFileName = 'package.json';
 
+/**
+ * Check if the given name is already used
+ *
+ * @param projectName the given name
+ * @returns true if the name is already used, otherwise returns false.
+ */
+export const isProjectNameUsed = (projectName: string): boolean => {
+  log.info(`Checking if project name "${projectName}" is already used`);
+
+  return ProjectStore.get().hasProject(projectName);
+};
+
 export const validateProjectPath = async (
   projectPath: string,
 ): Promise<string | undefined> => {
@@ -55,29 +67,14 @@ export const validateProjectPath = async (
   return undefined;
 };
 
-export const validateProjectName = (
-  projectName: string,
-): string | undefined => {
-  log.info(`Validating project name "${projectName}"`);
-
-  const isAlreadyUse = ProjectStore.get().hasProject(projectName);
-
-  if (isAlreadyUse) {
-    return i18n.t('project.validation.errors.nameAlreadyUsed');
-  }
-
-  return undefined;
-};
-
 export const importProject = async (
   projectName: string,
   projectPath: string,
 ): Promise<string> => {
   log.info(`Importing project with name "${projectName}"`);
 
-  const isProjectNameValid = validateProjectName(projectName);
-  if (isProjectNameValid) {
-    throw new Error(isProjectNameValid);
+  if (isProjectNameUsed(projectName)) {
+    throw new Error(i18n.t('project.validation.errors.nameAlreadyUsed'));
   }
 
   const isProjectPathValid = await validateProjectPath(projectPath);

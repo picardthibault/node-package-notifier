@@ -12,6 +12,7 @@ import {
 } from '../../../types/ProjectListenerArgs';
 import { useNavigate } from 'react-router-dom';
 import { routePaths } from '../../routes';
+import RegistryField from '../../components/Form/RegistryField';
 
 const ProjectImport: FunctionComponent = () => {
   const { t } = useTranslation();
@@ -22,22 +23,8 @@ const ProjectImport: FunctionComponent = () => {
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const [projectNameValidationResult, setProjectNameValidationResult] =
-    useState<string | undefined>(undefined);
-
   const [projectPathValidationResult, setProjectPathValidationResult] =
     useState<string | undefined>(undefined);
-
-  useEffect(() => {
-    const listener = (event: IpcRendererEvent, validationResult: string) => {
-      setProjectNameValidationResult(validationResult);
-    };
-
-    const cleanListener =
-      window.projectManagement.validateProjectNameListener(listener);
-
-    return cleanListener;
-  });
 
   useEffect(() => {
     const listener = (event: IpcRendererEvent, validationResult: string) => {
@@ -124,11 +111,11 @@ const ProjectImport: FunctionComponent = () => {
               message: t('common.form.rules.required'),
             },
             () => ({
-              validator() {
-                if (projectNameValidationResult) {
-                  return Promise.reject(projectNameValidationResult);
-                } else {
-                  return Promise.resolve();
+              async validator(_, value): Promise<void> {
+                const isProjectNameUsed =
+                  await window.projectManagement.isProjectNameUsed(value);
+                if (isProjectNameUsed) {
+                  throw new Error(t('project.import.form.rules.projectName'));
                 }
               },
             }),
@@ -137,13 +124,6 @@ const ProjectImport: FunctionComponent = () => {
           <Input
             placeholder={t('project.import.form.placeholder.projectName')}
             onChange={() => resetFieldError('projectName')}
-            onBlur={() => {
-              const projectPath = formInstance.getFieldValue('projectName');
-              if (projectPath) {
-                // Launch project name validation
-                window.projectManagement.validateProjectName(projectPath);
-              }
-            }}
           />
         </Form.Item>
 
@@ -179,6 +159,8 @@ const ProjectImport: FunctionComponent = () => {
             }}
           />
         </Form.Item>
+
+        <RegistryField toolTip={t('project.import.tooltip.')} />
 
         <div style={{ textAlign: 'center' }}>
           <Space>

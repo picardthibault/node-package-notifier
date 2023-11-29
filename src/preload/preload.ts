@@ -33,24 +33,11 @@ contextBridge.exposeInMainWorld('packageManagement', {
 });
 
 contextBridge.exposeInMainWorld('projectManagement', {
-  validateProjectName: (projectName: string) =>
-    ipcRenderer.send(ProjectListenerChannel.VALIDATE_PROJECT_NAME, projectName),
-  validateProjectNameListener: (
-    listener: (
-      event: IpcRendererEvent,
-      validationResult: string | undefined,
-    ) => void,
-  ) => {
-    ipcRenderer.on(
-      ProjectListenerChannel.VALIDATE_PROJECT_NAME_LISTENER,
-      listener,
-    );
-    return () =>
-      ipcRenderer.removeListener(
-        ProjectListenerChannel.VALIDATE_PROJECT_NAME_LISTENER,
-        listener,
-      );
-  },
+  isProjectNameUsed: (projectName: string): Promise<boolean> =>
+    ipcRenderer.invoke(
+      ProjectListenerChannel.IS_PROJECT_NAME_USED,
+      projectName,
+    ),
   validateProjectPath: (projectPath: string) =>
     ipcRenderer.send(ProjectListenerChannel.VALIDATE_PROJECT_PATH, projectPath),
   validateProjectPathListener: (

@@ -21,19 +21,12 @@ ipcMain.handle(
   },
 );
 
-ipcMain.on(
-  ProjectListenerChannel.VALIDATE_PROJECT_PATH,
-  async (event, projectPath: string) => {
+ipcMain.handle(
+  ProjectListenerChannel.IS_PROJECT_PATH_VALID,
+  (event, projectPath: string): Promise<string | undefined> => {
     log.debug('Received projectPath validation IPC');
 
-    const validationResult = await validateProjectPath(projectPath);
-
-    if (mainWindow) {
-      mainWindow.webContents.send(
-        ProjectListenerChannel.VALIDATE_PROJECT_PATH_LISTENER,
-        validationResult,
-      );
-    }
+    return validateProjectPath(projectPath);
   },
 );
 

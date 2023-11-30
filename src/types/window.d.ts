@@ -35,7 +35,7 @@ declare global {
     };
     projectManagement: {
       isProjectNameUsed: (projectName: string) => Promise<boolean>;
-      validateProjectPath: (projectPath: string) => void;
+      isProjectPathValid: (projectPath: string) => Promise<string | undefined>;
       validateProjectPathListener: (
         listener: (
           event: IpcRendererEvent,

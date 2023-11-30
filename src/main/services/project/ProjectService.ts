@@ -40,6 +40,12 @@ export const isProjectNameUsed = (projectName: string): boolean => {
   return ProjectStore.get().hasProject(projectName);
 };
 
+/**
+ * Check if the given project path is valid
+ *
+ * @param projectPath the given project path
+ * @returns undefined if the path is valid, otherwise an error message
+ */
 export const validateProjectPath = async (
   projectPath: string,
 ): Promise<string | undefined> => {

@@ -38,8 +38,11 @@ contextBridge.exposeInMainWorld('projectManagement', {
       ProjectListenerChannel.IS_PROJECT_NAME_USED,
       projectName,
     ),
-  validateProjectPath: (projectPath: string) =>
-    ipcRenderer.send(ProjectListenerChannel.VALIDATE_PROJECT_PATH, projectPath),
+  isProjectPathValid: (projectPath: string): Promise<string | undefined> =>
+    ipcRenderer.invoke(
+      ProjectListenerChannel.IS_PROJECT_PATH_VALID,
+      projectPath,
+    ),
   validateProjectPathListener: (
     listener: (
       event: IpcRendererEvent,

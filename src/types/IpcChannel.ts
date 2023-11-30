@@ -8,7 +8,7 @@ export enum PackageListenerChannel {
 
 export enum ProjectListenerChannel {
   IS_PROJECT_NAME_USED = 'projectChannelIsProjectNameUsed',
-  VALIDATE_PROJECT_PATH = 'projectChannelValidateProjectPath',
+  IS_PROJECT_PATH_VALID = 'projectChannelIsProjectPathValid',
   VALIDATE_PROJECT_PATH_LISTENER = 'projectChannelValidateProjectPathListener',
   IMPORT_PROJECT = 'projectChannelImportProject',
   IMPORT_PROJECT_LISTENER = 'projectChannelImportProjectListener',

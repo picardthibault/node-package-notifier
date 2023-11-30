@@ -23,20 +23,6 @@ const ProjectImport: FunctionComponent = () => {
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const [projectPathValidationResult, setProjectPathValidationResult] =
-    useState<string | undefined>(undefined);
-
-  useEffect(() => {
-    const listener = (event: IpcRendererEvent, validationResult: string) => {
-      setProjectPathValidationResult(validationResult);
-    };
-
-    const cleanListener =
-      window.projectManagement.validateProjectPathListener(listener);
-
-    return cleanListener;
-  });
-
   useEffect(() => {
     const listener = (
       event: IpcRendererEvent,
@@ -99,7 +85,7 @@ const ProjectImport: FunctionComponent = () => {
         labelAlign="left"
         labelCol={{ lg: 5, xl: 3 }}
         onFinish={onFinish}
-        validateTrigger="onSubmit"
+        validateTrigger="onBlur"
       >
         <Form.Item
           label={t('project.import.form.field.projectName')}
@@ -112,10 +98,12 @@ const ProjectImport: FunctionComponent = () => {
             },
             () => ({
               async validator(_, value): Promise<void> {
-                const isProjectNameUsed =
-                  await window.projectManagement.isProjectNameUsed(value);
-                if (isProjectNameUsed) {
-                  throw new Error(t('project.import.form.rules.projectName'));
+                if (value) {
+                  const isProjectNameUsed =
+                    await window.projectManagement.isProjectNameUsed(value);
+                  if (isProjectNameUsed) {
+                    throw new Error(t('project.import.form.rules.projectName'));
+                  }
                 }
               },
             }),
@@ -137,11 +125,13 @@ const ProjectImport: FunctionComponent = () => {
               message: t('common.form.rules.required'),
             },
             () => ({
-              validator() {
-                if (projectPathValidationResult) {
-                  return Promise.reject(projectPathValidationResult);
-                } else {
-                  return Promise.resolve();
+              async validator(_, value) {
+                if (value) {
+                  const projectPathValidationError =
+                    await window.projectManagement.isProjectPathValid(value);
+                  if (projectPathValidationError) {
+                    throw new Error(projectPathValidationError);
+                  }
                 }
               },
             }),
@@ -150,13 +140,6 @@ const ProjectImport: FunctionComponent = () => {
           <Input
             placeholder={t('project.import.form.placeholder.projectPath')}
             onChange={() => resetFieldError('projectPath')}
-            onBlur={() => {
-              const projectPath = formInstance.getFieldValue('projectPath');
-              if (projectPath) {
-                // Launch project path validation
-                window.projectManagement.validateProjectPath(projectPath);
-              }
-            }}
           />
         </Form.Item>
 

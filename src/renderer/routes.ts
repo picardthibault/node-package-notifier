@@ -8,8 +8,8 @@ export const routePaths = {
   packageDetails: {
     generate: (id: string) => `/package/${id}`,
   },
-  projectImport: {
-    generate: () => '/project/import',
+  projectCreation: {
+    generate: () => '/project/create',
   },
   projectDetails: {
     generate: (projectKey: string) => `/project/details/${projectKey}`,

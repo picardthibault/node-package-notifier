@@ -1,9 +1,10 @@
-export interface ProjectImportArgs {
+export interface ProjectCreationArgs {
   name: string;
   path: string;
+  registryUrl?: string;
 }
 
-export interface ProjectImportResult {
+export interface ProjectCreationResult {
   projectKey: string;
   error: string;
 }

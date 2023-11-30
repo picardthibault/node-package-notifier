@@ -11,8 +11,8 @@ import {
 } from '../types/IpcChannel';
 import {
   ProjectDataForMenu,
-  ProjectImportArgs,
-  ProjectImportResult,
+  ProjectCreationArgs,
+  ProjectCreationResult,
   ProjectDetails,
   ParsedProject,
 } from '../types/ProjectListenerArgs';
@@ -43,37 +43,10 @@ contextBridge.exposeInMainWorld('projectManagement', {
       ProjectListenerChannel.IS_PROJECT_PATH_VALID,
       projectPath,
     ),
-  validateProjectPathListener: (
-    listener: (
-      event: IpcRendererEvent,
-      validationResult: string | undefined,
-    ) => void,
-  ) => {
-    ipcRenderer.on(
-      ProjectListenerChannel.VALIDATE_PROJECT_PATH_LISTENER,
-      listener,
-    );
-    return () =>
-      ipcRenderer.removeListener(
-        ProjectListenerChannel.VALIDATE_PROJECT_PATH_LISTENER,
-        listener,
-      );
-  },
-  projectImport: (projectImportArgs: ProjectImportArgs) =>
-    ipcRenderer.send(ProjectListenerChannel.IMPORT_PROJECT, projectImportArgs),
-  projectImportListener: (
-    listener: (
-      event: IpcRendererEvent,
-      importResult: ProjectImportResult,
-    ) => void,
-  ) => {
-    ipcRenderer.on(ProjectListenerChannel.IMPORT_PROJECT_LISTENER, listener);
-    return () =>
-      ipcRenderer.removeListener(
-        ProjectListenerChannel.IMPORT_PROJECT_LISTENER,
-        listener,
-      );
-  },
+  create: (
+    projectCreationArgs: ProjectCreationArgs,
+  ): Promise<ProjectCreationResult> =>
+    ipcRenderer.invoke(ProjectListenerChannel.CREATE, projectCreationArgs),
   getProjectsDataForMenu: () =>
     ipcRenderer.send(ProjectListenerChannel.GET_PROJECTS_DATA_FOR_MENU),
   getProjectsDataForMenuListener: (

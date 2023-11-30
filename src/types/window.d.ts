@@ -6,8 +6,8 @@ import {
 import { IpcRendererEvent } from 'electron';
 import {
   ProjectDataForMenu,
-  ProjectImportArgs,
-  ProjectImportResult,
+  ProjectCreationArgs,
+  ProjectCreationResult,
   ProjectDetails,
   ParsedProject,
 } from './ProjectListenerArgs';
@@ -36,19 +36,9 @@ declare global {
     projectManagement: {
       isProjectNameUsed: (projectName: string) => Promise<boolean>;
       isProjectPathValid: (projectPath: string) => Promise<string | undefined>;
-      validateProjectPathListener: (
-        listener: (
-          event: IpcRendererEvent,
-          validationResult: string | undefined,
-        ) => void,
-      ) => () => void;
-      projectImport: (projectImportArgs: ProjectImportArgs) => void;
-      projectImportListener: (
-        listener: (
-          event: IpcRendererEvent,
-          importResult: ProjectImportResult,
-        ) => void,
-      ) => () => void;
+      create: (
+        projectCreationArgs: ProjectCreationArgs,
+      ) => Promise<ProjectCreationResult>;
       getProjectsDataForMenu: () => void;
       getProjectsDataForMenuListener: (
         listener: (event: IpcRendererEvent, keys: ProjectDataForMenu[]) => void,

@@ -4,17 +4,13 @@ import Title from '../../components/Title/Title';
 import { useForm } from 'antd/es/form/Form';
 import { Form, Input, Space } from 'antd';
 import ActionButton from '../../components/Button/ActionButton';
-import { IpcRendererEvent } from 'electron';
 import { openAlert } from '../../components/Alert/Alert';
-import {
-  ProjectImportArgs,
-  ProjectImportResult,
-} from '../../../types/ProjectListenerArgs';
+import { ProjectCreationArgs } from '../../../types/ProjectListenerArgs';
 import { useNavigate } from 'react-router-dom';
 import { routePaths } from '../../routes';
 import RegistryField from '../../components/Form/RegistryField';
 
-const ProjectImport: FunctionComponent = () => {
+const ProjectCreation: FunctionComponent = () => {
   const { t } = useTranslation();
 
   const navigate = useNavigate();
@@ -22,31 +18,6 @@ const ProjectImport: FunctionComponent = () => {
   const [formInstance] = useForm();
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  useEffect(() => {
-    const listener = (
-      event: IpcRendererEvent,
-      importResult: ProjectImportResult,
-    ) => {
-      setIsLoading(false);
-      if (importResult.error) {
-        openAlert(
-          'error',
-          t('project.import.alert.title.error'),
-          importResult.error,
-        );
-      } else {
-        openAlert('success', t('project.import.alert.title.success'));
-        window.projectManagement.getProjectsDataForMenu();
-        navigate(routePaths.projectDetails.generate(importResult.projectKey));
-      }
-    };
-
-    const cleanListener =
-      window.projectManagement.projectImportListener(listener);
-
-    return cleanListener;
-  });
 
   const resetFieldError = (fieldName: string) => {
     const fieldErrors = formInstance.getFieldError(fieldName);
@@ -62,22 +33,42 @@ const ProjectImport: FunctionComponent = () => {
     }
   };
 
-  const onFinish = () => {
+  const onFinish = async () => {
     setIsLoading(true);
 
-    const projectImportArgs: ProjectImportArgs = {
+    const projectCreationArgs: ProjectCreationArgs = {
       name: formInstance.getFieldValue('projectName'),
       path: formInstance.getFieldValue('projectPath'),
+      registryUrl: formInstance.getFieldValue('registryUrl'),
     };
 
-    window.projectManagement.projectImport(projectImportArgs);
+    window.projectManagement
+      .create(projectCreationArgs)
+      .then((projectCreationResult) => {
+        setIsLoading(false);
+        if (projectCreationResult.error) {
+          openAlert(
+            'error',
+            t('project.creation.alert.title.error'),
+            projectCreationResult.error,
+          );
+        } else {
+          openAlert('success', t('project.creation.alert.title.success'));
+          window.projectManagement.getProjectsDataForMenu();
+          navigate(
+            routePaths.projectDetails.generate(
+              projectCreationResult.projectKey,
+            ),
+          );
+        }
+      });
   };
 
   return (
     <>
-      <Title content={t('project.import.title')} />
+      <Title content={t('project.creation.title')} />
       <Form
-        name="projectImport"
+        name="projectCreation"
         form={formInstance}
         initialValues={{
           projectPath: '',
@@ -88,9 +79,9 @@ const ProjectImport: FunctionComponent = () => {
         validateTrigger="onBlur"
       >
         <Form.Item
-          label={t('project.import.form.field.projectName')}
+          label={t('project.creation.form.field.projectName')}
           name="projectName"
-          tooltip={t('project.import.tooltip.projectName')}
+          tooltip={t('project.creation.tooltip.projectName')}
           rules={[
             {
               required: true,
@@ -102,7 +93,9 @@ const ProjectImport: FunctionComponent = () => {
                   const isProjectNameUsed =
                     await window.projectManagement.isProjectNameUsed(value);
                   if (isProjectNameUsed) {
-                    throw new Error(t('project.import.form.rules.projectName'));
+                    throw new Error(
+                      t('project.creation.form.rules.projectName'),
+                    );
                   }
                 }
               },
@@ -110,15 +103,15 @@ const ProjectImport: FunctionComponent = () => {
           ]}
         >
           <Input
-            placeholder={t('project.import.form.placeholder.projectName')}
+            placeholder={t('project.creation.form.placeholder.projectName')}
             onChange={() => resetFieldError('projectName')}
           />
         </Form.Item>
 
         <Form.Item
-          label={t('project.import.form.field.projectPath')}
+          label={t('project.creation.form.field.projectPath')}
           name="projectPath"
-          tooltip={t('project.import.tooltip.projectPath')}
+          tooltip={t('project.creation.tooltip.projectPath')}
           rules={[
             {
               required: true,
@@ -138,17 +131,17 @@ const ProjectImport: FunctionComponent = () => {
           ]}
         >
           <Input
-            placeholder={t('project.import.form.placeholder.projectPath')}
+            placeholder={t('project.creation.form.placeholder.projectPath')}
             onChange={() => resetFieldError('projectPath')}
           />
         </Form.Item>
 
-        <RegistryField toolTip={t('project.import.tooltip.')} />
+        <RegistryField toolTip={t('project.creation.tooltip.registryUrl')} />
 
         <div style={{ textAlign: 'center' }}>
           <Space>
             <ActionButton type="primary" loading={isLoading} htmlType="submit">
-              {t('project.import.buttons.import')}
+              {t('project.creation.buttons.create')}
             </ActionButton>
           </Space>
         </div>
@@ -157,4 +150,4 @@ const ProjectImport: FunctionComponent = () => {
   );
 };
 
-export default ProjectImport;
+export default ProjectCreation;

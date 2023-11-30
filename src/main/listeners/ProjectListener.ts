@@ -1,10 +1,13 @@
 import { ipcMain } from 'electron';
 import { ProjectListenerChannel } from '../../types/IpcChannel';
-import { ProjectImportArgs } from '../../types/ProjectListenerArgs';
+import {
+  ProjectCreationArgs,
+  ProjectCreationResult,
+} from '../../types/ProjectListenerArgs';
 import log from 'electron-log';
 import {
   validateProjectPath,
-  importProject,
+  createProject,
   getProjectsDataForMenu,
   parseProject,
   getProjectDetails,
@@ -30,32 +33,30 @@ ipcMain.handle(
   },
 );
 
-ipcMain.on(
-  ProjectListenerChannel.IMPORT_PROJECT,
-  async (event, projectImportArgs: ProjectImportArgs) => {
-    log.debug('Received project import validation IPC');
+ipcMain.handle(
+  ProjectListenerChannel.CREATE,
+  async (
+    event,
+    projectCreationArgs: ProjectCreationArgs,
+  ): Promise<ProjectCreationResult> => {
+    log.debug('Received create project IPC');
 
-    let projectKey: string | undefined;
+    let createdProjectKey: string | undefined;
     let importError: string | undefined;
     try {
-      projectKey = await importProject(
-        projectImportArgs.name,
-        projectImportArgs.path,
+      createdProjectKey = await createProject(
+        projectCreationArgs.name,
+        projectCreationArgs.path,
       );
     } catch (err) {
-      log.error(`Unable to import project. ${err.message}`);
+      log.error(`Unable to create project. ${err.message}`);
       importError = err.message;
     }
 
-    if (mainWindow) {
-      mainWindow.webContents.send(
-        ProjectListenerChannel.IMPORT_PROJECT_LISTENER,
-        {
-          projectKey: projectKey,
-          error: importError,
-        },
-      );
-    }
+    return {
+      projectKey: createdProjectKey,
+      error: importError,
+    };
   },
 );
 

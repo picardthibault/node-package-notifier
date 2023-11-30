@@ -4,9 +4,11 @@ import { getSha1 } from '../helpers/HashHelper';
 export interface ProjectConfig {
   name: string;
   path: string;
+  registryUrl: string;
 }
 
 export type IProjectStore = {
+  // key is the SHA1 of the project name
   [key: string]: ProjectConfig;
 };
 
@@ -22,7 +24,7 @@ export class ProjectStore {
 
   private store: Store<IProjectStore>;
 
-  constructor() {
+  private constructor() {
     this.store = new Store<IProjectStore>({
       name: 'projects',
     });
@@ -33,11 +35,16 @@ export class ProjectStore {
     return this.store.has(projectKey);
   }
 
-  createProject(projectName: string, projectPath: string): string {
+  addProject(
+    projectName: string,
+    projectPath: string,
+    registryUrl: string,
+  ): string {
     const projectKey = getSha1(projectName);
     this.store.set(projectKey, {
       name: projectName,
       path: projectPath,
+      registryUrl: registryUrl,
     });
     return projectKey;
   }

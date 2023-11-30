@@ -107,8 +107,8 @@
         }
     },
     "project": {
-        "import": {
-            "title": "Import Project",
+        "creation": {
+            "title": "Create Project",
             "form": {
                 "field": {
                     "projectName": "Project name",
@@ -129,12 +129,12 @@
             },
             "alert": {
                 "title": {
-                    "success": "Project has been successufuly imported",
-                    "error": "Unable to import project"
+                    "success": "Project has been successufuly created",
+                    "error": "Unable to create project"
                 }
             },
             "buttons": {
-                "import": "Import"
+                "create": "Create"
             }
         },
         "details": {

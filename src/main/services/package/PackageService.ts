@@ -8,7 +8,7 @@ import { PackageCache } from '../../caches/PackageCache';
 
 export const npmRegistryUrl = 'https://registry.npmjs.org';
 
-function adaptRegistryUrl(registryUrl?: string) {
+export function adaptRegistryUrl(registryUrl?: string) {
   return registryUrl ? registryUrl : npmRegistryUrl;
 }
 

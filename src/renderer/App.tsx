@@ -17,7 +17,7 @@ import {
   ProjectOutlined,
   UnorderedListOutlined,
 } from '@ant-design/icons';
-import ProjectImport from './views/projects/ProjectImport';
+import ProjectCreation from './views/projects/ProjectCreation';
 import { IpcRendererEvent } from 'electron';
 import ProjectDetails from './views/projects/ProjectDetails';
 import { ProjectDataForMenu } from '../types/ProjectListenerArgs';
@@ -68,7 +68,7 @@ const App: FunctionComponent = () => {
             label: projectData.name,
           })),
           {
-            key: routePaths.projectImport.generate(),
+            key: routePaths.projectCreation.generate(),
             label: t('sideMenu.items.addProject'),
             icon: <PlusCircleOutlined />,
           },
@@ -93,8 +93,8 @@ const App: FunctionComponent = () => {
           element={<PackageDetails />}
         />
         <Route
-          path={routePaths.projectImport.generate()}
-          element={<ProjectImport />}
+          path={routePaths.projectCreation.generate()}
+          element={<ProjectCreation />}
         />
         <Route
           path={routePaths.projectDetails.generate(':id')}

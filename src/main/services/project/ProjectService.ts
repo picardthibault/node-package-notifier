@@ -13,7 +13,11 @@ import {
   ProjectDetails,
 } from '../../../types/ProjectListenerArgs';
 import path from 'path';
-import { fetchPackageDetails, npmRegistryUrl } from '../package/PackageService';
+import {
+  adaptRegistryUrl,
+  fetchPackageDetails,
+  npmRegistryUrl,
+} from '../package/PackageService';
 
 interface Dependencies {
   [key: string]: string;
@@ -34,11 +38,11 @@ const packageJsonFileName = 'package.json';
  * @param projectName the given name
  * @returns true if the name is already used, otherwise returns false.
  */
-export const isProjectNameUsed = (projectName: string): boolean => {
+export function isProjectNameUsed(projectName: string): boolean {
   log.info(`Checking if project name "${projectName}" is already used`);
 
   return ProjectStore.get().hasProject(projectName);
-};
+}
 
 /**
  * Check if the given project path is valid
@@ -46,9 +50,9 @@ export const isProjectNameUsed = (projectName: string): boolean => {
  * @param projectPath the given project path
  * @returns undefined if the path is valid, otherwise an error message
  */
-export const validateProjectPath = async (
+export async function validateProjectPath(
   projectPath: string,
-): Promise<string | undefined> => {
+): Promise<string | undefined> {
   log.info(`Validating project path "${projectPath}"`);
 
   const isDir = await isDirectory(projectPath);
@@ -71,12 +75,21 @@ export const validateProjectPath = async (
   }
 
   return undefined;
-};
+}
 
-export const importProject = async (
+/**
+ * Import a new project
+ *
+ * @param projectName the given project name
+ * @param projectPath the given project path
+ * @param registryUrl the given registry url
+ * @returns the created project key
+ */
+export async function createProject(
   projectName: string,
   projectPath: string,
-): Promise<string> => {
+  registryUrl?: string,
+): Promise<string> {
   log.info(`Importing project with name "${projectName}"`);
 
   if (isProjectNameUsed(projectName)) {
@@ -88,10 +101,15 @@ export const importProject = async (
     throw new Error(isProjectPathValid);
   }
 
-  const projectKey = ProjectStore.get().createProject(projectName, projectPath);
+  const adaptedRegistryUrl = adaptRegistryUrl(registryUrl);
+  const projectKey = ProjectStore.get().addProject(
+    projectName,
+    projectPath,
+    adaptedRegistryUrl,
+  );
 
   return projectKey;
-};
+}
 
 export const getProjectsDataForMenu = (): ProjectDataForMenu[] => {
   log.info('Retrieve projects data for menu');

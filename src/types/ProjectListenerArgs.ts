@@ -9,11 +9,6 @@ export interface ProjectCreationResult {
   error: string;
 }
 
-export interface ProjectDataForMenu {
-  projectKey: string;
-  name: string;
-}
-
 export interface ProjectDetails {
   name: string;
   path: string;

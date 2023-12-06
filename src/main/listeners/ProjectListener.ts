@@ -8,13 +8,13 @@ import log from 'electron-log';
 import {
   validateProjectPath,
   createProject,
-  getProjectsDataForMenu,
+  getProjectsSumUp,
   parseProject,
   getProjectDetails,
   fetchLatestsVersions,
   isProjectNameUsed,
 } from '../services/project/ProjectService';
-import { mainWindow } from '..';
+import { ProjectSumUp } from '../../types/ProjectInfo';
 
 ipcMain.handle(
   ProjectListenerChannel.IS_PROJECT_NAME_USED,
@@ -60,17 +60,15 @@ ipcMain.handle(
   },
 );
 
-ipcMain.on(ProjectListenerChannel.GET_PROJECTS_DATA_FOR_MENU, () => {
-  log.debug('Received get projects data for menu IPC');
+ipcMain.handle(
+  ProjectListenerChannel.GET_PROJECTS_SUM_UP,
+  (): Promise<ProjectSumUp[]> => {
+    log.debug('Received get projects data for menu IPC');
 
-  const projectsDataForMenu = getProjectsDataForMenu();
-  if (mainWindow) {
-    mainWindow.webContents.send(
-      ProjectListenerChannel.GET_PROJECTS_DATA_FOR_MENU_LISTENER,
-      projectsDataForMenu,
-    );
-  }
-});
+    const projectSumUp = getProjectsSumUp();
+    return Promise.resolve(projectSumUp);
+  },
+);
 
 ipcMain.handle(
   ProjectListenerChannel.GET_PROJECT_DETAILS,

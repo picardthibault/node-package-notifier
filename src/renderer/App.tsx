@@ -18,38 +18,21 @@ import {
   UnorderedListOutlined,
 } from '@ant-design/icons';
 import ProjectCreation from './views/projects/ProjectCreation';
-import { IpcRendererEvent } from 'electron';
 import ProjectDetails from './views/projects/ProjectDetails';
-import { ProjectDataForMenu } from '../types/ProjectListenerArgs';
+import { ProjectSumUp } from '../types/ProjectInfo';
+
+const projectListMenuKey = 'projectList';
 
 const App: FunctionComponent = () => {
   const { t } = useTranslation();
 
-  const [projectsDataForMenu, setProjectsDataForMenu] = useState<
-    ProjectDataForMenu[]
-  >([]);
+  const [projectsSumUp, setProjectsSumUp] = useState<ProjectSumUp[]>([]);
 
   useEffect(() => {
-    window.projectManagement.getProjectsDataForMenu();
+    window.projectManagement.getProjectsSumUp().then((projects) => {
+      setProjectsSumUp(projects);
+    });
   }, []);
-
-  useEffect(() => {
-    const projectKeyListener = (
-      event: IpcRendererEvent,
-      projectsData: ProjectDataForMenu[],
-    ) => {
-      setProjectsDataForMenu(projectsData);
-    };
-
-    const cleanListener =
-      window.projectManagement.getProjectsDataForMenuListener(
-        projectKeyListener,
-      );
-
-    return () => {
-      cleanListener();
-    };
-  }, [setProjectsDataForMenu]);
 
   const subMenuItems = useCallback((): Array<MenuItemType | SubMenuType> => {
     return [
@@ -59,11 +42,11 @@ const App: FunctionComponent = () => {
         icon: <UnorderedListOutlined />,
       },
       {
-        key: 'projectList',
+        key: projectListMenuKey,
         label: t('sideMenu.items.projectList'),
         icon: <ProjectOutlined />,
         children: [
-          ...projectsDataForMenu.map((projectData) => ({
+          ...projectsSumUp.map((projectData) => ({
             key: routePaths.projectDetails.generate(projectData.projectKey),
             label: projectData.name,
           })),
@@ -75,11 +58,18 @@ const App: FunctionComponent = () => {
         ],
       },
     ];
-  }, [projectsDataForMenu]);
+  }, [projectsSumUp]);
 
   return (
     <Routes>
-      <Route element={<PageLayout subMenuItems={subMenuItems()} />}>
+      <Route
+        element={
+          <PageLayout
+            subMenuItems={subMenuItems()}
+            defaultOpenMenuKeys={[projectListMenuKey]}
+          />
+        }
+      >
         <Route
           path={routePaths.packageList.generate()}
           element={<PackagesView />}

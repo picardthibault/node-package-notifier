@@ -7,7 +7,6 @@ import {
 import { ProjectStore } from '../../store/ProjectStore';
 import i18n from '../../i18n';
 import {
-  ProjectDataForMenu,
   ParsedDependency,
   ParsedProject,
   ProjectDetails,
@@ -18,6 +17,7 @@ import {
   fetchPackageDetails,
   npmRegistryUrl,
 } from '../package/PackageService';
+import { ProjectSumUp } from '../../../types/ProjectInfo';
 
 interface Dependencies {
   [key: string]: string;
@@ -111,7 +111,12 @@ export async function createProject(
   return projectKey;
 }
 
-export const getProjectsDataForMenu = (): ProjectDataForMenu[] => {
+/**
+ * Retrieve all project sum-up
+ *
+ * @returns the table of project sum-up
+ */
+export const getProjectsSumUp = (): ProjectSumUp[] => {
   log.info('Retrieve projects data for menu');
   const projects = ProjectStore.get().getProjects();
 

@@ -10,12 +10,12 @@ import {
   ProjectListenerChannel,
 } from '../types/IpcChannel';
 import {
-  ProjectDataForMenu,
   ProjectCreationArgs,
   ProjectCreationResult,
   ProjectDetails,
   ParsedProject,
 } from '../types/ProjectListenerArgs';
+import { ProjectSumUp } from '../types/ProjectInfo';
 
 contextBridge.exposeInMainWorld('packageManagement', {
   create: (creationArgs: PackageCreationArgs): Promise<string | undefined> =>
@@ -47,24 +47,8 @@ contextBridge.exposeInMainWorld('projectManagement', {
     projectCreationArgs: ProjectCreationArgs,
   ): Promise<ProjectCreationResult> =>
     ipcRenderer.invoke(ProjectListenerChannel.CREATE, projectCreationArgs),
-  getProjectsDataForMenu: () =>
-    ipcRenderer.send(ProjectListenerChannel.GET_PROJECTS_DATA_FOR_MENU),
-  getProjectsDataForMenuListener: (
-    listener: (
-      event: IpcRendererEvent,
-      projectsData: ProjectDataForMenu[],
-    ) => void,
-  ) => {
-    ipcRenderer.on(
-      ProjectListenerChannel.GET_PROJECTS_DATA_FOR_MENU_LISTENER,
-      listener,
-    );
-    return () =>
-      ipcRenderer.removeListener(
-        ProjectListenerChannel.GET_PROJECTS_DATA_FOR_MENU_LISTENER,
-        listener,
-      );
-  },
+  getProjectsSumUp: (): Promise<ProjectSumUp[]> =>
+    ipcRenderer.invoke(ProjectListenerChannel.GET_PROJECTS_SUM_UP),
   getProjectDetails: (projectKey: string): Promise<ProjectDetails> =>
     ipcRenderer.invoke(ProjectListenerChannel.GET_PROJECT_DETAILS, projectKey),
   parseProject: (projectKey: string): Promise<ParsedProject> =>

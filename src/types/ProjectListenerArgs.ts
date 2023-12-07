@@ -1,3 +1,5 @@
+import { ProjectDetails } from './ProjectInfo';
+
 export interface ProjectCreationArgs {
   name: string;
   path: string;
@@ -9,21 +11,7 @@ export interface ProjectCreationResult {
   error: string;
 }
 
-export interface ProjectDetails {
-  name: string;
-  path: string;
-}
-
-export interface ParsedDependency {
-  name: string;
-  currentVersion: string;
-}
-
-export interface ParsedProject {
-  name: string;
-  path: string;
-  version: string;
-  description?: string;
-  dependencies: ParsedDependency[];
-  devDependencies: ParsedDependency[];
+export interface GetProjectDetailsResult {
+  projectDetails: ProjectDetails;
+  error?: string;
 }

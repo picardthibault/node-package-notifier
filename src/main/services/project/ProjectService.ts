@@ -4,20 +4,21 @@ import {
   isDirectory,
   readFileContent,
 } from '../file/FileSystemService';
-import { ProjectStore } from '../../store/ProjectStore';
+import { ProjectConfig, ProjectStore } from '../../store/ProjectStore';
 import i18n from '../../i18n';
-import {
-  ParsedDependency,
-  ParsedProject,
-  ProjectDetails,
-} from '../../../types/ProjectListenerArgs';
 import path from 'path';
 import {
   adaptRegistryUrl,
   fetchPackageDetails,
   npmRegistryUrl,
 } from '../package/PackageService';
-import { ProjectSumUp } from '../../../types/ProjectInfo';
+import {
+  ParsedDependency,
+  ParsedProject,
+  ProjectDetails,
+  ProjectSumUp,
+} from '../../../types/ProjectInfo';
+import { GetProjectDetailsResult } from '../../../types/ProjectListenerArgs';
 
 interface Dependencies {
   [key: string]: string;
@@ -126,43 +127,68 @@ export const getProjectsSumUp = (): ProjectSumUp[] => {
   }));
 };
 
-export const getProjectDetails = (projectKey: string): ProjectDetails => {
+/**
+ * Get project details
+ *
+ * @param projectKey the project to get details
+ * @returns the details of the project
+ */
+export const getProjectDetails = async (
+  projectKey: string,
+): Promise<GetProjectDetailsResult> => {
   log.info(`Retrieve project "${projectKey}" details`);
 
-  const projectSavedData = ProjectStore.get().getProject(projectKey);
+  const projectConfig = ProjectStore.get().getProject(projectKey);
+
+  let parsedProject: ParsedProject | undefined;
+  let error: string | undefined;
+  try {
+    parsedProject = await parseProject(projectConfig);
+  } catch (err) {
+    error = i18n.t('project.parse.error');
+  }
+
+  const projectDetails: ProjectDetails = {
+    name: projectConfig.name,
+    path: projectConfig.path,
+    registryUrl: projectConfig.registryUrl,
+    parsedProject: parsedProject,
+  };
+
   return {
-    name: projectSavedData.name,
-    path: projectSavedData.path,
+    projectDetails: projectDetails,
+    error: error,
   };
 };
 
+/**
+ * Parse project details
+ *
+ * @param projectConfig the project configuration to parse
+ * @returns the parsed details of the project
+ */
 export const parseProject = async (
-  projectKey: string,
-): Promise<ParsedProject | string> => {
-  log.info(`Parse project "${projectKey}"`);
-
-  const projectData = ProjectStore.get().getProject(projectKey);
+  projectConfig: ProjectConfig,
+): Promise<ParsedProject> => {
+  log.info(`Parse project "${projectConfig.name}"`);
   let packageJson: PackageJson;
   try {
-    packageJson = await parsePackageJson(projectData.path);
+    packageJson = await parsePackageJson(projectConfig.path);
   } catch (err) {
     log.error(
-      `Unable to parse project package.json from "${projectData.path}"`,
+      `Unable to parse project package.json from "${projectConfig.path}"`,
       err,
     );
-    if (err instanceof Error) {
-      return err.message;
-    } else {
-      return i18n.t('project.parse.unknownError');
-    }
+    throw err;
   }
 
-  const dependencies = await parseProjectDependencies(packageJson);
-  const devDepencies = await parseProjectDevDependencies(packageJson);
+  log.info('Parse project dependencies');
+  const dependencies = parseDependencies(packageJson.dependencies);
+
+  log.info('Parse project devDepencies');
+  const devDepencies = parseDependencies(packageJson.devDependencies);
 
   return {
-    name: projectData.name,
-    path: projectData.path,
     version: packageJson.version,
     description: packageJson.description,
     dependencies: dependencies,
@@ -170,6 +196,12 @@ export const parseProject = async (
   };
 };
 
+/**
+ * Parse project package.json file
+ *
+ * @param projectPath the path to the project folder
+ * @returns the parsed package.json file
+ */
 const parsePackageJson = async (projectPath: string): Promise<PackageJson> => {
   const packageJsonPath = path.join(projectPath, packageJsonFileName);
   log.info(`Parse package.json project file "${packageJsonPath}"`);
@@ -177,24 +209,20 @@ const parsePackageJson = async (projectPath: string): Promise<PackageJson> => {
   return JSON.parse(packageJsonContent.toString());
 };
 
-const parseProjectDependencies = async (
-  packageJson: PackageJson,
-): Promise<ParsedDependency[]> => {
-  log.info('Parse project dependencies');
-  return parseDependencies(packageJson.dependencies);
-};
-
-const parseProjectDevDependencies = async (
-  packageJson: PackageJson,
-): Promise<ParsedDependency[]> => {
-  log.info('Parse project devDepencies');
-  return parseDependencies(packageJson.devDependencies);
-};
-
+/**
+ * Parse project dependencies
+ *
+ * @param dependencies the dependencies of a parsed package.json file
+ * @returns An array of the parsed dependencies, if the dependencies is null then return empty array
+ */
 const parseDependencies = (dependencies: Dependencies): ParsedDependency[] => {
+  if (!dependencies) {
+    return [];
+  }
+
   return Object.keys(dependencies).map((key) => ({
     name: key,
-    currentVersion: dependencies[key],
+    version: dependencies[key],
   }));
 };
 

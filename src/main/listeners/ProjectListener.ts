@@ -1,6 +1,7 @@
 import { ipcMain } from 'electron';
 import { ProjectListenerChannel } from '../../types/IpcChannel';
 import {
+  GetProjectDetailsResult,
   ProjectCreationArgs,
   ProjectCreationResult,
 } from '../../types/ProjectListenerArgs';
@@ -9,7 +10,6 @@ import {
   validateProjectPath,
   createProject,
   getProjectsSumUp,
-  parseProject,
   getProjectDetails,
   fetchLatestsVersions,
   isProjectNameUsed,
@@ -72,19 +72,11 @@ ipcMain.handle(
 
 ipcMain.handle(
   ProjectListenerChannel.GET_PROJECT_DETAILS,
-  (event, projectKey: string) => {
+  (event, projectKey: string): Promise<GetProjectDetailsResult> => {
     log.debug(
       `Received get project details IPC with projectKey "${projectKey}"`,
     );
     return getProjectDetails(projectKey);
-  },
-);
-
-ipcMain.handle(
-  ProjectListenerChannel.PARSE_PROJECT,
-  async (event, projectKey: string) => {
-    log.debug(`Received parse project IPC with projectKey "${projectKey}"`);
-    return parseProject(projectKey);
   },
 );
 

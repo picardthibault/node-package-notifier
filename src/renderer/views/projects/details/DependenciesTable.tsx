@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import Table, { ColumnsType } from 'antd/es/table';
-import { ParsedDependency } from '../../../../types/ProjectListenerArgs';
 import i18next from '../../../i18n';
 import LatestVersionCell from './LatestVersionCell';
 import { useCompare } from '../../../hooks/useCompare';
+import { ParsedDependency } from '../../../../types/ProjectInfo';
 
 interface DependenciesTableProps {
   dependencies: ParsedDependency[];
@@ -73,8 +73,8 @@ const DependenciesTable: React.FunctionComponent<DependenciesTableProps> = (
     },
     {
       title: i18next.t('project.details.table.columns.currentVersion'),
-      dataIndex: 'currentVersion',
-      key: 'currentVersion',
+      dataIndex: 'version',
+      key: 'version',
     },
     {
       title: i18next.t('project.details.table.columns.latestVersion'),

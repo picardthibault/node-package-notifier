@@ -1,14 +1,13 @@
+import { IpcRendererEvent } from 'electron';
 import {
   PackageCreationArgs,
   GetPackagesResult,
   GetPackageResult,
 } from './PackageListenerArgs';
-import { IpcRendererEvent } from 'electron';
 import {
   ProjectCreationArgs,
   ProjectCreationResult,
-  ProjectDetails,
-  ParsedProject,
+  GetProjectDetailsResult,
 } from './ProjectListenerArgs';
 import { ProjectSumUp } from './ProjectInfo';
 
@@ -40,8 +39,9 @@ declare global {
         projectCreationArgs: ProjectCreationArgs,
       ) => Promise<ProjectCreationResult>;
       getProjectsSumUp: () => Promise<ProjectSumUp[]>;
-      getProjectDetails: (projectKey: string) => Promise<ProjectDetails>;
-      parseProject: (projectKey: string) => Promise<ParsedProject>;
+      getProjectDetails: (
+        projectKey: string,
+      ) => Promise<GetProjectDetailsResult>;
       fetchLatestVersions: (
         projectDependencies: string[],
       ) => Promise<Map<string, string>>;

@@ -1,4 +1,9 @@
-import React, { FunctionComponent, useEffect, useState } from 'react';
+import React, {
+  FunctionComponent,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import { useParams } from 'react-router-dom';
 import Title from '../../components/Title/Title';
 import Loading from '../../components/Loading/Loading';
@@ -6,8 +11,8 @@ import { Form, Input, Tabs, TabsProps } from 'antd';
 import { useTranslation } from 'react-i18next';
 import TextArea from 'antd/es/input/TextArea';
 import { openAlert } from '../../components/Alert/Alert';
-import { ParsedDependency } from '../../../types/ProjectListenerArgs';
 import DependenciesTable from './details/DependenciesTable';
+import { ParsedDependency } from '../../../types/ProjectInfo';
 
 const dependenciesTabKey = 'dependencies';
 const devDepenciesTabKey = 'devDependencies';
@@ -29,44 +34,50 @@ const ProjectDetails: FunctionComponent = () => {
     [],
   );
 
-  useEffect(() => {
+  const fetchProjectDetails = useCallback(() => {
+    setIsLoading(true);
+
     // Reset fields and tables
     formInstance.resetFields();
     setDependencies([]);
     setDevDependencies([]);
-  }, [id]);
 
-  useEffect(() => {
     // Fetch project details
-    window.projectManagement.getProjectDetails(id).then((details) => {
-      setTitle(details.name);
-      formInstance.setFieldValue('projectPath', details.path);
+    window.projectManagement.getProjectDetails(id).then((result) => {
       setIsLoading(false);
-    });
-  }, [id]);
-
-  useEffect(() => {
-    // Parse project data
-    window.projectManagement.parseProject(id).then((parsedProject) => {
-      if (typeof parsedProject === 'string') {
+      setTitle(result.projectDetails.name);
+      formInstance.setFieldsValue({
+        projectPath: result.projectDetails.path,
+        registryUrl: result.projectDetails.registryUrl,
+      });
+      if (result.error) {
         openAlert(
           'error',
           t('project.details.alert.title.loadProjectError'),
           t('project.details.alert.description.loadProjectError', {
-            cause: parsedProject,
+            cause: result.error,
           }),
         );
-      } else {
+      } else if (result.projectDetails.parsedProject) {
         formInstance.setFieldsValue({
-          projectPath: parsedProject.path,
-          version: parsedProject.version,
-          description: parsedProject.description,
+          version: result.projectDetails.parsedProject.version,
+          description: result.projectDetails.parsedProject.description,
         });
-        setDependencies(parsedProject.dependencies);
-        setDevDependencies(parsedProject.devDependencies);
+        setDependencies(result.projectDetails.parsedProject.dependencies);
+        setDevDependencies(result.projectDetails.parsedProject.devDependencies);
+      } else {
+        openAlert(
+          'error',
+          t('project.details.alert.title.loadProjectError'),
+          t('project.details.alert.description.noProjectData'),
+        );
       }
     });
   }, [id]);
+
+  useEffect(() => {
+    fetchProjectDetails();
+  }, [fetchProjectDetails]);
 
   const tabItems: TabsProps['items'] = [
     {
@@ -98,6 +109,12 @@ const ProjectDetails: FunctionComponent = () => {
               <Form.Item
                 label={t('project.details.form.field.projectPath')}
                 name="projectPath"
+              >
+                <Input disabled />
+              </Form.Item>
+              <Form.Item
+                label={t('project.details.form.field.registryUrl')}
+                name="registryUrl"
               >
                 <Input disabled />
               </Form.Item>

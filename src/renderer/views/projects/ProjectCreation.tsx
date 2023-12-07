@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useEffect, useState } from 'react';
+import React, { FunctionComponent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Title from '../../components/Title/Title';
 import { useForm } from 'antd/es/form/Form';
@@ -54,7 +54,7 @@ const ProjectCreation: FunctionComponent = () => {
           );
         } else {
           openAlert('success', t('project.creation.alert.title.success'));
-          window.projectManagement.getProjectsDataForMenu();
+          window.projectManagement.getProjectsSumUp();
           navigate(
             routePaths.projectDetails.generate(
               projectCreationResult.projectKey,

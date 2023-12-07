@@ -21,7 +21,7 @@
             }
         },
         "parse": {
-            "unknownError": "Unable to parse project \"package.json\" file"
+            "error": "Unable to parse project \"package.json\" file"
         }
     },
     "fileSystem": {

@@ -1,4 +1,4 @@
-import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
+import { contextBridge, ipcRenderer } from 'electron';
 import {
   GetPackagesResult,
   PackageCreationArgs,
@@ -12,8 +12,7 @@ import {
 import {
   ProjectCreationArgs,
   ProjectCreationResult,
-  ProjectDetails,
-  ParsedProject,
+  GetProjectDetailsResult,
 } from '../types/ProjectListenerArgs';
 import { ProjectSumUp } from '../types/ProjectInfo';
 
@@ -49,10 +48,8 @@ contextBridge.exposeInMainWorld('projectManagement', {
     ipcRenderer.invoke(ProjectListenerChannel.CREATE, projectCreationArgs),
   getProjectsSumUp: (): Promise<ProjectSumUp[]> =>
     ipcRenderer.invoke(ProjectListenerChannel.GET_PROJECTS_SUM_UP),
-  getProjectDetails: (projectKey: string): Promise<ProjectDetails> =>
+  getProjectDetails: (projectKey: string): Promise<GetProjectDetailsResult> =>
     ipcRenderer.invoke(ProjectListenerChannel.GET_PROJECT_DETAILS, projectKey),
-  parseProject: (projectKey: string): Promise<ParsedProject> =>
-    ipcRenderer.invoke(ProjectListenerChannel.PARSE_PROJECT, projectKey),
   fetchLatestVersions: (projectDependencies: string[]) =>
     ipcRenderer.invoke(
       ProjectListenerChannel.FETCH_LATEST_VERSIONS,

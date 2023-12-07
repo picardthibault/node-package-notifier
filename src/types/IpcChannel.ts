@@ -12,6 +12,5 @@ export enum ProjectListenerChannel {
   CREATE = 'projectChannelCreate',
   GET_PROJECTS_SUM_UP = 'projectChannelGetProjectsSumUp',
   GET_PROJECT_DETAILS = 'projectChannelGetProjectDetails',
-  PARSE_PROJECT = 'projectChannelParseProject',
   FETCH_LATEST_VERSIONS = 'projectChannelFetchLatestVersions',
 }

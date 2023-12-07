@@ -141,6 +141,7 @@
             "form": {
                "field": {
                 "projectPath": "Project path",
+                "registryUrl": "Registry",
                 "version": "Version",
                 "description": "Description"
                } 
@@ -168,6 +169,7 @@
                 },
                 "description": {
                     "loadProjectError": "An error occurred while loading project details: {{cause}}",
+                    "noProjectData": "Unable to extract project details",
                     "fetchLatestVerionError": "An error occurred while fetching latest version of \"{{package}}\""
                 }
             }

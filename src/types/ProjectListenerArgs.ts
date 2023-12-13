@@ -15,3 +15,8 @@ export interface GetProjectDetailsResult {
   projectDetails: ProjectDetails;
   error?: string;
 }
+
+export interface FetchLatestVersionArgs {
+  dependencyName: string;
+  registryUrl?: string;
+}

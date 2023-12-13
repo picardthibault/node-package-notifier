@@ -42,9 +42,9 @@ declare global {
       getProjectDetails: (
         projectKey: string,
       ) => Promise<GetProjectDetailsResult>;
-      fetchLatestVersions: (
-        projectDependencies: string[],
-      ) => Promise<Map<string, string>>;
+      fetchLatestVersion: (
+        fetchLatestVersionArgs: FetchLatestVersionArgs,
+      ) => Promise<string | undefined>;
     };
   }
 }

@@ -28,6 +28,8 @@ const ProjectDetails: FunctionComponent = () => {
 
   const [title, setTitle] = useState<string>('');
 
+  const [registryUrl, setRegistryUrl] = useState<string | undefined>('');
+
   const [dependencies, setDependencies] = useState<ParsedDependency[]>([]);
 
   const [devDependencies, setDevDependencies] = useState<ParsedDependency[]>(
@@ -46,6 +48,7 @@ const ProjectDetails: FunctionComponent = () => {
     window.projectManagement.getProjectDetails(id).then((result) => {
       setIsLoading(false);
       setTitle(result.projectDetails.name);
+      setRegistryUrl(result.projectDetails.registryUrl);
       formInstance.setFieldsValue({
         projectPath: result.projectDetails.path,
         registryUrl: result.projectDetails.registryUrl,
@@ -83,12 +86,22 @@ const ProjectDetails: FunctionComponent = () => {
     {
       key: dependenciesTabKey,
       label: t('project.details.tabs.label.dependencies'),
-      children: <DependenciesTable dependencies={dependencies} />,
+      children: (
+        <DependenciesTable
+          dependencies={dependencies}
+          registryUrl={registryUrl}
+        />
+      ),
     },
     {
       key: devDepenciesTabKey,
       label: t('project.details.tabs.label.devDependencies'),
-      children: <DependenciesTable dependencies={devDependencies} />,
+      children: (
+        <DependenciesTable
+          dependencies={devDependencies}
+          registryUrl={registryUrl}
+        />
+      ),
     },
   ];
 

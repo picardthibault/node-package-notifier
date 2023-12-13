@@ -155,7 +155,7 @@
             "table": {
                 "columns": {
                     "name": "Name",
-                    "currentVersion": "Current version",
+                    "version": "Version",
                     "latestVersion": "Latest version"
                 },
                 "values": {

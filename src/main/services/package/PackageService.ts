@@ -117,10 +117,10 @@ export async function fetchPackageDetails(
   packageName: string,
   refresh = false,
 ): Promise<PackageDetails | string> {
-  log.debug(`Fetch package "${packageName} details`);
+  log.debug(`Fetch package "${packageName}" details`);
   // Search package info in PackageCache
   if (!refresh) {
-    const packageInfo = PackageCache.get().get(registryUrl, packageName);
+    const packageInfo = await PackageCache.get().get(registryUrl, packageName);
     if (packageInfo !== undefined) {
       return packageInfo;
     }

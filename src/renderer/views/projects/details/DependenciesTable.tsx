@@ -1,67 +1,18 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React from 'react';
 import Table, { ColumnsType } from 'antd/es/table';
 import i18next from '../../../i18n';
 import LatestVersionCell from './LatestVersionCell';
-import { useCompare } from '../../../hooks/useCompare';
 import { ParsedDependency } from '../../../../types/ProjectInfo';
 
 interface DependenciesTableProps {
   dependencies: ParsedDependency[];
+  registryUrl?: string;
 }
 
 const DependenciesTable: React.FunctionComponent<DependenciesTableProps> = (
   props,
 ) => {
-  const { dependencies } = props;
-  const hasDependenciesChanged = useCompare(dependencies);
-
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const hasCurrentPageChanged = useCompare(currentPage);
-
-  const [pageSize, setPageSize] = useState<number>(10);
-  const hasPageSizeChanged = useCompare(pageSize);
-
-  const [dependencyLatestVersions, setDependencyLatestVersions] = useState<
-    Map<string, string | undefined>
-  >(new Map<string, string | undefined>());
-
-  const fetchLatestVersion = useCallback(() => {
-    setIsLoading(true);
-    const displayedDependencies = dependencies.slice(
-      (currentPage - 1) * pageSize,
-      currentPage * pageSize,
-    );
-    const dependenciesTofetch = displayedDependencies
-      .filter((dependency) => !dependencyLatestVersions.has(dependency.name))
-      .map((dependency) => dependency.name);
-
-    window.projectManagement
-      .fetchLatestVersions(dependenciesTofetch)
-      .then((fetchedDependencyLatestVersions) => {
-        setDependencyLatestVersions(
-          new Map<string, string | undefined>([
-            ...dependencyLatestVersions,
-            ...fetchedDependencyLatestVersions,
-          ]),
-        );
-        setIsLoading(false);
-      });
-  }, [dependencies, pageSize, currentPage, dependencyLatestVersions]);
-
-  useEffect(() => {
-    if (hasDependenciesChanged || hasCurrentPageChanged || hasPageSizeChanged) {
-      fetchLatestVersion();
-    }
-  }, [
-    dependencies,
-    pageSize,
-    currentPage,
-    hasCurrentPageChanged,
-    hasPageSizeChanged,
-    dependencyLatestVersions,
-  ]);
+  const { dependencies, registryUrl } = props;
 
   const dependenciesTableColumns: ColumnsType<ParsedDependency> = [
     {
@@ -72,7 +23,7 @@ const DependenciesTable: React.FunctionComponent<DependenciesTableProps> = (
       sorter: (a, b) => a.name.localeCompare(b.name),
     },
     {
-      title: i18next.t('project.details.table.columns.currentVersion'),
+      title: i18next.t('project.details.table.columns.version'),
       dataIndex: 'version',
       key: 'version',
     },
@@ -81,10 +32,7 @@ const DependenciesTable: React.FunctionComponent<DependenciesTableProps> = (
       key: 'latestVersion',
       dataIndex: 'name',
       render: (name: string) => (
-        <LatestVersionCell
-          isLoading={isLoading}
-          latestVersion={dependencyLatestVersions.get(name)}
-        />
+        <LatestVersionCell dependencyName={name} registryUrl={registryUrl} />
       ),
     },
   ];
@@ -99,12 +47,6 @@ const DependenciesTable: React.FunctionComponent<DependenciesTableProps> = (
       pagination={{
         position: ['bottomCenter'],
         showSizeChanger: true,
-        current: currentPage,
-        pageSize: pageSize,
-        onChange: (page: number, pageSize: number) => {
-          setCurrentPage(page);
-          setPageSize(pageSize);
-        },
       }}
     />
   );

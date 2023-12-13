@@ -1,6 +1,7 @@
 import { ipcMain } from 'electron';
 import { ProjectListenerChannel } from '../../types/IpcChannel';
 import {
+  FetchLatestVersionArgs,
   GetProjectDetailsResult,
   ProjectCreationArgs,
   ProjectCreationResult,
@@ -11,8 +12,8 @@ import {
   createProject,
   getProjectsSumUp,
   getProjectDetails,
-  fetchLatestsVersions,
   isProjectNameUsed,
+  fetchLatestVersion,
 } from '../services/project/ProjectService';
 import { ProjectSumUp } from '../../types/ProjectInfo';
 
@@ -81,9 +82,18 @@ ipcMain.handle(
 );
 
 ipcMain.handle(
-  ProjectListenerChannel.FETCH_LATEST_VERSIONS,
-  async (event, projectDependencies: string[]) => {
-    log.debug('Received fetch latest versions IPC');
-    return fetchLatestsVersions(projectDependencies);
+  ProjectListenerChannel.FETCH_LATEST_VERSION,
+  async (
+    event,
+    fetchLatestVersionArgs: FetchLatestVersionArgs,
+  ): Promise<string | undefined> => {
+    log.debug(
+      `Received fetch latest version IPC with dependency "${fetchLatestVersionArgs.dependencyName}" et registry URL "${fetchLatestVersionArgs.registryUrl}`,
+    );
+
+    return fetchLatestVersion(
+      fetchLatestVersionArgs.dependencyName,
+      fetchLatestVersionArgs.registryUrl,
+    );
   },
 );

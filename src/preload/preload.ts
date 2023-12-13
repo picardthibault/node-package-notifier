@@ -13,6 +13,7 @@ import {
   ProjectCreationArgs,
   ProjectCreationResult,
   GetProjectDetailsResult,
+  FetchLatestVersionArgs,
 } from '../types/ProjectListenerArgs';
 import { ProjectSumUp } from '../types/ProjectInfo';
 
@@ -50,9 +51,11 @@ contextBridge.exposeInMainWorld('projectManagement', {
     ipcRenderer.invoke(ProjectListenerChannel.GET_PROJECTS_SUM_UP),
   getProjectDetails: (projectKey: string): Promise<GetProjectDetailsResult> =>
     ipcRenderer.invoke(ProjectListenerChannel.GET_PROJECT_DETAILS, projectKey),
-  fetchLatestVersions: (projectDependencies: string[]) =>
+  fetchLatestVersion: (
+    fetchLatestVersionArgs: FetchLatestVersionArgs,
+  ): Promise<string | undefined> =>
     ipcRenderer.invoke(
-      ProjectListenerChannel.FETCH_LATEST_VERSIONS,
-      projectDependencies,
+      ProjectListenerChannel.FETCH_LATEST_VERSION,
+      fetchLatestVersionArgs,
     ),
 });

@@ -20,6 +20,7 @@ import {
 import ProjectCreation from './views/projects/ProjectCreation';
 import ProjectDetails from './views/projects/ProjectDetails';
 import { ProjectSumUp } from '../types/ProjectInfo';
+import { fetchProjectsSumUp } from './effects/ProjectEffects';
 
 const projectListMenuKey = 'projectList';
 
@@ -29,10 +30,14 @@ const App: FunctionComponent = () => {
   const [projectsSumUp, setProjectsSumUp] = useState<ProjectSumUp[]>([]);
 
   useEffect(() => {
-    window.projectManagement.getProjectsSumUp().then((projects) => {
-      setProjectsSumUp(projects);
-    });
+    fetchProjectsSumUp();
   }, []);
+
+  useEffect(() => {
+    fetchProjectsSumUp.done.watch(projects => {
+      setProjectsSumUp(projects.result);
+    });
+  })
 
   const subMenuItems = useCallback((): Array<MenuItemType | SubMenuType> => {
     return [

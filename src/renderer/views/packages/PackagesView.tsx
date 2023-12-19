@@ -14,6 +14,7 @@ import { useStore } from 'effector-react';
 import Title from '../../components/Title/Title';
 import { routePaths } from '../../routes';
 import { updatePackageDetails } from '../../stores/PackageDetailsStore';
+import { fetchPackages } from '../../effects/PackageListEffect';
 
 interface TableItemType {
   key: number;
@@ -33,35 +34,34 @@ export const PackagesView = (): JSX.Element => {
   const [hasFilter, setHasFilter] = useState<boolean>(false);
   const [filteredPackages, setFilteredPackages] = useState<TableItemType[]>([]);
 
-  const { page, pageSize } = useStore<PackageListStore>(packageListStore);
+  const { fetchedPackages, page, pageSize } =
+    useStore<PackageListStore>(packageListStore);
 
   const [formInstance] = Form.useForm();
-
-  const fetchPackages = useCallback(() => {
-    window.packageManagement.getPackages().then((packages) => {
-      const tableItems: TableItemType[] = Object.keys(packages).map(
-        (packageId, index) => ({
-          key: index,
-          packageId,
-          name: packages[packageId].name,
-          registryUrl: packages[packageId].registryUrl,
-          license: packages[packageId].license
-            ? packages[packageId].license
-            : t('common.na'),
-          version: packages[packageId].latest
-            ? packages[packageId].latest
-            : t('common.na'),
-        }),
-      );
-
-      setPackages(tableItems);
-    });
-  }, []);
 
   useEffect(() => {
     // Load packages
     fetchPackages();
   }, []);
+
+  useEffect(() => {
+    const tableItems: TableItemType[] = Object.keys(fetchedPackages).map(
+      (packageId, index) => ({
+        key: index,
+        packageId,
+        name: fetchedPackages[packageId].name,
+        registryUrl: fetchedPackages[packageId].registryUrl,
+        license: fetchedPackages[packageId].license
+          ? fetchedPackages[packageId].license
+          : t('common.na'),
+        version: fetchedPackages[packageId].latest
+          ? fetchedPackages[packageId].latest
+          : t('common.na'),
+      }),
+    );
+
+    setPackages(tableItems);
+  }, [fetchedPackages]);
 
   const deletePackage = (packageId: string) => {
     window.packageManagement.delete(packageId).then(() => fetchPackages());

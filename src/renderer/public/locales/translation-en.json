@@ -156,11 +156,15 @@
                 "columns": {
                     "name": "Name",
                     "version": "Version",
-                    "latestVersion": "Latest version"
+                    "latestVersion": "Latest version",
+                    "actions": "Actions"
                 },
                 "values": {
                     "unableToFetch": "Unable to fetch"
                 }
+            },
+            "tooltip": {
+                "viewPackage": "Open package details"
             },
             "alert": {
                 "title": {

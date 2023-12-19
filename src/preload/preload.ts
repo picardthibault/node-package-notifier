@@ -24,7 +24,10 @@ contextBridge.exposeInMainWorld('packageManagement', {
     ipcRenderer.invoke(PackageListenerChannel.DELETE, packageId),
   getPackages: (): Promise<GetPackagesResult> =>
     ipcRenderer.invoke(PackageListenerChannel.GET_PACKAGES),
-  getPackage: (packageName: string, registryUrl: string): Promise<GetPackageResult> =>
+  getPackage: (
+    packageName: string,
+    registryUrl: string,
+  ): Promise<GetPackageResult> =>
     ipcRenderer.invoke(PackageListenerChannel.GET_PACKAGE, {
       packageName: packageName,
       registryUrl: registryUrl,

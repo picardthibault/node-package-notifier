@@ -13,6 +13,7 @@ import {
 import { useStore } from 'effector-react';
 import Title from '../../components/Title/Title';
 import { routePaths } from '../../routes';
+import { updatePackageDetails } from '../../stores/PackageDetailsStore';
 
 interface TableItemType {
   key: number;
@@ -93,7 +94,13 @@ export const PackagesView = (): JSX.Element => {
           <ActionButton
             type="primary"
             toolTip={t('package.list.tooltips.detailsPackage')}
-            onClick={() => navigate(routePaths.packageDetails.generate(tableItem.name, tableItem.registryUrl))}
+            onClick={() => {
+              updatePackageDetails({
+                packageName: tableItem.name,
+                registryUrl: tableItem.registryUrl,
+              });
+              navigate(routePaths.packageDetails.generate());
+            }}
           >
             <EyeOutlined />
           </ActionButton>

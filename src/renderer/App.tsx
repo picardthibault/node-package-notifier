@@ -34,10 +34,10 @@ const App: FunctionComponent = () => {
   }, []);
 
   useEffect(() => {
-    fetchProjectsSumUp.done.watch(projects => {
+    fetchProjectsSumUp.done.watch((projects) => {
       setProjectsSumUp(projects.result);
     });
-  })
+  });
 
   const subMenuItems = useCallback((): Array<MenuItemType | SubMenuType> => {
     return [
@@ -84,7 +84,7 @@ const App: FunctionComponent = () => {
           element={<PackageCreation />}
         />
         <Route
-          path={routePaths.packageDetails.generate(':packageName', '*')}
+          path={routePaths.packageDetails.generate()}
           element={<PackageDetails />}
         />
         <Route

@@ -44,7 +44,10 @@ ipcMain.handle(
     const packages = PackageStore.get().getPackages();
     const result: { [key: string]: PackageDetails } = {};
     for (const key of Object.keys(packages)) {
-      const packageDetails = await getPackage(packages[key].registryUrl, packages[key].name);
+      const packageDetails = await getPackage(
+        packages[key].registryUrl,
+        packages[key].name,
+      );
       if (typeof packageDetails === 'string') {
         log.warn(
           `Unable to fetch package "${packages[key].name}" details. Received error : ${packageDetails}`,
@@ -62,7 +65,10 @@ ipcMain.handle(
   PackageListenerChannel.GET_PACKAGE,
   async (event, detailsArgs: PackageDetailsArgs): Promise<GetPackageResult> => {
     log.debug('Received get package IPC');
-    const packageDetails = await getPackage(detailsArgs.registryUrl, detailsArgs.packageName);
+    const packageDetails = await getPackage(
+      detailsArgs.registryUrl,
+      detailsArgs.packageName,
+    );
     if (typeof packageDetails === 'string') {
       return {
         error: packageDetails,

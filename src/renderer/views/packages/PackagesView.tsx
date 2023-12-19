@@ -18,6 +18,7 @@ interface TableItemType {
   key: number;
   packageId: string;
   name: string;
+  registryUrl: string;
   license: string;
   version: string;
 }
@@ -42,6 +43,7 @@ export const PackagesView = (): JSX.Element => {
           key: index,
           packageId,
           name: packages[packageId].name,
+          registryUrl: packages[packageId].registryUrl,
           license: packages[packageId].license
             ? packages[packageId].license
             : t('common.na'),
@@ -91,7 +93,7 @@ export const PackagesView = (): JSX.Element => {
           <ActionButton
             type="primary"
             toolTip={t('package.list.tooltips.detailsPackage')}
-            onClick={() => navigate(`/package/${tableItem.packageId}`)}
+            onClick={() => navigate(routePaths.packageDetails.generate(tableItem.name, tableItem.registryUrl))}
           >
             <EyeOutlined />
           </ActionButton>

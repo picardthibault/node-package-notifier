@@ -84,7 +84,7 @@ const App: FunctionComponent = () => {
           element={<PackageCreation />}
         />
         <Route
-          path={routePaths.packageDetails.generate(':id')}
+          path={routePaths.packageDetails.generate(':packageName', '*')}
           element={<PackageDetails />}
         />
         <Route

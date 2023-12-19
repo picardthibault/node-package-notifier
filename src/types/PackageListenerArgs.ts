@@ -5,6 +5,11 @@ export interface PackageCreationArgs {
   registryUrl?: string;
 }
 
+export interface PackageDetailsArgs {
+  packageName: string;
+  registryUrl: string;
+}
+
 export interface PackageSuggestionArgs {
   current: string;
   registryUrl?: string;

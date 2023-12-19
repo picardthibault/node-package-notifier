@@ -6,7 +6,7 @@ export const routePaths = {
     generate: () => '/package/create',
   },
   packageDetails: {
-    generate: (id: string) => `/package/${id}`,
+    generate: (packageName: string, registryUrl?: string) => `/package/${packageName}/${registryUrl}`,
   },
   projectCreation: {
     generate: () => '/project/create',

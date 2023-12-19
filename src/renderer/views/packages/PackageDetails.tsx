@@ -17,7 +17,7 @@ interface TableItemType {
 }
 
 const PackageDetails: FunctionComponent = () => {
-  const { id } = useParams<{ id: string }>();
+  const { packageName, "*": registryUrl } = useParams<{ packageName: string, "*": string }>();
 
   const { t } = useTranslation();
 
@@ -29,7 +29,7 @@ const PackageDetails: FunctionComponent = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    window.packageManagement.getPackage(id).then((getPackageResult) => {
+    window.packageManagement.getPackage(packageName, registryUrl).then((getPackageResult) => {
       setTitle(
         getPackageResult.packageDetails.name.charAt(0).toUpperCase() +
           getPackageResult.packageDetails.name.slice(1),
@@ -73,7 +73,7 @@ const PackageDetails: FunctionComponent = () => {
       }
       setIsLoading(false);
     });
-  }, [id]);
+  }, [packageName, registryUrl]);
 
   const tableColumns: ColumnsType<TableItemType> = [
     {

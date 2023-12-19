@@ -21,7 +21,7 @@ declare global {
       ) => Promise<string | undefined>;
       delete: (packageId: string) => Promise<void>;
       getPackages: () => Promise<GetPackagesResult>;
-      getPackage: (packageId: string) => Promise<GetPackageResult>;
+      getPackage: (packageName: string, registryUrl: string) => Promise<GetPackageResult>;
       getSuggestions: (
         suggestionArgs: PackageSuggestionArgs,
       ) => Promise<string[] | string>;

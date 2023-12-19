@@ -157,16 +157,18 @@ export async function fetchPackageDetails(
 /**
  * Get package details
  *
- * @param packageConfig The package to fetch details
+ * @param registryUrl the url of the registry on which info will be fetched 
+ * @param packageName the name of the package for which info will be fetched
  * @returns The details of the package or an error message
  */
 export async function getPackage(
-  packageConfig: PackageConfig,
+  registryUrl: string,
+  packageName: string,
 ): Promise<PackageDetails | string> {
-  log.debug(`Get package "${packageConfig.name}" details`);
+  log.debug(`Get package "${packageName}" details on "${registryUrl}"`);
   const packageDetails = await fetchPackageDetails(
-    packageConfig.registryUrl,
-    packageConfig.name,
+    registryUrl,
+    packageName,
   );
   return packageDetails;
 }

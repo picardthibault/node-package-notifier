@@ -19,7 +19,7 @@ declare global {
       create: (
         creationArgs: PackageCreationArgs,
       ) => Promise<string | undefined>;
-      delete: (packageId: string) => Promise<void>;
+      delete: (packageName: string) => Promise<void>;
       getPackages: () => Promise<GetPackagesResult>;
       getPackage: (
         packageName: string,

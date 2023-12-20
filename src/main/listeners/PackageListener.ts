@@ -16,6 +16,7 @@ import {
   fetchPackageSuggestions,
   getPackage,
 } from '../services/package/PackageService';
+import { getSha1 } from '../helpers/HashHelper';
 
 ipcMain.handle(
   PackageListenerChannel.CREATE,
@@ -30,8 +31,9 @@ ipcMain.handle(
 
 ipcMain.handle(
   PackageListenerChannel.DELETE,
-  (event, packageId: string): Promise<void> => {
+  (event, packageName: string): Promise<void> => {
     log.debug('Received delete package IPC');
+    const packageId = getSha1(packageName);
     deletePackage(packageId);
     return Promise.resolve();
   },

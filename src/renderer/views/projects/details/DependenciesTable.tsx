@@ -15,7 +15,7 @@ import { updatePackageDetails } from '../../../stores/PackageDetailsStore';
 import { Space } from 'antd';
 import { useStore } from 'effector-react';
 import { packageListStore } from '../../../stores/PackageListStore';
-import { createPackage } from '../../../effects/PackageEffect';
+import { createPackage, deletePackage } from '../../../effects/PackageEffect';
 import { GetPackagesResult } from '../../../../types/PackageListenerArgs';
 import { openAlert } from '../../../components/Alert/Alert';
 
@@ -49,6 +49,15 @@ const DependenciesTable: React.FunctionComponent<DependenciesTableProps> = (
           t('project.details.alert.description.dependencyFollowError'),
         );
       }
+    });
+  });
+
+  useEffect(() => {
+    return deletePackage.done.watch(() => {
+      openAlert(
+        'success',
+        t('project.details.alert.title.dependencyUnfollowed'),
+      );
     });
   });
 
@@ -111,7 +120,7 @@ const DependenciesTable: React.FunctionComponent<DependenciesTableProps> = (
                 danger={true}
                 toolTip={t('project.details.tooltip.unfollowPackage')}
                 onClick={() => {
-                  console.log('Unfollow');
+                  deletePackage(record.name);
                 }}
               >
                 <MinusCircleOutlined />

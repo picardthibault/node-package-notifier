@@ -173,7 +173,8 @@
                     "loadProjectError": "Unable to load project details.",
                     "fetchLatestVerionError": "Unable to fetch latest version.",
                     "dependencyFollowed": "Dependency is now followed.",
-                    "dependencyFollowError": "Unable to follow the selected dependency."
+                    "dependencyFollowError": "Unable to follow the selected dependency.",
+                    "dependencyUnfollowed": "Dependency is now unfollowed."
                 },
                 "description": {
                     "loadProjectError": "An error occurred while loading project details: {{cause}}.",

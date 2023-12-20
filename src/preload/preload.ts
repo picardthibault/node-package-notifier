@@ -20,8 +20,8 @@ import { ProjectSumUp } from '../types/ProjectInfo';
 contextBridge.exposeInMainWorld('packageManagement', {
   create: (creationArgs: PackageCreationArgs): Promise<string | undefined> =>
     ipcRenderer.invoke(PackageListenerChannel.CREATE, creationArgs),
-  delete: (packageId: string) =>
-    ipcRenderer.invoke(PackageListenerChannel.DELETE, packageId),
+  delete: (packageName: string) =>
+    ipcRenderer.invoke(PackageListenerChannel.DELETE, packageName),
   getPackages: (): Promise<GetPackagesResult> =>
     ipcRenderer.invoke(PackageListenerChannel.GET_PACKAGES),
   getPackage: (

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form, Input, Space, Table } from 'antd';
 import { DeleteOutlined, PlusOutlined, EyeOutlined } from '@ant-design/icons';
 import { ColumnsType } from 'antd/es/table';
@@ -14,7 +14,7 @@ import { useStore } from 'effector-react';
 import Title from '../../components/Title/Title';
 import { routePaths } from '../../routes';
 import { updatePackageDetails } from '../../stores/PackageDetailsStore';
-import { fetchPackages } from '../../effects/PackageEffect';
+import { deletePackage, fetchPackages } from '../../effects/PackageEffect';
 
 interface TableItemType {
   key: number;
@@ -63,10 +63,6 @@ export const PackagesView = (): JSX.Element => {
     setPackages(tableItems);
   }, [fetchedPackages]);
 
-  const deletePackage = (packageId: string) => {
-    window.packageManagement.delete(packageId).then(() => fetchPackages());
-  };
-
   const tableColumns: ColumnsType<TableItemType> = [
     {
       key: 'name',
@@ -108,7 +104,7 @@ export const PackagesView = (): JSX.Element => {
             type="default"
             danger={true}
             toolTip={t('package.list.tooltips.deletePackage')}
-            onClick={() => deletePackage(tableItem.packageId)}
+            onClick={() => deletePackage(tableItem.name)}
           >
             <DeleteOutlined />
           </ActionButton>

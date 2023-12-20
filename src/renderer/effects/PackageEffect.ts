@@ -8,3 +8,7 @@ export const fetchPackages = createEffect(() =>
 export const createPackage = createEffect((creationArgs: PackageCreationArgs) =>
   window.packageManagement.create(creationArgs),
 );
+
+export const deletePackage = createEffect((packageName: string) =>
+  window.packageManagement.delete(packageName),
+);

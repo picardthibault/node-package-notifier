@@ -1,5 +1,5 @@
 import log from 'electron-log';
-import { PackageConfig, PackageStore } from '../../store/PackageStore';
+import { PackageStore } from '../../store/PackageStore';
 import { PackageInfo, RegistryApi } from '../api/RegistryApi';
 import i18n from '../../i18n';
 import { PackageSuggestionArgs } from '../../../types/PackageListenerArgs';

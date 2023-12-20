@@ -1,5 +1,9 @@
 import { createEvent, createStore } from 'effector';
-import { createPackage, fetchPackages } from '../effects/PackageEffect';
+import {
+  createPackage,
+  deletePackage,
+  fetchPackages,
+} from '../effects/PackageEffect';
 import { GetPackagesResult } from '../../types/PackageListenerArgs';
 
 export interface PackageListStore {
@@ -36,6 +40,6 @@ fetchPackages.done.watch((packages) => {
   updatePackages(packages.result);
 });
 
-createPackage.done.watch(() => {
-  fetchPackages();
-});
+createPackage.done.watch(() => fetchPackages());
+
+deletePackage.done.watch(() => fetchPackages());

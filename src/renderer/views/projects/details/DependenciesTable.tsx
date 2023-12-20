@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import Table, { ColumnsType } from 'antd/es/table';
 import LatestVersionCell from './LatestVersionCell';
 import { ParsedDependency } from '../../../../types/ProjectInfo';
@@ -15,6 +15,9 @@ import { updatePackageDetails } from '../../../stores/PackageDetailsStore';
 import { Space } from 'antd';
 import { useStore } from 'effector-react';
 import { packageListStore } from '../../../stores/PackageListStore';
+import { createPackage } from '../../../effects/PackageEffect';
+import { GetPackagesResult } from '../../../../types/PackageListenerArgs';
+import { openAlert } from '../../../components/Alert/Alert';
 
 interface DependenciesTableProps {
   dependencies: ParsedDependency[];
@@ -32,15 +35,36 @@ const DependenciesTable: React.FunctionComponent<DependenciesTableProps> = (
 
   const navigation = useNavigate();
 
-  const isFollowed = useCallback(
-    (packageName: string) =>
-      Object.keys(fetchedPackages).filter(
-        (packageId) => fetchedPackages[packageId].name === packageName,
-      ).length > 0,
-    [fetchedPackages],
-  );
+  useEffect(() => {
+    return createPackage.done.watch(({ result }) => {
+      if (!result) {
+        openAlert(
+          'success',
+          t('project.details.alert.title.dependencyFollowed'),
+        );
+      } else {
+        openAlert(
+          'error',
+          t('project.details.alert.title.dependencyFollowError'),
+          t('project.details.alert.description.dependencyFollowError'),
+        );
+      }
+    });
+  });
 
-  const dependenciesTableColumns: ColumnsType<ParsedDependency> = [
+  const isFollowed = (
+    packageName: string,
+    followedPackages: GetPackagesResult,
+  ) =>
+    Object.keys(followedPackages).filter(
+      (packageId) => fetchedPackages[packageId].name === packageName,
+    ).length > 0;
+
+  const dependenciesTableColumns: (
+    followedPackages: GetPackagesResult,
+  ) => ColumnsType<ParsedDependency> = (
+    followedPackages: GetPackagesResult,
+  ) => [
     {
       title: t('project.details.table.columns.name'),
       dataIndex: 'name',
@@ -81,7 +105,7 @@ const DependenciesTable: React.FunctionComponent<DependenciesTableProps> = (
             >
               <EyeOutlined />
             </ActionButton>
-            {isFollowed(record.name) ? (
+            {isFollowed(record.name, followedPackages) ? (
               <ActionButton
                 type="default"
                 danger={true}
@@ -97,7 +121,10 @@ const DependenciesTable: React.FunctionComponent<DependenciesTableProps> = (
                 type="default"
                 toolTip={t('project.details.tooltip.followPackage')}
                 onClick={() => {
-                  console.log('Follow');
+                  createPackage({
+                    packageName: record.name,
+                    registryUrl: registryUrl,
+                  });
                 }}
               >
                 <PlusCircleOutlined />
@@ -111,7 +138,7 @@ const DependenciesTable: React.FunctionComponent<DependenciesTableProps> = (
 
   return (
     <Table
-      columns={dependenciesTableColumns}
+      columns={dependenciesTableColumns(fetchedPackages)}
       dataSource={dependencies.map((dependency) => ({
         ...dependency,
         key: dependency.name,

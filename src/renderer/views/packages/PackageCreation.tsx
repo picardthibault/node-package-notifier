@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { AutoComplete, Form, Space } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -8,9 +8,11 @@ import { routePaths } from '../../routes';
 import { openAlert } from '../../components/Alert/Alert';
 import LinkButton from '../../components/Button/LinkButton';
 import RegistryField from '../../components/Form/RegistryField';
+import { createPackage } from '../../effects/PackageEffect';
 
 interface PackageFormField {
   packageName: string;
+  registryUrl?: string;
 }
 
 export const PackageCreation = (): JSX.Element => {
@@ -25,6 +27,23 @@ export const PackageCreation = (): JSX.Element => {
     useState<NodeJS.Timeout | null>(null);
 
   const [formInstance] = Form.useForm<PackageFormField>();
+
+  useEffect(() => {
+    return createPackage.done.watch(({ result }) => {
+      if (!result) {
+        openAlert('success', t('package.creation.alert.title.success'));
+        navigate(routePaths.packageList.generate());
+      } else {
+        openAlert(
+          'error',
+          t('package.creation.alert.title.error'),
+          t('package.creation.alert.description.error', {
+            cause: result,
+          }),
+        );
+      }
+    });
+  });
 
   const fetchSuggestions = useCallback(() => {
     const current = formInstance.getFieldValue('packageName');
@@ -55,22 +74,7 @@ export const PackageCreation = (): JSX.Element => {
   }, [suggestionTimeout, setSuggestionTimeout]);
 
   const onFinish = () => {
-    window.packageManagement
-      .create(formInstance.getFieldsValue())
-      .then((errorMessage: string | undefined) => {
-        if (!errorMessage) {
-          openAlert('success', t('package.creation.alert.title.success'));
-          navigate(routePaths.packageList.generate());
-        } else {
-          openAlert(
-            'error',
-            t('package.creation.alert.title.error'),
-            t('package.creation.alert.description.error', {
-              cause: errorMessage,
-            }),
-          );
-        }
-      });
+    createPackage(formInstance.getFieldsValue());
   };
 
   return (

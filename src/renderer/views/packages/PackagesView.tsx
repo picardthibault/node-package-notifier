@@ -14,7 +14,7 @@ import { useStore } from 'effector-react';
 import Title from '../../components/Title/Title';
 import { routePaths } from '../../routes';
 import { updatePackageDetails } from '../../stores/PackageDetailsStore';
-import { fetchPackages } from '../../effects/PackageListEffect';
+import { fetchPackages } from '../../effects/PackageEffect';
 
 interface TableItemType {
   key: number;

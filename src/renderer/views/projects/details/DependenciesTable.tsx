@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import Table, { ColumnsType } from 'antd/es/table';
 import LatestVersionCell from './LatestVersionCell';
 import { ParsedDependency } from '../../../../types/ProjectInfo';

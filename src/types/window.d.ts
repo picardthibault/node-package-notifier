@@ -1,16 +1,15 @@
+import { IpcRendererEvent } from 'electron';
 import {
   PackageCreationArgs,
   GetPackagesResult,
   GetPackageResult,
 } from './PackageListenerArgs';
-import { IpcRendererEvent } from 'electron';
 import {
-  ProjectDataForMenu,
-  ProjectImportArgs,
-  ProjectImportResult,
-  ProjectDetails,
-  ParsedProject,
+  ProjectCreationArgs,
+  ProjectCreationResult,
+  GetProjectDetailsResult,
 } from './ProjectListenerArgs';
+import { ProjectSumUp } from './ProjectInfo';
 
 export {};
 
@@ -20,9 +19,12 @@ declare global {
       create: (
         creationArgs: PackageCreationArgs,
       ) => Promise<string | undefined>;
-      delete: (packageId: string) => Promise<void>;
+      delete: (packageName: string) => Promise<void>;
       getPackages: () => Promise<GetPackagesResult>;
-      getPackage: (packageId: string) => Promise<GetPackageResult>;
+      getPackage: (
+        packageName: string,
+        registryUrl: string,
+      ) => Promise<GetPackageResult>;
       getSuggestions: (
         suggestionArgs: PackageSuggestionArgs,
       ) => Promise<string[] | string>;
@@ -34,36 +36,18 @@ declare global {
       ) => () => void;
     };
     projectManagement: {
-      validateProjectName: (projectName: string) => void;
-      validateProjectNameListener: (
-        listener: (
-          event: IpcRendererEvent,
-          validationResult: string | undefined,
-        ) => void,
-      ) => () => void;
-      validateProjectPath: (projectPath: string) => void;
-      validateProjectPathListener: (
-        listener: (
-          event: IpcRendererEvent,
-          validationResult: string | undefined,
-        ) => void,
-      ) => () => void;
-      projectImport: (projectImportArgs: ProjectImportArgs) => void;
-      projectImportListener: (
-        listener: (
-          event: IpcRendererEvent,
-          importResult: ProjectImportResult,
-        ) => void,
-      ) => () => void;
-      getProjectsDataForMenu: () => void;
-      getProjectsDataForMenuListener: (
-        listener: (event: IpcRendererEvent, keys: ProjectDataForMenu[]) => void,
-      ) => () => void;
-      getProjectDetails: (projectKey: string) => Promise<ProjectDetails>;
-      parseProject: (projectKey: string) => Promise<ParsedProject>;
-      fetchLatestVersions: (
-        projectDependencies: string[],
-      ) => Promise<Map<string, string>>;
+      isProjectNameUsed: (projectName: string) => Promise<boolean>;
+      isProjectPathValid: (projectPath: string) => Promise<string | undefined>;
+      create: (
+        projectCreationArgs: ProjectCreationArgs,
+      ) => Promise<ProjectCreationResult>;
+      getProjectsSumUp: () => Promise<ProjectSumUp[]>;
+      getProjectDetails: (
+        projectKey: string,
+      ) => Promise<GetProjectDetailsResult>;
+      fetchLatestVersion: (
+        fetchLatestVersionArgs: FetchLatestVersionArgs,
+      ) => Promise<string | undefined>;
     };
   }
 }

@@ -1,97 +1,153 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import Table, { ColumnsType } from 'antd/es/table';
-import { ParsedDependency } from '../../../../types/ProjectListenerArgs';
-import i18next from '../../../i18n';
 import LatestVersionCell from './LatestVersionCell';
-import { useCompare } from '../../../hooks/useCompare';
+import { ParsedDependency } from '../../../../types/ProjectInfo';
+import ActionButton from '../../../components/Button/ActionButton';
+import {
+  EyeOutlined,
+  MinusCircleOutlined,
+  PlusCircleOutlined,
+} from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import { routePaths } from '../../../routes';
+import { updatePackageDetails } from '../../../stores/PackageDetailsStore';
+import { Space } from 'antd';
+import { useStore } from 'effector-react';
+import { packageListStore } from '../../../stores/PackageListStore';
+import { createPackage, deletePackage } from '../../../effects/PackageEffect';
+import { GetPackagesResult } from '../../../../types/PackageListenerArgs';
+import { openAlert } from '../../../components/Alert/Alert';
 
 interface DependenciesTableProps {
   dependencies: ParsedDependency[];
+  registryUrl?: string;
 }
 
 const DependenciesTable: React.FunctionComponent<DependenciesTableProps> = (
   props,
 ) => {
-  const { dependencies } = props;
-  const hasDependenciesChanged = useCompare(dependencies);
+  const { dependencies, registryUrl } = props;
 
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { t } = useTranslation();
 
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const hasCurrentPageChanged = useCompare(currentPage);
+  const { fetchedPackages } = useStore(packageListStore);
 
-  const [pageSize, setPageSize] = useState<number>(10);
-  const hasPageSizeChanged = useCompare(pageSize);
-
-  const [dependencyLatestVersions, setDependencyLatestVersions] = useState<
-    Map<string, string | undefined>
-  >(new Map<string, string | undefined>());
-
-  const fetchLatestVersion = useCallback(() => {
-    setIsLoading(true);
-    const displayedDependencies = dependencies.slice(
-      (currentPage - 1) * pageSize,
-      currentPage * pageSize,
-    );
-    const dependenciesTofetch = displayedDependencies
-      .filter((dependency) => !dependencyLatestVersions.has(dependency.name))
-      .map((dependency) => dependency.name);
-
-    window.projectManagement
-      .fetchLatestVersions(dependenciesTofetch)
-      .then((fetchedDependencyLatestVersions) => {
-        setDependencyLatestVersions(
-          new Map<string, string | undefined>([
-            ...dependencyLatestVersions,
-            ...fetchedDependencyLatestVersions,
-          ]),
-        );
-        setIsLoading(false);
-      });
-  }, [dependencies, pageSize, currentPage, dependencyLatestVersions]);
+  const navigation = useNavigate();
 
   useEffect(() => {
-    if (hasDependenciesChanged || hasCurrentPageChanged || hasPageSizeChanged) {
-      fetchLatestVersion();
-    }
-  }, [
-    dependencies,
-    pageSize,
-    currentPage,
-    hasCurrentPageChanged,
-    hasPageSizeChanged,
-    dependencyLatestVersions,
-  ]);
+    return createPackage.done.watch(({ result }) => {
+      if (!result) {
+        openAlert(
+          'success',
+          t('project.details.alert.title.dependencyFollowed'),
+        );
+      } else {
+        openAlert(
+          'error',
+          t('project.details.alert.title.dependencyFollowError'),
+          t('project.details.alert.description.dependencyFollowError'),
+        );
+      }
+    });
+  });
 
-  const dependenciesTableColumns: ColumnsType<ParsedDependency> = [
+  useEffect(() => {
+    return deletePackage.done.watch(() => {
+      openAlert(
+        'success',
+        t('project.details.alert.title.dependencyUnfollowed'),
+      );
+    });
+  });
+
+  const isFollowed = (
+    packageName: string,
+    followedPackages: GetPackagesResult,
+  ) =>
+    Object.keys(followedPackages).filter(
+      (packageId) => fetchedPackages[packageId].name === packageName,
+    ).length > 0;
+
+  const dependenciesTableColumns: (
+    followedPackages: GetPackagesResult,
+  ) => ColumnsType<ParsedDependency> = (
+    followedPackages: GetPackagesResult,
+  ) => [
     {
-      title: i18next.t('project.details.table.columns.name'),
+      title: t('project.details.table.columns.name'),
       dataIndex: 'name',
       key: 'name',
       defaultSortOrder: 'ascend',
       sorter: (a, b) => a.name.localeCompare(b.name),
     },
     {
-      title: i18next.t('project.details.table.columns.currentVersion'),
-      dataIndex: 'currentVersion',
-      key: 'currentVersion',
+      title: t('project.details.table.columns.version'),
+      dataIndex: 'version',
+      key: 'version',
     },
     {
-      title: i18next.t('project.details.table.columns.latestVersion'),
+      title: t('project.details.table.columns.latestVersion'),
       key: 'latestVersion',
       dataIndex: 'name',
       render: (name: string) => (
-        <LatestVersionCell
-          isLoading={isLoading}
-          latestVersion={dependencyLatestVersions.get(name)}
-        />
+        <LatestVersionCell dependencyName={name} registryUrl={registryUrl} />
       ),
+    },
+    {
+      title: t('project.details.table.columns.actions'),
+      key: 'actions',
+      width: '110px',
+      render: (record: ParsedDependency) => {
+        return (
+          <Space>
+            <ActionButton
+              type="primary"
+              toolTip={t('project.details.tooltip.viewPackage')}
+              onClick={() => {
+                updatePackageDetails({
+                  packageName: record.name,
+                  registryUrl: registryUrl,
+                });
+                navigation(routePaths.packageDetails.generate());
+              }}
+            >
+              <EyeOutlined />
+            </ActionButton>
+            {isFollowed(record.name, followedPackages) ? (
+              <ActionButton
+                type="default"
+                danger={true}
+                toolTip={t('project.details.tooltip.unfollowPackage')}
+                onClick={() => {
+                  deletePackage(record.name);
+                }}
+              >
+                <MinusCircleOutlined />
+              </ActionButton>
+            ) : (
+              <ActionButton
+                type="default"
+                toolTip={t('project.details.tooltip.followPackage')}
+                onClick={() => {
+                  createPackage({
+                    packageName: record.name,
+                    registryUrl: registryUrl,
+                  });
+                }}
+              >
+                <PlusCircleOutlined />
+              </ActionButton>
+            )}
+          </Space>
+        );
+      },
     },
   ];
 
   return (
     <Table
-      columns={dependenciesTableColumns}
+      columns={dependenciesTableColumns(fetchedPackages)}
       dataSource={dependencies.map((dependency) => ({
         ...dependency,
         key: dependency.name,
@@ -99,12 +155,6 @@ const DependenciesTable: React.FunctionComponent<DependenciesTableProps> = (
       pagination={{
         position: ['bottomCenter'],
         showSizeChanger: true,
-        current: currentPage,
-        pageSize: pageSize,
-        onChange: (page: number, pageSize: number) => {
-          setCurrentPage(page);
-          setPageSize(pageSize);
-        },
       }}
     />
   );

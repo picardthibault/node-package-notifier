@@ -4,11 +4,10 @@ import {
   GetPackageResult,
   GetPackagesResult,
   PackageCreationArgs,
+  PackageDetailsArgs,
   PackageSuggestionArgs,
 } from '../../types/PackageListenerArgs';
-import {
-  PackageDetails,
-} from '../../types/PackageInfo';
+import { PackageDetails } from '../../types/PackageInfo';
 import { PackageStore } from '../store/PackageStore';
 import log from 'electron-log';
 import {
@@ -17,6 +16,7 @@ import {
   fetchPackageSuggestions,
   getPackage,
 } from '../services/package/PackageService';
+import { getSha1 } from '../helpers/HashHelper';
 
 ipcMain.handle(
   PackageListenerChannel.CREATE,
@@ -31,8 +31,9 @@ ipcMain.handle(
 
 ipcMain.handle(
   PackageListenerChannel.DELETE,
-  (event, packageId: string): Promise<void> => {
+  (event, packageName: string): Promise<void> => {
     log.debug('Received delete package IPC');
+    const packageId = getSha1(packageName);
     deletePackage(packageId);
     return Promise.resolve();
   },
@@ -45,7 +46,10 @@ ipcMain.handle(
     const packages = PackageStore.get().getPackages();
     const result: { [key: string]: PackageDetails } = {};
     for (const key of Object.keys(packages)) {
-      const packageDetails = await getPackage(packages[key]);
+      const packageDetails = await getPackage(
+        packages[key].registryUrl,
+        packages[key].name,
+      );
       if (typeof packageDetails === 'string') {
         log.warn(
           `Unable to fetch package "${packages[key].name}" details. Received error : ${packageDetails}`,
@@ -61,15 +65,18 @@ ipcMain.handle(
 
 ipcMain.handle(
   PackageListenerChannel.GET_PACKAGE,
-  async (event, packageId: string): Promise<GetPackageResult> => {
+  async (event, detailsArgs: PackageDetailsArgs): Promise<GetPackageResult> => {
     log.debug('Received get package IPC');
-    const packageConfig = PackageStore.get().getPackage(packageId);
-    const packageDetails = await getPackage(packageConfig);
+    const packageDetails = await getPackage(
+      detailsArgs.registryUrl,
+      detailsArgs.packageName,
+    );
     if (typeof packageDetails === 'string') {
       return {
         error: packageDetails,
         packageDetails: {
-          ...packageConfig,
+          name: detailsArgs.packageName,
+          registryUrl: detailsArgs.registryUrl,
         },
       };
     } else {

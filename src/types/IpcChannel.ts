@@ -7,15 +7,10 @@ export enum PackageListenerChannel {
 }
 
 export enum ProjectListenerChannel {
-  VALIDATE_PROJECT_NAME = 'projectChannelValidateProjectName',
-  VALIDATE_PROJECT_NAME_LISTENER = 'projectChannelValidateProjectNameListener',
-  VALIDATE_PROJECT_PATH = 'projectChannelValidateProjectPath',
-  VALIDATE_PROJECT_PATH_LISTENER = 'projectChannelValidateProjectPathListener',
-  IMPORT_PROJECT = 'projectChannelImportProject',
-  IMPORT_PROJECT_LISTENER = 'projectChannelImportProjectListener',
-  GET_PROJECTS_DATA_FOR_MENU = 'projectChannelGetProjectDataForMenu',
-  GET_PROJECTS_DATA_FOR_MENU_LISTENER = 'projectChannelGetProjectDataForMenuListener',
+  IS_PROJECT_NAME_USED = 'projectChannelIsProjectNameUsed',
+  IS_PROJECT_PATH_VALID = 'projectChannelIsProjectPathValid',
+  CREATE = 'projectChannelCreate',
+  GET_PROJECTS_SUM_UP = 'projectChannelGetProjectsSumUp',
   GET_PROJECT_DETAILS = 'projectChannelGetProjectDetails',
-  PARSE_PROJECT = 'projectChannelParseProject',
-  FETCH_LATEST_VERSIONS = 'projectChannelFetchLatestVersions',
+  FETCH_LATEST_VERSION = 'projectChannelFetchLatestVersion',
 }

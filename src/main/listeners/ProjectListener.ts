@@ -1,94 +1,79 @@
 import { ipcMain } from 'electron';
 import { ProjectListenerChannel } from '../../types/IpcChannel';
-import { ProjectImportArgs } from '../../types/ProjectListenerArgs';
+import {
+  FetchLatestVersionArgs,
+  GetProjectDetailsResult,
+  ProjectCreationArgs,
+  ProjectCreationResult,
+} from '../../types/ProjectListenerArgs';
 import log from 'electron-log';
 import {
   validateProjectPath,
-  importProject,
-  validateProjectName,
-  getProjectsDataForMenu,
-  parseProject,
+  createProject,
+  getProjectsSumUp,
   getProjectDetails,
-  fetchLatestsVersions,
+  isProjectNameUsed,
+  fetchLatestVersion,
 } from '../services/project/ProjectService';
-import { mainWindow } from '..';
+import { ProjectSumUp } from '../../types/ProjectInfo';
 
-ipcMain.on(
-  ProjectListenerChannel.VALIDATE_PROJECT_NAME,
-  async (event, projectName: string) => {
-    log.debug('Received projectName validation IPC');
-
-    const validationResult = validateProjectName(projectName);
-
-    if (mainWindow) {
-      mainWindow.webContents.send(
-        ProjectListenerChannel.VALIDATE_PROJECT_NAME_LISTENER,
-        validationResult,
-      );
-    }
+ipcMain.handle(
+  ProjectListenerChannel.IS_PROJECT_NAME_USED,
+  (event, projectName: string): Promise<boolean> => {
+    log.debug('Received project name is already used IPC');
+    return Promise.resolve(isProjectNameUsed(projectName));
   },
 );
 
-ipcMain.on(
-  ProjectListenerChannel.VALIDATE_PROJECT_PATH,
-  async (event, projectPath: string) => {
+ipcMain.handle(
+  ProjectListenerChannel.IS_PROJECT_PATH_VALID,
+  (event, projectPath: string): Promise<string | undefined> => {
     log.debug('Received projectPath validation IPC');
 
-    const validationResult = await validateProjectPath(projectPath);
-
-    if (mainWindow) {
-      mainWindow.webContents.send(
-        ProjectListenerChannel.VALIDATE_PROJECT_PATH_LISTENER,
-        validationResult,
-      );
-    }
+    return validateProjectPath(projectPath);
   },
 );
 
-ipcMain.on(
-  ProjectListenerChannel.IMPORT_PROJECT,
-  async (event, projectImportArgs: ProjectImportArgs) => {
-    log.debug('Received project import validation IPC');
+ipcMain.handle(
+  ProjectListenerChannel.CREATE,
+  async (
+    event,
+    projectCreationArgs: ProjectCreationArgs,
+  ): Promise<ProjectCreationResult> => {
+    log.debug('Received create project IPC');
 
-    let projectKey: string | undefined;
+    let createdProjectKey: string | undefined;
     let importError: string | undefined;
     try {
-      projectKey = await importProject(
-        projectImportArgs.name,
-        projectImportArgs.path,
+      createdProjectKey = await createProject(
+        projectCreationArgs.name,
+        projectCreationArgs.path,
       );
     } catch (err) {
-      log.error(`Unable to import project. ${err.message}`);
+      log.error(`Unable to create project. ${err.message}`);
       importError = err.message;
     }
 
-    if (mainWindow) {
-      mainWindow.webContents.send(
-        ProjectListenerChannel.IMPORT_PROJECT_LISTENER,
-        {
-          projectKey: projectKey,
-          error: importError,
-        },
-      );
-    }
+    return {
+      projectKey: createdProjectKey,
+      error: importError,
+    };
   },
 );
 
-ipcMain.on(ProjectListenerChannel.GET_PROJECTS_DATA_FOR_MENU, () => {
-  log.debug('Received get projects data for menu IPC');
+ipcMain.handle(
+  ProjectListenerChannel.GET_PROJECTS_SUM_UP,
+  (): Promise<ProjectSumUp[]> => {
+    log.debug('Received get projects data for menu IPC');
 
-  const projectsDataForMenu = getProjectsDataForMenu();
-  if (mainWindow) {
-    mainWindow.webContents.send(
-      ProjectListenerChannel.GET_PROJECTS_DATA_FOR_MENU_LISTENER,
-      projectsDataForMenu,
-    );
-  }
-});
+    const projectSumUp = getProjectsSumUp();
+    return Promise.resolve(projectSumUp);
+  },
+);
 
 ipcMain.handle(
   ProjectListenerChannel.GET_PROJECT_DETAILS,
-  (event, projectKey: string) => {
+  (event, projectKey: string): Promise<GetProjectDetailsResult> => {
     log.debug(
       `Received get project details IPC with projectKey "${projectKey}"`,
     );
@@ -97,17 +82,18 @@ ipcMain.handle(
 );
 
 ipcMain.handle(
-  ProjectListenerChannel.PARSE_PROJECT,
-  async (event, projectKey: string) => {
-    log.debug(`Received parse project IPC with projectKey "${projectKey}"`);
-    return parseProject(projectKey);
-  },
-);
+  ProjectListenerChannel.FETCH_LATEST_VERSION,
+  async (
+    event,
+    fetchLatestVersionArgs: FetchLatestVersionArgs,
+  ): Promise<string | undefined> => {
+    log.debug(
+      `Received fetch latest version IPC with dependency "${fetchLatestVersionArgs.dependencyName}" et registry URL "${fetchLatestVersionArgs.registryUrl}`,
+    );
 
-ipcMain.handle(
-  ProjectListenerChannel.FETCH_LATEST_VERSIONS,
-  async (event, projectDependencies: string[]) => {
-    log.debug('Received fetch latest versions IPC');
-    return fetchLatestsVersions(projectDependencies);
+    return fetchLatestVersion(
+      fetchLatestVersionArgs.dependencyName,
+      fetchLatestVersionArgs.registryUrl,
+    );
   },
 );

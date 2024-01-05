@@ -4,16 +4,21 @@ import {
   isDirectory,
   readFileContent,
 } from '../file/FileSystemService';
-import { ProjectStore } from '../../store/ProjectStore';
+import { ProjectConfig, ProjectStore } from '../../store/ProjectStore';
 import i18n from '../../i18n';
+import path from 'path';
 import {
-  ProjectDataForMenu,
+  adaptRegistryUrl,
+  fetchPackageDetails,
+  npmRegistryUrl,
+} from '../package/PackageService';
+import {
   ParsedDependency,
   ParsedProject,
   ProjectDetails,
-} from '../../../types/ProjectListenerArgs';
-import path from 'path';
-import { fetchPackageDetails, npmRegistryUrl } from '../package/PackageService';
+  ProjectSumUp,
+} from '../../../types/ProjectInfo';
+import { GetProjectDetailsResult } from '../../../types/ProjectListenerArgs';
 
 interface Dependencies {
   [key: string]: string;
@@ -28,9 +33,27 @@ interface PackageJson {
 
 const packageJsonFileName = 'package.json';
 
-export const validateProjectPath = async (
+/**
+ * Check if the given name is already used
+ *
+ * @param projectName the given name
+ * @returns true if the name is already used, otherwise returns false.
+ */
+export function isProjectNameUsed(projectName: string): boolean {
+  log.info(`Checking if project name "${projectName}" is already used`);
+
+  return ProjectStore.get().hasProject(projectName);
+}
+
+/**
+ * Check if the given project path is valid
+ *
+ * @param projectPath the given project path
+ * @returns undefined if the path is valid, otherwise an error message
+ */
+export async function validateProjectPath(
   projectPath: string,
-): Promise<string | undefined> => {
+): Promise<string | undefined> {
   log.info(`Validating project path "${projectPath}"`);
 
   const isDir = await isDirectory(projectPath);
@@ -53,31 +76,25 @@ export const validateProjectPath = async (
   }
 
   return undefined;
-};
+}
 
-export const validateProjectName = (
-  projectName: string,
-): string | undefined => {
-  log.info(`Validating project name "${projectName}"`);
-
-  const isAlreadyUse = ProjectStore.get().hasProject(projectName);
-
-  if (isAlreadyUse) {
-    return i18n.t('project.validation.errors.nameAlreadyUsed');
-  }
-
-  return undefined;
-};
-
-export const importProject = async (
+/**
+ * Import a new project
+ *
+ * @param projectName the given project name
+ * @param projectPath the given project path
+ * @param registryUrl the given registry url
+ * @returns the created project key
+ */
+export async function createProject(
   projectName: string,
   projectPath: string,
-): Promise<string> => {
+  registryUrl?: string,
+): Promise<string> {
   log.info(`Importing project with name "${projectName}"`);
 
-  const isProjectNameValid = validateProjectName(projectName);
-  if (isProjectNameValid) {
-    throw new Error(isProjectNameValid);
+  if (isProjectNameUsed(projectName)) {
+    throw new Error(i18n.t('project.validation.errors.nameAlreadyUsed'));
   }
 
   const isProjectPathValid = await validateProjectPath(projectPath);
@@ -85,12 +102,22 @@ export const importProject = async (
     throw new Error(isProjectPathValid);
   }
 
-  const projectKey = ProjectStore.get().createProject(projectName, projectPath);
+  const adaptedRegistryUrl = adaptRegistryUrl(registryUrl);
+  const projectKey = ProjectStore.get().addProject(
+    projectName,
+    projectPath,
+    adaptedRegistryUrl,
+  );
 
   return projectKey;
-};
+}
 
-export const getProjectsDataForMenu = (): ProjectDataForMenu[] => {
+/**
+ * Retrieve all project sum-up
+ *
+ * @returns the table of project sum-up
+ */
+export const getProjectsSumUp = (): ProjectSumUp[] => {
   log.info('Retrieve projects data for menu');
   const projects = ProjectStore.get().getProjects();
 
@@ -100,43 +127,68 @@ export const getProjectsDataForMenu = (): ProjectDataForMenu[] => {
   }));
 };
 
-export const getProjectDetails = (projectKey: string): ProjectDetails => {
+/**
+ * Get project details
+ *
+ * @param projectKey the project to get details
+ * @returns the details of the project
+ */
+export const getProjectDetails = async (
+  projectKey: string,
+): Promise<GetProjectDetailsResult> => {
   log.info(`Retrieve project "${projectKey}" details`);
 
-  const projectSavedData = ProjectStore.get().getProject(projectKey);
+  const projectConfig = ProjectStore.get().getProject(projectKey);
+
+  let parsedProject: ParsedProject | undefined;
+  let error: string | undefined;
+  try {
+    parsedProject = await parseProject(projectConfig);
+  } catch (err) {
+    error = i18n.t('project.parse.error');
+  }
+
+  const projectDetails: ProjectDetails = {
+    name: projectConfig.name,
+    path: projectConfig.path,
+    registryUrl: projectConfig.registryUrl,
+    parsedProject: parsedProject,
+  };
+
   return {
-    name: projectSavedData.name,
-    path: projectSavedData.path,
+    projectDetails: projectDetails,
+    error: error,
   };
 };
 
+/**
+ * Parse project details
+ *
+ * @param projectConfig the project configuration to parse
+ * @returns the parsed details of the project
+ */
 export const parseProject = async (
-  projectKey: string,
-): Promise<ParsedProject | string> => {
-  log.info(`Parse project "${projectKey}"`);
-
-  const projectData = ProjectStore.get().getProject(projectKey);
+  projectConfig: ProjectConfig,
+): Promise<ParsedProject> => {
+  log.info(`Parse project "${projectConfig.name}"`);
   let packageJson: PackageJson;
   try {
-    packageJson = await parsePackageJson(projectData.path);
+    packageJson = await parsePackageJson(projectConfig.path);
   } catch (err) {
     log.error(
-      `Unable to parse project package.json from "${projectData.path}"`,
+      `Unable to parse project package.json from "${projectConfig.path}"`,
       err,
     );
-    if (err instanceof Error) {
-      return err.message;
-    } else {
-      return i18n.t('project.parse.unknownError');
-    }
+    throw err;
   }
 
-  const dependencies = await parseProjectDependencies(packageJson);
-  const devDepencies = await parseProjectDevDependencies(packageJson);
+  log.info('Parse project dependencies');
+  const dependencies = parseDependencies(packageJson.dependencies);
+
+  log.info('Parse project devDepencies');
+  const devDepencies = parseDependencies(packageJson.devDependencies);
 
   return {
-    name: projectData.name,
-    path: projectData.path,
     version: packageJson.version,
     description: packageJson.description,
     dependencies: dependencies,
@@ -144,6 +196,12 @@ export const parseProject = async (
   };
 };
 
+/**
+ * Parse project package.json file
+ *
+ * @param projectPath the path to the project folder
+ * @returns the parsed package.json file
+ */
 const parsePackageJson = async (projectPath: string): Promise<PackageJson> => {
   const packageJsonPath = path.join(projectPath, packageJsonFileName);
   log.info(`Parse package.json project file "${packageJsonPath}"`);
@@ -151,48 +209,45 @@ const parsePackageJson = async (projectPath: string): Promise<PackageJson> => {
   return JSON.parse(packageJsonContent.toString());
 };
 
-const parseProjectDependencies = async (
-  packageJson: PackageJson,
-): Promise<ParsedDependency[]> => {
-  log.info('Parse project dependencies');
-  return parseDependencies(packageJson.dependencies);
-};
-
-const parseProjectDevDependencies = async (
-  packageJson: PackageJson,
-): Promise<ParsedDependency[]> => {
-  log.info('Parse project devDepencies');
-  return parseDependencies(packageJson.devDependencies);
-};
-
+/**
+ * Parse project dependencies
+ *
+ * @param dependencies the dependencies of a parsed package.json file
+ * @returns An array of the parsed dependencies, if the dependencies is null then return empty array
+ */
 const parseDependencies = (dependencies: Dependencies): ParsedDependency[] => {
+  if (!dependencies) {
+    return [];
+  }
+
   return Object.keys(dependencies).map((key) => ({
     name: key,
-    currentVersion: dependencies[key],
+    version: dependencies[key],
   }));
 };
 
-export const fetchLatestsVersions = async (
-  dependencies: string[],
-): Promise<Map<string, string | undefined>> => {
-  const dependencyWithLatestVersion = new Map<string, string | undefined>();
-
-  for (const dependency of dependencies) {
-    log.debug(`Fetch latest version of package "${dependency}"`);
-    // TODO : Handle registry url
-    const packageDetails = await fetchPackageDetails(
-      dependency,
-      npmRegistryUrl,
+/**
+ * Fetch the latest version number of a project dependency
+ *
+ * @param dependencyName the name of the dependency
+ * @param registryUrl the registry url on which the dependency latest tag should be fetched
+ * @returns the string representing the latest version if the request succeed and the tag is present, undefined otherwise
+ */
+export const fetchLatestVersion = async (
+  dependencyName: string,
+  registryUrl: string,
+): Promise<string | undefined> => {
+  const adaptedRegistryUrl = registryUrl ? registryUrl : npmRegistryUrl;
+  const packageDetails = await fetchPackageDetails(
+    adaptedRegistryUrl,
+    dependencyName,
+  );
+  if (typeof packageDetails === 'string') {
+    log.warn(
+      `Error while fetching package "${dependencyName}" details. Cause: ${packageDetails}`,
     );
-    if (typeof packageDetails === 'string') {
-      log.warn(
-        `Error while fetching package "${dependencies}" details. Cause: ${packageDetails}`,
-      );
-      dependencyWithLatestVersion.set(dependency, undefined);
-    } else {
-      dependencyWithLatestVersion.set(dependency, packageDetails.latest);
-    }
+    return undefined;
+  } else {
+    return packageDetails.latest;
   }
-
-  return dependencyWithLatestVersion;
 };

@@ -32,7 +32,7 @@ export class PackageStore {
 
   private store: Store<IPackageStore>;
 
-  constructor() {
+  private constructor() {
     this.store = new Store<IPackageStore>({
       name: 'packages',
     });
@@ -80,7 +80,7 @@ export class PackageStore {
     return this.store.get(key);
   }
 
-  getPackages(): { [key: string]: PackageConfig } {
+  getPackages(): IPackageStore {
     return this.store.store;
   }
 }

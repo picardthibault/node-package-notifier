@@ -1,8 +1,13 @@
-import { PackageDetails } from "./PackageInfo";
+import { PackageDetails } from './PackageInfo';
 
 export interface PackageCreationArgs {
   packageName: string;
   registryUrl?: string;
+}
+
+export interface PackageDetailsArgs {
+  packageName: string;
+  registryUrl: string;
 }
 
 export interface PackageSuggestionArgs {

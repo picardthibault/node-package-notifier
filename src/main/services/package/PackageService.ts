@@ -1,16 +1,14 @@
 import log from 'electron-log';
-import { PackageConfig, PackageStore } from '../../store/PackageStore';
+import { PackageStore } from '../../store/PackageStore';
 import { PackageInfo, RegistryApi } from '../api/RegistryApi';
 import i18n from '../../i18n';
-import {
-  PackageSuggestionArgs,
-} from '../../../types/PackageListenerArgs';
-import { PackageDetails } from '../../../types/PackageInfo'
+import { PackageSuggestionArgs } from '../../../types/PackageListenerArgs';
+import { PackageDetails } from '../../../types/PackageInfo';
 import { PackageCache } from '../../caches/PackageCache';
 
 export const npmRegistryUrl = 'https://registry.npmjs.org';
 
-function adaptRegistryUrl(registryUrl?: string) {
+export function adaptRegistryUrl(registryUrl?: string) {
   return registryUrl ? registryUrl : npmRegistryUrl;
 }
 
@@ -119,10 +117,10 @@ export async function fetchPackageDetails(
   packageName: string,
   refresh = false,
 ): Promise<PackageDetails | string> {
-  log.debug(`Fetch package "${packageName} details`);
+  log.debug(`Fetch package "${packageName}" details`);
   // Search package info in PackageCache
   if (!refresh) {
-    const packageInfo = PackageCache.get().get(registryUrl, packageName);
+    const packageInfo = await PackageCache.get().get(registryUrl, packageName);
     if (packageInfo !== undefined) {
       return packageInfo;
     }
@@ -159,17 +157,16 @@ export async function fetchPackageDetails(
 /**
  * Get package details
  *
- * @param packageConfig The package to fetch details
+ * @param registryUrl the url of the registry on which info will be fetched
+ * @param packageName the name of the package for which info will be fetched
  * @returns The details of the package or an error message
  */
 export async function getPackage(
-  packageConfig: PackageConfig,
+  registryUrl: string,
+  packageName: string,
 ): Promise<PackageDetails | string> {
-  log.debug(`Get package "${packageConfig.name}" details`);
-  const packageDetails = await fetchPackageDetails(
-    packageConfig.registryUrl,
-    packageConfig.name,
-  );
+  log.debug(`Get package "${packageName}" details on "${registryUrl}"`);
+  const packageDetails = await fetchPackageDetails(registryUrl, packageName);
   return packageDetails;
 }
 

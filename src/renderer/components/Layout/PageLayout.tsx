@@ -6,14 +6,17 @@ import SideMenu, { SideMenuItem } from '../Menu/SideMenu';
 
 interface PageLayoutProps {
   subMenuItems: SideMenuItem[];
+  defaultOpenMenuKeys?: string[];
 }
 
-const PageLayout: FunctionComponent<PageLayoutProps> = ({
-  subMenuItems: items,
-}) => {
+const PageLayout: FunctionComponent<PageLayoutProps> = (props) => {
+  const { subMenuItems, defaultOpenMenuKeys } = props;
   return (
     <Layout>
-      <SideMenu items={items} />
+      <SideMenu
+        items={subMenuItems}
+        defaultOpenMenuKeys={defaultOpenMenuKeys}
+      />
       <Content>
         <Outlet />
       </Content>

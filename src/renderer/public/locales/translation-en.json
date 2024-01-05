@@ -8,6 +8,17 @@
             }
         }
     },
+    "form": {
+        "field": {
+            "registryUrl": "Registry"
+        },
+        "placeholder": {
+            "registryUrl": "https://registry.npmjs.org"
+        },
+        "rules": {
+            "url": "This field should be a valid url"
+        }
+    },
     "sideMenu": {
         "items": {
             "packageList": "Package List",
@@ -47,19 +58,14 @@
             "title": "Create Package",
             "form": {
                 "field": {
-                    "name": "Package name",
-                    "registryUrl": "Registry"
+                    "name": "Package name"
                 },
                 "placeholder": {
-                    "name": "electron",
-                    "registryUrl": "https://registry.npmjs.org"
-                },
-                "rules": {
-                    "url": "This field should be a valid url"
+                    "name": "electron"
                 }
             },
             "tooltip": {
-                "registryUrl": "The base url of the registry on which the package is hosted. If not provided, the package will be fetched on the npm registry."
+                "registryUrl": "The base url of the registry on which the package is hosted. If not provided, the npm registry will be used."
             },
             "buttons": {
                 "create": "Create"
@@ -101,8 +107,8 @@
         }
     },
     "project": {
-        "import": {
-            "title": "Import Project",
+        "creation": {
+            "title": "Create Project",
             "form": {
                 "field": {
                     "projectName": "Project name",
@@ -111,26 +117,31 @@
                 "placeholder": {
                     "projectName": "My Awesome Project",
                     "projectPath": "C:\\MyAwesomeProject"
+                },
+                "rules": {
+                    "projectName": "This name is already used by another project."
                 }
             },
             "tooltip": {
                 "projectName": "The name that will be used in NPN for the project",
-                "projectPath": "The path to the directory where you \"package.json\" file lives"
+                "projectPath": "The path to the directory where you \"package.json\" file lives",
+                "registryUrl": "The base url of the registry on which the project fetch its packages. If not provided, the npm registry will be used."
             },
             "alert": {
                 "title": {
-                    "success": "Project has been successufuly imported",
-                    "error": "Unable to import project"
+                    "success": "Project has been successufuly created",
+                    "error": "Unable to create project"
                 }
             },
             "buttons": {
-                "import": "Import"
+                "create": "Create"
             }
         },
         "details": {
             "form": {
                "field": {
                 "projectPath": "Project path",
+                "registryUrl": "Registry",
                 "version": "Version",
                 "description": "Description"
                } 
@@ -144,21 +155,32 @@
             "table": {
                 "columns": {
                     "name": "Name",
-                    "currentVersion": "Current version",
-                    "latestVersion": "Latest version"
+                    "version": "Version",
+                    "latestVersion": "Latest version",
+                    "actions": "Actions"
                 },
                 "values": {
                     "unableToFetch": "Unable to fetch"
                 }
             },
+            "tooltip": {
+                "viewPackage": "Open package details.",
+                "followPackage": "Follow this package and receive notifications when new version are published.",
+                "unfollowPackage": "Unfollow this package and stop receiving notifications when new version are released."
+            },
             "alert": {
                 "title": {
-                    "loadProjectError": "Unable to load project details",
-                    "fetchLatestVerionError": "Unable to fetch latest version"
+                    "loadProjectError": "Unable to load project details.",
+                    "fetchLatestVerionError": "Unable to fetch latest version.",
+                    "dependencyFollowed": "Dependency is now followed.",
+                    "dependencyFollowError": "Unable to follow the selected dependency.",
+                    "dependencyUnfollowed": "Dependency is now unfollowed."
                 },
                 "description": {
-                    "loadProjectError": "An error occurred while loading project details: {{cause}}",
-                    "fetchLatestVerionError": "An error occurred while fetching latest version of \"{{package}}\""
+                    "loadProjectError": "An error occurred while loading project details: {{cause}}.",
+                    "noProjectData": "Unable to extract project details",
+                    "fetchLatestVerionError": "An error occurred while fetching latest version of \"{{package}}\".",
+                    "dependencyFollowError": "An error occurred while fetching dependency details : \"{{cause}}\"."
                 }
             }
         }

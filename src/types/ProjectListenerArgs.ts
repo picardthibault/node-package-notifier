@@ -1,33 +1,22 @@
-export interface ProjectImportArgs {
+import { ProjectDetails } from './ProjectInfo';
+
+export interface ProjectCreationArgs {
   name: string;
   path: string;
+  registryUrl?: string;
 }
 
-export interface ProjectImportResult {
+export interface ProjectCreationResult {
   projectKey: string;
   error: string;
 }
 
-export interface ProjectDataForMenu {
-  projectKey: string;
-  name: string;
+export interface GetProjectDetailsResult {
+  projectDetails: ProjectDetails;
+  error?: string;
 }
 
-export interface ProjectDetails {
-  name: string;
-  path: string;
-}
-
-export interface ParsedDependency {
-  name: string;
-  currentVersion: string;
-}
-
-export interface ParsedProject {
-  name: string;
-  path: string;
-  version: string;
-  description?: string;
-  dependencies: ParsedDependency[];
-  devDependencies: ParsedDependency[];
+export interface FetchLatestVersionArgs {
+  dependencyName: string;
+  registryUrl?: string;
 }

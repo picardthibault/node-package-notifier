@@ -1,5 +1,4 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import Title from '../../components/Title/Title';
 import { Form, Input, Table } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
@@ -9,6 +8,11 @@ import LinkButton from '../../components/Button/LinkButton';
 import { useTranslation } from 'react-i18next';
 import { ColumnsType } from 'antd/es/table';
 import { openAlert } from '../../components/Alert/Alert';
+import { useStore } from 'effector-react';
+import {
+  PackageDetailsStore,
+  packageDetailsStore,
+} from '../../stores/PackageDetailsStore';
 
 interface TableItemType {
   key: number;
@@ -17,9 +21,10 @@ interface TableItemType {
 }
 
 const PackageDetails: FunctionComponent = () => {
-  const { id } = useParams<{ id: string }>();
-
   const { t } = useTranslation();
+
+  const { packageName, registryUrl } =
+    useStore<PackageDetailsStore>(packageDetailsStore);
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [title, setTitle] = useState<string>('');
@@ -29,51 +34,53 @@ const PackageDetails: FunctionComponent = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    window.packageManagement.getPackage(id).then((getPackageResult) => {
-      setTitle(
-        getPackageResult.packageDetails.name.charAt(0).toUpperCase() +
-          getPackageResult.packageDetails.name.slice(1),
-      );
-
-      if (getPackageResult.error) {
-        formInstance.resetFields();
-        setTags([]);
-        formInstance.setFieldValue(
-          'registryUrl',
-          getPackageResult.packageDetails.registryUrl,
+    window.packageManagement
+      .getPackage(packageName, registryUrl)
+      .then((getPackageResult) => {
+        setTitle(
+          getPackageResult.packageDetails.name.charAt(0).toUpperCase() +
+            getPackageResult.packageDetails.name.slice(1),
         );
-        openAlert(
-          'error',
-          t('package.details.alert.title.error'),
-          t('package.details.alert.description.error', {
-            cause: getPackageResult.error,
-          }),
-        );
-      } else {
-        formInstance.setFieldsValue({
-          registryUrl: getPackageResult.packageDetails.registryUrl,
-          licence: getPackageResult.packageDetails.license,
-          homePage: getPackageResult.packageDetails.homePage,
-          repository: getPackageResult.packageDetails.repository,
-          description: getPackageResult.packageDetails.description,
-        });
 
-        const tags: TableItemType[] = [];
-        if (getPackageResult.packageDetails.tags) {
-          Object.keys(getPackageResult.packageDetails.tags).forEach(
-            (key, index) =>
-              tags.push({
-                key: index,
-                tagName: key,
-                tagVersion: getPackageResult.packageDetails.tags[key],
-              }),
+        if (getPackageResult.error) {
+          formInstance.resetFields();
+          setTags([]);
+          formInstance.setFieldValue(
+            'registryUrl',
+            getPackageResult.packageDetails.registryUrl,
           );
+          openAlert(
+            'error',
+            t('package.details.alert.title.error'),
+            t('package.details.alert.description.error', {
+              cause: getPackageResult.error,
+            }),
+          );
+        } else {
+          formInstance.setFieldsValue({
+            registryUrl: getPackageResult.packageDetails.registryUrl,
+            licence: getPackageResult.packageDetails.license,
+            homePage: getPackageResult.packageDetails.homePage,
+            repository: getPackageResult.packageDetails.repository,
+            description: getPackageResult.packageDetails.description,
+          });
+
+          const tags: TableItemType[] = [];
+          if (getPackageResult.packageDetails.tags) {
+            Object.keys(getPackageResult.packageDetails.tags).forEach(
+              (key, index) =>
+                tags.push({
+                  key: index,
+                  tagName: key,
+                  tagVersion: getPackageResult.packageDetails.tags[key],
+                }),
+            );
+          }
+          setTags(tags);
         }
-        setTags(tags);
-      }
-      setIsLoading(false);
-    });
-  }, [id]);
+        setIsLoading(false);
+      });
+  }, [packageName, registryUrl]);
 
   const tableColumns: ColumnsType<TableItemType> = [
     {

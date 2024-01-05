@@ -17,39 +17,27 @@ import {
   ProjectOutlined,
   UnorderedListOutlined,
 } from '@ant-design/icons';
-import ProjectImport from './views/projects/ProjectImport';
-import { IpcRendererEvent } from 'electron';
+import ProjectCreation from './views/projects/ProjectCreation';
 import ProjectDetails from './views/projects/ProjectDetails';
-import { ProjectDataForMenu } from '../types/ProjectListenerArgs';
+import { ProjectSumUp } from '../types/ProjectInfo';
+import { fetchProjectsSumUp } from './effects/ProjectEffects';
+
+const projectListMenuKey = 'projectList';
 
 const App: FunctionComponent = () => {
   const { t } = useTranslation();
 
-  const [projectsDataForMenu, setProjectsDataForMenu] = useState<
-    ProjectDataForMenu[]
-  >([]);
+  const [projectsSumUp, setProjectsSumUp] = useState<ProjectSumUp[]>([]);
 
   useEffect(() => {
-    window.projectManagement.getProjectsDataForMenu();
+    fetchProjectsSumUp();
   }, []);
 
   useEffect(() => {
-    const projectKeyListener = (
-      event: IpcRendererEvent,
-      projectsData: ProjectDataForMenu[],
-    ) => {
-      setProjectsDataForMenu(projectsData);
-    };
-
-    const cleanListener =
-      window.projectManagement.getProjectsDataForMenuListener(
-        projectKeyListener,
-      );
-
-    return () => {
-      cleanListener();
-    };
-  }, [setProjectsDataForMenu]);
+    fetchProjectsSumUp.done.watch((projects) => {
+      setProjectsSumUp(projects.result);
+    });
+  });
 
   const subMenuItems = useCallback((): Array<MenuItemType | SubMenuType> => {
     return [
@@ -59,27 +47,34 @@ const App: FunctionComponent = () => {
         icon: <UnorderedListOutlined />,
       },
       {
-        key: 'projectList',
+        key: projectListMenuKey,
         label: t('sideMenu.items.projectList'),
         icon: <ProjectOutlined />,
         children: [
-          ...projectsDataForMenu.map((projectData) => ({
+          ...projectsSumUp.map((projectData) => ({
             key: routePaths.projectDetails.generate(projectData.projectKey),
             label: projectData.name,
           })),
           {
-            key: routePaths.projectImport.generate(),
+            key: routePaths.projectCreation.generate(),
             label: t('sideMenu.items.addProject'),
             icon: <PlusCircleOutlined />,
           },
         ],
       },
     ];
-  }, [projectsDataForMenu]);
+  }, [projectsSumUp]);
 
   return (
     <Routes>
-      <Route element={<PageLayout subMenuItems={subMenuItems()} />}>
+      <Route
+        element={
+          <PageLayout
+            subMenuItems={subMenuItems()}
+            defaultOpenMenuKeys={[projectListMenuKey]}
+          />
+        }
+      >
         <Route
           path={routePaths.packageList.generate()}
           element={<PackagesView />}
@@ -89,12 +84,12 @@ const App: FunctionComponent = () => {
           element={<PackageCreation />}
         />
         <Route
-          path={routePaths.packageDetails.generate(':id')}
+          path={routePaths.packageDetails.generate()}
           element={<PackageDetails />}
         />
         <Route
-          path={routePaths.projectImport.generate()}
-          element={<ProjectImport />}
+          path={routePaths.projectCreation.generate()}
+          element={<ProjectCreation />}
         />
         <Route
           path={routePaths.projectDetails.generate(':id')}

@@ -10,10 +10,11 @@ export type SideMenuItem = MenuItemType | SubMenuType;
 
 interface SideMenuProps {
   items: SideMenuItem[];
+  defaultOpenMenuKeys?: string[];
 }
 
 const SideMenu: FunctionComponent<SideMenuProps> = (props) => {
-  const { items } = props;
+  const { items, defaultOpenMenuKeys } = props;
 
   const navigate = useNavigate();
 
@@ -44,6 +45,7 @@ const SideMenu: FunctionComponent<SideMenuProps> = (props) => {
       <Menu
         onClick={onClick}
         selectedKeys={[selectedKey]}
+        defaultOpenKeys={defaultOpenMenuKeys}
         mode="inline"
         items={items}
         className="sideMenu"

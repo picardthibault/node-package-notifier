@@ -6,10 +6,10 @@ export const routePaths = {
     generate: () => '/package/create',
   },
   packageDetails: {
-    generate: (id: string) => `/package/${id}`,
+    generate: () => '/package/details',
   },
-  projectImport: {
-    generate: () => '/project/import',
+  projectCreation: {
+    generate: () => '/project/create',
   },
   projectDetails: {
     generate: (projectKey: string) => `/project/details/${projectKey}`,

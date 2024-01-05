@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form, Input, Space, Table } from 'antd';
 import { DeleteOutlined, PlusOutlined, EyeOutlined } from '@ant-design/icons';
 import { ColumnsType } from 'antd/es/table';
@@ -13,11 +13,14 @@ import {
 import { useStore } from 'effector-react';
 import Title from '../../components/Title/Title';
 import { routePaths } from '../../routes';
+import { updatePackageDetails } from '../../stores/PackageDetailsStore';
+import { deletePackage, fetchPackages } from '../../effects/PackageEffect';
 
 interface TableItemType {
   key: number;
   packageId: string;
   name: string;
+  registryUrl: string;
   license: string;
   version: string;
 }
@@ -31,38 +34,34 @@ export const PackagesView = (): JSX.Element => {
   const [hasFilter, setHasFilter] = useState<boolean>(false);
   const [filteredPackages, setFilteredPackages] = useState<TableItemType[]>([]);
 
-  const { page, pageSize } = useStore<PackageListStore>(packageListStore);
+  const { fetchedPackages, page, pageSize } =
+    useStore<PackageListStore>(packageListStore);
 
   const [formInstance] = Form.useForm();
-
-  const fetchPackages = useCallback(() => {
-    window.packageManagement.getPackages().then((packages) => {
-      const tableItems: TableItemType[] = Object.keys(packages).map(
-        (packageId, index) => ({
-          key: index,
-          packageId,
-          name: packages[packageId].name,
-          license: packages[packageId].license
-            ? packages[packageId].license
-            : t('common.na'),
-          version: packages[packageId].latest
-            ? packages[packageId].latest
-            : t('common.na'),
-        }),
-      );
-
-      setPackages(tableItems);
-    });
-  }, []);
 
   useEffect(() => {
     // Load packages
     fetchPackages();
   }, []);
 
-  const deletePackage = (packageId: string) => {
-    window.packageManagement.delete(packageId).then(() => fetchPackages());
-  };
+  useEffect(() => {
+    const tableItems: TableItemType[] = Object.keys(fetchedPackages).map(
+      (packageId, index) => ({
+        key: index,
+        packageId,
+        name: fetchedPackages[packageId].name,
+        registryUrl: fetchedPackages[packageId].registryUrl,
+        license: fetchedPackages[packageId].license
+          ? fetchedPackages[packageId].license
+          : t('common.na'),
+        version: fetchedPackages[packageId].latest
+          ? fetchedPackages[packageId].latest
+          : t('common.na'),
+      }),
+    );
+
+    setPackages(tableItems);
+  }, [fetchedPackages]);
 
   const tableColumns: ColumnsType<TableItemType> = [
     {
@@ -91,7 +90,13 @@ export const PackagesView = (): JSX.Element => {
           <ActionButton
             type="primary"
             toolTip={t('package.list.tooltips.detailsPackage')}
-            onClick={() => navigate(`/package/${tableItem.packageId}`)}
+            onClick={() => {
+              updatePackageDetails({
+                packageName: tableItem.name,
+                registryUrl: tableItem.registryUrl,
+              });
+              navigate(routePaths.packageDetails.generate());
+            }}
           >
             <EyeOutlined />
           </ActionButton>
@@ -99,7 +104,7 @@ export const PackagesView = (): JSX.Element => {
             type="default"
             danger={true}
             toolTip={t('package.list.tooltips.deletePackage')}
-            onClick={() => deletePackage(tableItem.packageId)}
+            onClick={() => deletePackage(tableItem.name)}
           >
             <DeleteOutlined />
           </ActionButton>

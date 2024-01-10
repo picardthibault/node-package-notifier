@@ -6,15 +6,13 @@ import { Form, Input, Space } from 'antd';
 import ActionButton from '../../components/Button/ActionButton';
 import { openAlert } from '../../components/Alert/Alert';
 import { ProjectCreationArgs } from '../../../types/ProjectListenerArgs';
-import { useNavigate } from 'react-router-dom';
 import { routePaths } from '../../routes';
 import RegistryField from '../../components/Form/RegistryField';
 import { fetchProjectsSumUp } from '../../effects/ProjectEffects';
+import { navigateTo } from '../../effects/MenuEffect';
 
 const ProjectCreation: FunctionComponent = () => {
   const { t } = useTranslation();
-
-  const navigate = useNavigate();
 
   const [formInstance] = useForm();
 
@@ -56,7 +54,7 @@ const ProjectCreation: FunctionComponent = () => {
         } else {
           openAlert('success', t('project.creation.alert.title.success'));
           fetchProjectsSumUp();
-          navigate(
+          navigateTo(
             routePaths.projectDetails.generate(
               projectCreationResult.projectKey,
             ),

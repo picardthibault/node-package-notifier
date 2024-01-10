@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Form, Input, Space, Table } from 'antd';
 import { DeleteOutlined, PlusOutlined, EyeOutlined } from '@ant-design/icons';
 import { ColumnsType } from 'antd/es/table';
-import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import ActionButton from '../../components/Button/ActionButton';
 import {
@@ -15,6 +14,7 @@ import Title from '../../components/Title/Title';
 import { routePaths } from '../../routes';
 import { updatePackageDetails } from '../../stores/PackageDetailsStore';
 import { deletePackage, fetchPackages } from '../../effects/PackageEffect';
+import { navigateTo } from '../../effects/MenuEffect';
 
 interface TableItemType {
   key: number;
@@ -26,8 +26,6 @@ interface TableItemType {
 }
 
 export const PackagesView = (): JSX.Element => {
-  const navigate = useNavigate();
-
   const { t } = useTranslation();
 
   const [packages, setPackages] = useState<TableItemType[]>([]);
@@ -95,7 +93,7 @@ export const PackagesView = (): JSX.Element => {
                 packageName: tableItem.name,
                 registryUrl: tableItem.registryUrl,
               });
-              navigate(routePaths.packageDetails.generate());
+              navigateTo(routePaths.packageDetails.generate());
             }}
           >
             <EyeOutlined />
@@ -140,7 +138,7 @@ export const PackagesView = (): JSX.Element => {
         <ActionButton
           type="primary"
           toolTip={t('package.list.tooltips.createPackage')}
-          onClick={() => navigate(routePaths.packageCreation.generate())}
+          onClick={() => navigateTo(routePaths.packageCreation.generate())}
         >
           <PlusOutlined />
         </ActionButton>

@@ -9,7 +9,6 @@ import {
   PlusCircleOutlined,
 } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 import { routePaths } from '../../../routes';
 import { updatePackageDetails } from '../../../stores/PackageDetailsStore';
 import { Space } from 'antd';
@@ -18,6 +17,7 @@ import { packageListStore } from '../../../stores/PackageListStore';
 import { createPackage, deletePackage } from '../../../effects/PackageEffect';
 import { GetPackagesResult } from '../../../../types/PackageListenerArgs';
 import { openAlert } from '../../../components/Alert/Alert';
+import { navigateTo } from '../../../effects/MenuEffect';
 
 interface DependenciesTableProps {
   dependencies: ParsedDependency[];
@@ -32,8 +32,6 @@ const DependenciesTable: React.FunctionComponent<DependenciesTableProps> = (
   const { t } = useTranslation();
 
   const { fetchedPackages } = useStore(packageListStore);
-
-  const navigation = useNavigate();
 
   useEffect(() => {
     return createPackage.done.watch(({ result }) => {
@@ -109,7 +107,7 @@ const DependenciesTable: React.FunctionComponent<DependenciesTableProps> = (
                   packageName: record.name,
                   registryUrl: registryUrl,
                 });
-                navigation(routePaths.packageDetails.generate());
+                navigateTo(routePaths.packageDetails.generate());
               }}
             >
               <EyeOutlined />

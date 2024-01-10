@@ -51,10 +51,20 @@ const App: FunctionComponent = () => {
         label: t('sideMenu.items.projectList'),
         icon: <ProjectOutlined />,
         children: [
-          ...projectsSumUp.map((projectData) => ({
-            key: routePaths.projectDetails.generate(projectData.projectKey),
-            label: projectData.name,
-          })),
+          ...projectsSumUp
+            .sort((projectA, projectB) => {
+              if (projectA.name < projectB.name) {
+                return -1;
+              } else if (projectA.name > projectB.name) {
+                return 1;
+              } else {
+                return 0;
+              }
+            })
+            .map((projectData) => ({
+              key: routePaths.projectDetails.generate(projectData.projectKey),
+              label: projectData.name,
+            })),
           {
             key: routePaths.projectCreation.generate(),
             label: t('sideMenu.items.addProject'),

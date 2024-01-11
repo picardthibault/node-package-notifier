@@ -41,6 +41,7 @@ declare global {
       create: (
         projectCreationArgs: ProjectCreationArgs,
       ) => Promise<ProjectCreationResult>;
+      delete: (projectKey: string) => Promise<void>;
       getProjectsSumUp: () => Promise<ProjectSumUp[]>;
       getProjectDetails: (
         projectKey: string,

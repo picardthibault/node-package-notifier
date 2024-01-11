@@ -166,7 +166,8 @@
             "tooltip": {
                 "viewPackage": "Open package details.",
                 "followPackage": "Follow this package and receive notifications when new version are published.",
-                "unfollowPackage": "Unfollow this package and stop receiving notifications when new version are released."
+                "unfollowPackage": "Unfollow this package and stop receiving notifications when new version are released.",
+                "deleteProject": "Remove the project from your project list."
             },
             "alert": {
                 "title": {
@@ -174,7 +175,8 @@
                     "fetchLatestVerionError": "Unable to fetch latest version.",
                     "dependencyFollowed": "Dependency is now followed.",
                     "dependencyFollowError": "Unable to follow the selected dependency.",
-                    "dependencyUnfollowed": "Dependency is now unfollowed."
+                    "dependencyUnfollowed": "Dependency is now unfollowed.",
+                    "projectRemoved": "Project \"{{projectName}}\" has been removed."
                 },
                 "description": {
                     "loadProjectError": "An error occurred while loading project details: {{cause}}.",

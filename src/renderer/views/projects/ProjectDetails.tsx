@@ -13,6 +13,11 @@ import TextArea from 'antd/es/input/TextArea';
 import { openAlert } from '../../components/Alert/Alert';
 import DependenciesTable from './details/DependenciesTable';
 import { ParsedDependency } from '../../../types/ProjectInfo';
+import ActionButton from '../../components/Button/ActionButton';
+import { DeleteOutlined } from '@ant-design/icons';
+import { navigateTo } from '../../effects/MenuEffect';
+import { routePaths } from '../../routes';
+import { fetchProjectsSumUp } from '../../effects/ProjectEffects';
 
 const dependenciesTabKey = 'dependencies';
 const devDepenciesTabKey = 'devDependencies';
@@ -105,6 +110,17 @@ const ProjectDetails: FunctionComponent = () => {
     },
   ];
 
+  const onDeleteClick = useCallback(() => {
+    window.projectManagement.delete(id).then(() => {
+      openAlert(
+        'success',
+        t('project.details.alert.title.projectRemoved', { projectName: title }),
+      );
+      fetchProjectsSumUp();
+      navigateTo(routePaths.packageList.generate());
+    });
+  }, [id, title]);
+
   return (
     <>
       {isLoading ? (
@@ -146,6 +162,16 @@ const ProjectDetails: FunctionComponent = () => {
             </Form>
           </div>
           <Tabs defaultActiveKey={dependenciesTabKey} items={tabItems} />
+          <div className="actionFooter">
+            <ActionButton
+              danger
+              type="default"
+              toolTip={t('project.details.tooltip.deleteProject')}
+              onClick={onDeleteClick}
+            >
+              <DeleteOutlined />
+            </ActionButton>
+          </div>
         </>
       )}
     </>

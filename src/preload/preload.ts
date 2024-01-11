@@ -53,6 +53,8 @@ contextBridge.exposeInMainWorld('projectManagement', {
     projectCreationArgs: ProjectCreationArgs,
   ): Promise<ProjectCreationResult> =>
     ipcRenderer.invoke(ProjectListenerChannel.CREATE, projectCreationArgs),
+  delete: (projectKey: string) =>
+    ipcRenderer.invoke(ProjectListenerChannel.DELETE, projectKey),
   getProjectsSumUp: (): Promise<ProjectSumUp[]> =>
     ipcRenderer.invoke(ProjectListenerChannel.GET_PROJECTS_SUM_UP),
   getProjectDetails: (projectKey: string): Promise<GetProjectDetailsResult> =>

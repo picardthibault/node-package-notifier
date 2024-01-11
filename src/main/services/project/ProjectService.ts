@@ -112,6 +112,11 @@ export async function createProject(
   return projectKey;
 }
 
+export function deleteProject(projectKey: string): void {
+  log.info(`Deleting project with key ${projectKey}`);
+  ProjectStore.get().removeProject(projectKey);
+}
+
 /**
  * Retrieve all project sum-up
  *

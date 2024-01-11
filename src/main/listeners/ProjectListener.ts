@@ -14,6 +14,7 @@ import {
   getProjectDetails,
   isProjectNameUsed,
   fetchLatestVersion,
+  deleteProject,
 } from '../services/project/ProjectService';
 import { ProjectSumUp } from '../../types/ProjectInfo';
 
@@ -58,6 +59,15 @@ ipcMain.handle(
       projectKey: createdProjectKey,
       error: importError,
     };
+  },
+);
+
+ipcMain.handle(
+  ProjectListenerChannel.DELETE,
+  (event, projectkey: string): Promise<void> => {
+    log.debug('Received delete project IPC');
+    deleteProject(projectkey);
+    return Promise.resolve();
   },
 );
 

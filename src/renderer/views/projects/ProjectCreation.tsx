@@ -10,6 +10,7 @@ import { routePaths } from '../../routes';
 import RegistryField from '../../components/Form/RegistryField';
 import { fetchProjectsSumUp } from '../../effects/ProjectEffects';
 import { navigateTo } from '../../effects/MenuEffect';
+import FilePathField from '../../components/Form/FilePathField';
 
 const ProjectCreation: FunctionComponent = () => {
   const { t } = useTranslation();
@@ -107,17 +108,20 @@ const ProjectCreation: FunctionComponent = () => {
           />
         </Form.Item>
 
-        <Form.Item
+        <FilePathField
+          formInstance={formInstance}
           label={t('project.creation.form.field.projectPath')}
           name="projectPath"
           tooltip={t('project.creation.tooltip.projectPath')}
+          placeholder={t('project.creation.form.placeholder.projectPath')}
+          onChange={() => resetFieldError('projectPath')}
           rules={[
             {
               required: true,
               message: t('common.form.rules.required'),
             },
             () => ({
-              async validator(_, value) {
+              async validator(_, value: string) {
                 if (value) {
                   const projectPathValidationError =
                     await window.projectManagement.isProjectPathValid(value);
@@ -128,12 +132,7 @@ const ProjectCreation: FunctionComponent = () => {
               },
             }),
           ]}
-        >
-          <Input
-            placeholder={t('project.creation.form.placeholder.projectPath')}
-            onChange={() => resetFieldError('projectPath')}
-          />
-        </Form.Item>
+        />
 
         <RegistryField toolTip={t('project.creation.tooltip.registryUrl')} />
 

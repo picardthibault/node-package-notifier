@@ -39,6 +39,11 @@ contextBridge.exposeInMainWorld('packageManagement', {
 });
 
 contextBridge.exposeInMainWorld('projectManagement', {
+  projectPathSelector: (defaultPath: string): Promise<string | undefined> =>
+    ipcRenderer.invoke(
+      ProjectListenerChannel.PROJECT_PATH_SELECTOR,
+      defaultPath,
+    ),
   isProjectNameUsed: (projectName: string): Promise<boolean> =>
     ipcRenderer.invoke(
       ProjectListenerChannel.IS_PROJECT_NAME_USED,

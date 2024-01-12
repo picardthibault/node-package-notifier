@@ -36,6 +36,7 @@ declare global {
       ) => () => void;
     };
     projectManagement: {
+      projectPathSelector: (defaultPath: string) => Promise<string | undefined>;
       isProjectNameUsed: (projectName: string) => Promise<boolean>;
       isProjectPathValid: (projectPath: string) => Promise<string | undefined>;
       create: (

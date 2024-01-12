@@ -1,4 +1,4 @@
-import { ipcMain } from 'electron';
+import { dialog, ipcMain } from 'electron';
 import { ProjectListenerChannel } from '../../types/IpcChannel';
 import {
   FetchLatestVersionArgs,
@@ -17,6 +17,18 @@ import {
   deleteProject,
 } from '../services/project/ProjectService';
 import { ProjectSumUp } from '../../types/ProjectInfo';
+
+ipcMain.handle(
+  ProjectListenerChannel.PROJECT_PATH_SELECTOR,
+  async (event, defaultPath: string): Promise<string | undefined> => {
+    log.debug('Received project path show selector IPC');
+    const selection = await dialog.showOpenDialog({
+      properties: ['openDirectory'],
+      defaultPath: defaultPath,
+    });
+    return selection?.filePaths.length > 0 ? selection.filePaths[0] : undefined;
+  },
+);
 
 ipcMain.handle(
   ProjectListenerChannel.IS_PROJECT_NAME_USED,

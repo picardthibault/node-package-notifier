@@ -28,6 +28,7 @@ const FilePathField: FunctionComponent<Props> = (props) => {
     const files = event.dataTransfer.files;
     if (files.length === 1) {
       formInstance.setFieldValue(name, files[0].path);
+      onChange();
       inputRef.current.focus();
     } else {
       openAlert('error', t('project.creation.alert.title'));
@@ -45,6 +46,7 @@ const FilePathField: FunctionComponent<Props> = (props) => {
             if (selection) {
               formInstance.setFieldValue(name, selection);
               inputRef.current.focus();
+              onChange();
             }
           });
       }}

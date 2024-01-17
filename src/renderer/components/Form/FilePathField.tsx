@@ -31,7 +31,7 @@ const FilePathField: FunctionComponent<Props> = (props) => {
       onChange();
       inputRef.current.focus();
     } else {
-      openAlert('error', t('project.creation.alert.title'));
+      openAlert('error', t('project.creation.alert.title.invalidSelection'));
     }
     event.dataTransfer.clearData();
   };

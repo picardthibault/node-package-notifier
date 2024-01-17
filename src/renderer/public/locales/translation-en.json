@@ -131,7 +131,7 @@
                 "title": {
                     "success": "Project has been successufuly created.",
                     "error": "Unable to create project.",
-                    "invalidSelection": "You should drag and drop only one element."
+                    "invalidSelection": "You should drag and drop only one folder."
                 }
             },
             "buttons": {

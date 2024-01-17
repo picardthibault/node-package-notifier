@@ -13,6 +13,7 @@ import {
   PackageDetailsStore,
   packageDetailsStore,
 } from '../../stores/PackageDetailsStore';
+import { MenuStore, menuStore } from '../../stores/MenuStore';
 
 interface TableItemType {
   key: number;
@@ -25,6 +26,9 @@ const PackageDetails: FunctionComponent = () => {
 
   const { packageName, registryUrl } =
     useStore<PackageDetailsStore>(packageDetailsStore);
+
+  const { previousLocation: previousSelectedKey } =
+    useStore<MenuStore>(menuStore);
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [title, setTitle] = useState<string>('');
@@ -104,7 +108,7 @@ const PackageDetails: FunctionComponent = () => {
       ) : (
         <>
           <LinkButton
-            to={routePaths.packageList.generate()}
+            to={previousSelectedKey}
             label={t('common.back')}
             isBack
           />

@@ -2,15 +2,23 @@
     display: inline-block;
     color: $primary-color;
     
-    a {
+    button {
         color: $primary-color;
         padding-left: 3px;   
+    }
+
+    button:hover {
+        color: $secondary-color;
+        button {
+            color: $secondary-color;
+        }
     }
 }
 
 .linkButton:hover {
     color: $secondary-color;
-    a {
-        color: $secondary-color;
+
+    button:hover {
+        color: $secondary-color !important;
     }
 }

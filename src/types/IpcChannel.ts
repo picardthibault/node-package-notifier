@@ -7,9 +7,11 @@ export enum PackageListenerChannel {
 }
 
 export enum ProjectListenerChannel {
+  PROJECT_PATH_SELECTOR = 'projectChannelProjectPathSelector',
   IS_PROJECT_NAME_USED = 'projectChannelIsProjectNameUsed',
   IS_PROJECT_PATH_VALID = 'projectChannelIsProjectPathValid',
   CREATE = 'projectChannelCreate',
+  DELETE = 'projectChannelDelete',
   GET_PROJECTS_SUM_UP = 'projectChannelGetProjectsSumUp',
   GET_PROJECT_DETAILS = 'projectChannelGetProjectDetails',
   FETCH_LATEST_VERSION = 'projectChannelFetchLatestVersion',

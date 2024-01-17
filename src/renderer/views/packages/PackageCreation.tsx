@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { AutoComplete, Form, Space } from 'antd';
-import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import ActionButton from '../../components/Button/ActionButton';
 import Title from '../../components/Title/Title';
@@ -9,6 +8,7 @@ import { openAlert } from '../../components/Alert/Alert';
 import LinkButton from '../../components/Button/LinkButton';
 import RegistryField from '../../components/Form/RegistryField';
 import { createPackage } from '../../effects/PackageEffect';
+import { navigateTo } from '../../effects/MenuEffect';
 
 interface PackageFormField {
   packageName: string;
@@ -17,8 +17,6 @@ interface PackageFormField {
 
 export const PackageCreation = (): JSX.Element => {
   const { t } = useTranslation();
-
-  const navigate = useNavigate();
 
   const [suggestions, setSuggestions] = useState<
     { label: string; value: string }[]
@@ -32,7 +30,7 @@ export const PackageCreation = (): JSX.Element => {
     return createPackage.done.watch(({ result }) => {
       if (!result) {
         openAlert('success', t('package.creation.alert.title.success'));
-        navigate(routePaths.packageList.generate());
+        navigateTo(routePaths.packageList.generate());
       } else {
         openAlert(
           'error',

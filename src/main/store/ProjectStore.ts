@@ -49,6 +49,10 @@ export class ProjectStore {
     return projectKey;
   }
 
+  removeProject(projectKey: string): void {
+    this.store.delete(projectKey);
+  }
+
   getProjects(): IProjectStore {
     return this.store.store;
   }

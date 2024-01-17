@@ -36,11 +36,13 @@ declare global {
       ) => () => void;
     };
     projectManagement: {
+      projectPathSelector: (defaultPath: string) => Promise<string | undefined>;
       isProjectNameUsed: (projectName: string) => Promise<boolean>;
       isProjectPathValid: (projectPath: string) => Promise<string | undefined>;
       create: (
         projectCreationArgs: ProjectCreationArgs,
       ) => Promise<ProjectCreationResult>;
+      delete: (projectKey: string) => Promise<void>;
       getProjectsSumUp: () => Promise<ProjectSumUp[]>;
       getProjectDetails: (
         projectKey: string,

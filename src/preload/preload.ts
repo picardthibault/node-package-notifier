@@ -39,6 +39,11 @@ contextBridge.exposeInMainWorld('packageManagement', {
 });
 
 contextBridge.exposeInMainWorld('projectManagement', {
+  projectPathSelector: (defaultPath: string): Promise<string | undefined> =>
+    ipcRenderer.invoke(
+      ProjectListenerChannel.PROJECT_PATH_SELECTOR,
+      defaultPath,
+    ),
   isProjectNameUsed: (projectName: string): Promise<boolean> =>
     ipcRenderer.invoke(
       ProjectListenerChannel.IS_PROJECT_NAME_USED,
@@ -53,6 +58,8 @@ contextBridge.exposeInMainWorld('projectManagement', {
     projectCreationArgs: ProjectCreationArgs,
   ): Promise<ProjectCreationResult> =>
     ipcRenderer.invoke(ProjectListenerChannel.CREATE, projectCreationArgs),
+  delete: (projectKey: string) =>
+    ipcRenderer.invoke(ProjectListenerChannel.DELETE, projectKey),
   getProjectsSumUp: (): Promise<ProjectSumUp[]> =>
     ipcRenderer.invoke(ProjectListenerChannel.GET_PROJECTS_SUM_UP),
   getProjectDetails: (projectKey: string): Promise<GetProjectDetailsResult> =>

@@ -139,25 +139,25 @@ const ProjectDetails: FunctionComponent = () => {
                 label={t('project.details.form.field.projectPath')}
                 name="projectPath"
               >
-                <Input disabled />
+                <Input readOnly />
               </Form.Item>
               <Form.Item
                 label={t('project.details.form.field.registryUrl')}
                 name="registryUrl"
               >
-                <Input disabled />
+                <Input readOnly />
               </Form.Item>
               <Form.Item
                 label={t('project.details.form.field.version')}
                 name="version"
               >
-                <Input disabled />
+                <Input readOnly />
               </Form.Item>
               <Form.Item
                 label={t('project.details.form.field.description')}
                 name="description"
               >
-                <TextArea disabled />
+                <TextArea readOnly />
               </Form.Item>
             </Form>
           </div>

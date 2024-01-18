@@ -1,4 +1,9 @@
 {
+    "tray": {
+        "open": "Open",
+        "close": "Close",
+        "tooltip": "Node Package Notifier"
+    },
     "package": {
         "newVersion": {
             "title": "{{name}} new version",

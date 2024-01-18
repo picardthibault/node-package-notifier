@@ -103,6 +103,9 @@
                 "description": {
                     "error": "An error occurred while fetching package details: \"{{cause}}\""
                 }
+            },
+            "tooltip": {
+                "openHomePage": "Open package home page in browser"
             }
         }
     },

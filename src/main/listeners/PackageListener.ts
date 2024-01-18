@@ -17,6 +17,7 @@ import {
   getPackage,
 } from '../services/package/PackageService';
 import { getSha1 } from '../helpers/HashHelper';
+import opener from 'opener';
 
 ipcMain.handle(
   PackageListenerChannel.CREATE,
@@ -84,6 +85,15 @@ ipcMain.handle(
         packageDetails: packageDetails,
       };
     }
+  },
+);
+
+ipcMain.handle(
+  PackageListenerChannel.OPEN_HOME_PAGE,
+  (event, packageHomePage: string) => {
+    log.debug('Received open home page IPC');
+    opener(packageHomePage);
+    return Promise.resolve();
   },
 );
 

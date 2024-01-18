@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import Title from '../../components/Title/Title';
-import { Form, Input, Table } from 'antd';
+import { Form, Input, Table, Tooltip } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import Loading from '../../components/Loading/Loading';
 import { routePaths } from '../../routes';
@@ -14,6 +14,7 @@ import {
   packageDetailsStore,
 } from '../../stores/PackageDetailsStore';
 import { MenuStore, menuStore } from '../../stores/MenuStore';
+import { EyeOutlined } from '@ant-design/icons';
 
 interface TableItemType {
   key: number;
@@ -101,6 +102,19 @@ const PackageDetails: FunctionComponent = () => {
     },
   ];
 
+  const homePageAddon = (
+    <Tooltip title={t('package.details.tooltip.openHomePage')}>
+      <div
+        onClick={() => {
+          const homePage = formInstance.getFieldValue('homePage');
+          window.packageManagement.openPackageHomePage(homePage);
+        }}
+      >
+        <EyeOutlined />
+      </div>
+    </Tooltip>
+  );
+
   return (
     <>
       {isLoading ? (
@@ -124,31 +138,31 @@ const PackageDetails: FunctionComponent = () => {
                 label={t('package.details.form.field.registry')}
                 name="registryUrl"
               >
-                <Input disabled />
+                <Input readOnly />
               </Form.Item>
               <Form.Item
                 label={t('package.details.form.field.licence')}
                 name="licence"
               >
-                <Input disabled />
+                <Input readOnly />
               </Form.Item>
               <Form.Item
                 label={t('package.details.form.field.homePage')}
                 name="homePage"
               >
-                <Input disabled />
+                <Input readOnly addonAfter={homePageAddon} />
               </Form.Item>
               <Form.Item
                 label={t('package.details.form.field.repository')}
                 name="repository"
               >
-                <Input disabled />
+                <Input readOnly />
               </Form.Item>
               <Form.Item
                 label={t('package.details.form.field.description')}
                 name="description"
               >
-                <TextArea disabled />
+                <TextArea readOnly />
               </Form.Item>
             </Form>
           </div>

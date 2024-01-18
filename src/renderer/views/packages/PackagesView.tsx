@@ -113,7 +113,9 @@ export const PackagesView = (): JSX.Element => {
 
   const onFilter = () => {
     setHasFilter(true);
-    const packageNameFilter = (formInstance.getFieldValue('packageNameFilter') as string).toLocaleLowerCase();
+    const packageNameFilter = (
+      formInstance.getFieldValue('packageNameFilter') as string
+    ).toLocaleLowerCase();
     setFilteredPackages(
       packages.filter((pack) => pack.name.includes(packageNameFilter)),
     );

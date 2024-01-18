@@ -1,5 +1,5 @@
 .detailsForm {
-    input:disabled, textarea:disabled {
-        color: $primary-color;
+    .ant-input:hover, .ant-input:focus {
+        border-color: #d9d9d9;
     }
 }

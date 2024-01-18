@@ -3,6 +3,7 @@ export enum PackageListenerChannel {
   DELETE = 'packageChannelDelete',
   GET_PACKAGES = 'packageChannelGetPackages',
   GET_PACKAGE = 'packageChannelGetPackage',
+  OPEN_HOME_PAGE = 'packageChannelOpenHomePage',
   GET_SUGGESTIONS = 'packageChannelGetSuggestion',
 }
 

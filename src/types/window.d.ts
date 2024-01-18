@@ -28,6 +28,7 @@ declare global {
       getSuggestions: (
         suggestionArgs: PackageSuggestionArgs,
       ) => Promise<string[] | string>;
+      openPackageHomePage: (packageHomePage: string) => Promise<void>;
       getSuggestionsListener: (
         listener: (
           event: IpcRendererEvent,

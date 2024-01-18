@@ -32,6 +32,8 @@ contextBridge.exposeInMainWorld('packageManagement', {
       packageName: packageName,
       registryUrl: registryUrl,
     }),
+  openPackageHomePage: (packageHomePage: string): Promise<void> =>
+    ipcRenderer.invoke(PackageListenerChannel.OPEN_HOME_PAGE, packageHomePage),
   getSuggestions: (
     suggestionArgs: PackageSuggestionArgs,
   ): Promise<string[] | string> =>

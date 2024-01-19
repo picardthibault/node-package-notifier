@@ -12,7 +12,11 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "paths": {
-      "*": ["node_modules/*"]
+      "@renderer/components/*": ["src/renderer/components/*"],
+      "@renderer/effects/*": ["src/renderer/effects/*"],
+      "@renderer/stores/*": ["src/renderer/stores/*"],
+      "@renderer/views/*": ["src/renderer/views/*"],
+      "*": ["node_modules/*"]      
     },
     "jsx": "react",
     "typeRoots": ["./node_modules/@types", "./src/types"]

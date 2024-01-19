@@ -5,11 +5,11 @@ import React, {
   useState,
 } from 'react';
 import { Route, Routes } from 'react-router-dom';
-import { PackageCreation } from './views/packages/PackageCreation';
-import { PackagesView } from './views/packages/PackagesView';
+import { PackageCreation } from '@renderer/views/packages/PackageCreation';
+import { PackagesView } from '@renderer/views/packages/PackagesView';
 import { routePaths } from './routes';
-import PackageDetails from './views/packages/PackageDetails';
-import PageLayout from './components/Layout/PageLayout';
+import PackageDetails from '@renderer/views/packages/PackageDetails';
+import PageLayout from '@renderer/components/Layout/PageLayout';
 import { MenuItemType, SubMenuType } from 'antd/es/menu/hooks/useItems';
 import { useTranslation } from 'react-i18next';
 import {
@@ -17,8 +17,8 @@ import {
   ProjectOutlined,
   UnorderedListOutlined,
 } from '@ant-design/icons';
-import ProjectCreation from './views/projects/ProjectCreation';
-import ProjectDetails from './views/projects/ProjectDetails';
+import ProjectCreation from '@renderer/views/projects/ProjectCreation';
+import ProjectDetails from '@renderer/views/projects/ProjectDetails';
 import { ProjectSumUp } from '../types/ProjectInfo';
 import { fetchProjectsSumUp } from './effects/ProjectEffects';
 

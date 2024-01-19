@@ -3,18 +3,18 @@ import { Form, Input, Space, Table } from 'antd';
 import { DeleteOutlined, PlusOutlined, EyeOutlined } from '@ant-design/icons';
 import { ColumnsType } from 'antd/es/table';
 import { useTranslation } from 'react-i18next';
-import ActionButton from '../../components/Button/ActionButton';
+import ActionButton from '@renderer/components/Button/ActionButton';
 import {
   packageListStore,
   PackageListStore,
   updatePackageListPageConfig,
-} from '../../stores/PackageListStore';
+} from '@renderer/stores/PackageListStore';
 import { useStore } from 'effector-react';
-import Title from '../../components/Title/Title';
+import Title from '@renderer/components/Title/Title';
 import { routePaths } from '../../routes';
-import { updatePackageDetails } from '../../stores/PackageDetailsStore';
-import { deletePackage, fetchPackages } from '../../effects/PackageEffect';
-import { navigateTo } from '../../effects/MenuEffect';
+import { updatePackageDetails } from '@renderer/stores/PackageDetailsStore';
+import { deletePackage, fetchPackages } from '@renderer/effects/PackageEffect';
+import { navigateTo } from '@renderer/effects/MenuEffect';
 
 interface TableItemType {
   key: number;

@@ -5,7 +5,8 @@
     "node": true
   },
   "plugins": [
-    "prettier"
+    "prettier",
+    "import"
   ],
   "extends": [
     "eslint:recommended",
@@ -16,5 +17,10 @@
     "plugin:import/typescript",
     "prettier"
   ],
-  "parser": "@typescript-eslint/parser"
+  "parser": "@typescript-eslint/parser",
+  "settings": {
+    "import/resolver": {
+      "typescript": {}
+    }
+  }
 }

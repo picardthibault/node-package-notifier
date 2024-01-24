@@ -1,19 +1,18 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
-import Title from '../../components/Title/Title';
+import Title from '@renderer/components/Title/Title';
 import { Form, Input, Table, Tooltip } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
-import Loading from '../../components/Loading/Loading';
-import { routePaths } from '../../routes';
-import LinkButton from '../../components/Button/LinkButton';
+import Loading from '@renderer/components/Loading/Loading';
+import LinkButton from '@renderer/components/Button/LinkButton';
 import { useTranslation } from 'react-i18next';
 import { ColumnsType } from 'antd/es/table';
-import { openAlert } from '../../components/Alert/Alert';
+import { openAlert } from '@renderer/components/Alert/Alert';
 import { useStore } from 'effector-react';
 import {
   PackageDetailsStore,
   packageDetailsStore,
-} from '../../stores/PackageDetailsStore';
-import { MenuStore, menuStore } from '../../stores/MenuStore';
+} from '@renderer/stores/PackageDetailsStore';
+import { MenuStore, menuStore } from '@renderer/stores/MenuStore';
 import { EyeOutlined } from '@ant-design/icons';
 
 interface TableItemType {

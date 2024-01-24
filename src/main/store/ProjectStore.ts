@@ -1,5 +1,5 @@
 import Store = require('electron-store');
-import { getSha1 } from '../helpers/HashHelper';
+import { getSha1 } from '@main/helpers/HashHelper';
 
 export interface ProjectConfig {
   name: string;

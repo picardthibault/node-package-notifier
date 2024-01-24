@@ -5,19 +5,19 @@ import React, {
   useState,
 } from 'react';
 import { useParams } from 'react-router-dom';
-import Title from '../../components/Title/Title';
-import Loading from '../../components/Loading/Loading';
+import Title from '@renderer/components/Title/Title';
+import Loading from '@renderer/components/Loading/Loading';
 import { Form, Input, Tabs, TabsProps } from 'antd';
 import { useTranslation } from 'react-i18next';
 import TextArea from 'antd/es/input/TextArea';
-import { openAlert } from '../../components/Alert/Alert';
+import { openAlert } from '@renderer/components/Alert/Alert';
 import DependenciesTable from './details/DependenciesTable';
-import { ParsedDependency } from '../../../types/ProjectInfo';
-import ActionButton from '../../components/Button/ActionButton';
+import { ParsedDependency } from '@type/ProjectInfo';
+import ActionButton from '@renderer/components/Button/ActionButton';
 import { DeleteOutlined } from '@ant-design/icons';
-import { navigateTo } from '../../effects/MenuEffect';
+import { navigateTo } from '@renderer/effects/MenuEffect';
 import { routePaths } from '../../routes';
-import { fetchProjectsSumUp } from '../../effects/ProjectEffects';
+import { fetchProjectsSumUp } from '@renderer/effects/ProjectEffects';
 
 const dependenciesTabKey = 'dependencies';
 const devDepenciesTabKey = 'devDependencies';

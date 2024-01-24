@@ -1,6 +1,6 @@
 import Store = require('electron-store');
-import { getSha1 } from '../helpers/HashHelper';
-import { PackageDetails } from '../../types/PackageInfo';
+import { getSha1 } from '@main/helpers/HashHelper';
+import { PackageDetails } from '@type/PackageInfo';
 
 export interface PackageConfig {
   name: string;

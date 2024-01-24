@@ -1,14 +1,14 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { AutoComplete, Form, Space } from 'antd';
 import { useTranslation } from 'react-i18next';
-import ActionButton from '../../components/Button/ActionButton';
-import Title from '../../components/Title/Title';
+import ActionButton from '@renderer/components/Button/ActionButton';
+import Title from '@renderer/components/Title/Title';
 import { routePaths } from '../../routes';
-import { openAlert } from '../../components/Alert/Alert';
-import LinkButton from '../../components/Button/LinkButton';
-import RegistryField from '../../components/Form/RegistryField';
-import { createPackage } from '../../effects/PackageEffect';
-import { navigateTo } from '../../effects/MenuEffect';
+import { openAlert } from '@renderer/components/Alert/Alert';
+import LinkButton from '@renderer/components/Button/LinkButton';
+import RegistryField from '@renderer/components/Form/RegistryField';
+import { createPackage } from '@renderer/effects/PackageEffect';
+import { navigateTo } from '@renderer/effects/MenuEffect';
 
 interface PackageFormField {
   packageName: string;

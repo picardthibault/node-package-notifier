@@ -4,7 +4,7 @@ import {
   deletePackage,
   fetchPackages,
 } from '../effects/PackageEffect';
-import { GetPackagesResult } from '../../types/PackageListenerArgs';
+import { GetPackagesResult } from '@type/PackageListenerArgs';
 
 export interface PackageListStore {
   page: number;

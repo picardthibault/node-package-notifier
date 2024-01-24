@@ -1,8 +1,8 @@
 import './listeners/index';
-import './helpers/LogConfiguration';
+import '@main/helpers/LogConfiguration';
 import { app, BrowserWindow, Menu, nativeImage, Tray } from 'electron';
 import * as path from 'path';
-import { createMainWindow } from './helpers/AppLifeCycleHelper';
+import { createMainWindow } from '@main/helpers/AppLifeCycleHelper';
 import { launchUpdatePackageJob } from './jobs/PackageJobs';
 import log from 'electron-log';
 import i18n from './i18n';

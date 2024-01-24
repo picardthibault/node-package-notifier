@@ -1,16 +1,16 @@
 import React, { FunctionComponent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import Title from '../../components/Title/Title';
+import Title from '@renderer/components/Title/Title';
 import { useForm } from 'antd/es/form/Form';
 import { Form, Input, Space } from 'antd';
-import ActionButton from '../../components/Button/ActionButton';
-import { openAlert } from '../../components/Alert/Alert';
-import { ProjectCreationArgs } from '../../../types/ProjectListenerArgs';
+import ActionButton from '@renderer/components/Button/ActionButton';
+import { openAlert } from '@renderer/components/Alert/Alert';
+import { ProjectCreationArgs } from '@type/ProjectListenerArgs';
 import { routePaths } from '../../routes';
-import RegistryField from '../../components/Form/RegistryField';
-import { fetchProjectsSumUp } from '../../effects/ProjectEffects';
-import { navigateTo } from '../../effects/MenuEffect';
-import FilePathField from '../../components/Form/FilePathField';
+import RegistryField from '@renderer/components/Form/RegistryField';
+import { fetchProjectsSumUp } from '@renderer/effects/ProjectEffects';
+import { navigateTo } from '@renderer/effects/MenuEffect';
+import FilePathField from '@renderer/components/Form/FilePathField';
 
 const ProjectCreation: FunctionComponent = () => {
   const { t } = useTranslation();

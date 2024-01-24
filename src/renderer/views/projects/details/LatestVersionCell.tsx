@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import Loading from '../../../components/Loading/Loading';
-import ErrorIcon from '../../../components/Icon/ErrorIcon';
+import Loading from '@renderer/components/Loading/Loading';
+import ErrorIcon from '@renderer/components/Icon/ErrorIcon';
 
 interface Props {
   dependencyName: string;

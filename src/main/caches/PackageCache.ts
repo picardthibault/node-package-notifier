@@ -1,5 +1,5 @@
 import { MemoryCache, caching } from 'cache-manager';
-import { PackageDetails } from '../../types/PackageInfo';
+import { PackageDetails } from '@type/PackageInfo';
 
 export class PackageCache {
   private static instance: PackageCache;

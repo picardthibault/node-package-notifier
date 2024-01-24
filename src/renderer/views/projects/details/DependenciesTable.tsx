@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import Table, { ColumnsType } from 'antd/es/table';
 import LatestVersionCell from './LatestVersionCell';
-import { ParsedDependency } from '../../../../types/ProjectInfo';
-import ActionButton from '../../../components/Button/ActionButton';
+import { ParsedDependency } from '@type/ProjectInfo';
+import ActionButton from '@renderer/components/Button/ActionButton';
 import {
   EyeOutlined,
   MinusCircleOutlined,
@@ -10,14 +10,14 @@ import {
 } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import { routePaths } from '../../../routes';
-import { updatePackageDetails } from '../../../stores/PackageDetailsStore';
+import { updatePackageDetails } from '@renderer/stores/PackageDetailsStore';
 import { Space } from 'antd';
 import { useStore } from 'effector-react';
-import { packageListStore } from '../../../stores/PackageListStore';
-import { createPackage, deletePackage } from '../../../effects/PackageEffect';
-import { GetPackagesResult } from '../../../../types/PackageListenerArgs';
-import { openAlert } from '../../../components/Alert/Alert';
-import { navigateTo } from '../../../effects/MenuEffect';
+import { packageListStore } from '@renderer/stores/PackageListStore';
+import { createPackage, deletePackage } from '@renderer/effects/PackageEffect';
+import { GetPackagesResult } from '@type/PackageListenerArgs';
+import { openAlert } from '@renderer/components/Alert/Alert';
+import { navigateTo } from '@renderer/effects/MenuEffect';
 
 interface DependenciesTableProps {
   dependencies: ParsedDependency[];

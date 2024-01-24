@@ -6,8 +6,8 @@ import Sider from 'antd/es/layout/Sider';
 import { useNavigate } from 'react-router-dom';
 import { routePaths } from '../../routes';
 import { useStore } from 'effector-react';
-import { MenuStore, menuStore } from '../../stores/MenuStore';
-import { navigateTo } from '../../effects/MenuEffect';
+import { MenuStore, menuStore } from '@renderer/stores/MenuStore';
+import { navigateTo } from '@renderer/effects/MenuEffect';
 
 export type SideMenuItem = MenuItemType | SubMenuType;
 

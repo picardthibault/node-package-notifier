@@ -1,11 +1,11 @@
 import { dialog, ipcMain } from 'electron';
-import { ProjectListenerChannel } from '../../types/IpcChannel';
+import { ProjectListenerChannel } from '@type/IpcChannel';
 import {
   FetchLatestVersionArgs,
   GetProjectDetailsResult,
   ProjectCreationArgs,
   ProjectCreationResult,
-} from '../../types/ProjectListenerArgs';
+} from '@type/ProjectListenerArgs';
 import log from 'electron-log';
 import {
   validateProjectPath,
@@ -15,8 +15,8 @@ import {
   isProjectNameUsed,
   fetchLatestVersion,
   deleteProject,
-} from '../services/project/ProjectService';
-import { ProjectSumUp } from '../../types/ProjectInfo';
+} from '@main/services/project/ProjectService';
+import { ProjectSumUp } from '@type/ProjectInfo';
 
 ipcMain.handle(
   ProjectListenerChannel.PROJECT_PATH_SELECTOR,

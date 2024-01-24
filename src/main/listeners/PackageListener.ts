@@ -1,22 +1,22 @@
 import { ipcMain } from 'electron';
-import { PackageListenerChannel } from '../../types/IpcChannel';
+import { PackageListenerChannel } from '@type/IpcChannel';
 import {
   GetPackageResult,
   GetPackagesResult,
   PackageCreationArgs,
   PackageDetailsArgs,
   PackageSuggestionArgs,
-} from '../../types/PackageListenerArgs';
-import { PackageDetails } from '../../types/PackageInfo';
-import { PackageStore } from '../store/PackageStore';
+} from '@type/PackageListenerArgs';
+import { PackageDetails } from '@type/PackageInfo';
+import { PackageStore } from '@main/store/PackageStore';
 import log from 'electron-log';
 import {
   createPackage,
   deletePackage,
   fetchPackageSuggestions,
   getPackage,
-} from '../services/package/PackageService';
-import { getSha1 } from '../helpers/HashHelper';
+} from '@main/services/package/PackageService';
+import { getSha1 } from '@main/helpers/HashHelper';
 import opener from 'opener';
 
 ipcMain.handle(

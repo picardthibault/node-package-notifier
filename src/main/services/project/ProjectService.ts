@@ -4,7 +4,7 @@ import {
   isDirectory,
   readFileContent,
 } from '../file/FileSystemService';
-import { ProjectConfig, ProjectStore } from '../../store/ProjectStore';
+import { ProjectConfig, ProjectStore } from '@main/store/ProjectStore';
 import i18n from '../../i18n';
 import path from 'path';
 import {
@@ -17,8 +17,8 @@ import {
   ParsedProject,
   ProjectDetails,
   ProjectSumUp,
-} from '../../../types/ProjectInfo';
-import { GetProjectDetailsResult } from '../../../types/ProjectListenerArgs';
+} from '@type/ProjectInfo';
+import { GetProjectDetailsResult } from '@type/ProjectListenerArgs';
 
 interface Dependencies {
   [key: string]: string;

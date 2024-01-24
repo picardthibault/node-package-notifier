@@ -1,10 +1,10 @@
 import log from 'electron-log';
-import { PackageStore } from '../../store/PackageStore';
+import { PackageStore } from '@main/store/PackageStore';
 import { PackageInfo, RegistryApi } from '../api/RegistryApi';
 import i18n from '../../i18n';
-import { PackageSuggestionArgs } from '../../../types/PackageListenerArgs';
-import { PackageDetails } from '../../../types/PackageInfo';
-import { PackageCache } from '../../caches/PackageCache';
+import { PackageSuggestionArgs } from '@type/PackageListenerArgs';
+import { PackageDetails } from '@type/PackageInfo';
+import { PackageCache } from '@main/caches/PackageCache';
 
 export const npmRegistryUrl = 'https://registry.npmjs.org';
 

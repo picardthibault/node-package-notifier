@@ -1,7 +1,7 @@
 import { CronJob } from 'cron';
 import { nativeImage, Notification } from 'electron';
-import { updateAllStoredPackages } from '../services/package/PackageService';
-import { PackageStore } from '../store/PackageStore';
+import { updateAllStoredPackages } from '@main/services/package/PackageService';
+import { PackageStore } from '@main/store/PackageStore';
 import * as path from 'path';
 import { ressourcePathFolder } from '..';
 import i18n from '../i18n';

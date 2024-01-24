@@ -12,6 +12,7 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "paths": {
+      "@type/*": ["src/types/*"],
       "@renderer/components/*": ["src/renderer/components/*"],
       "@renderer/effects/*": ["src/renderer/effects/*"],
       "@renderer/stores/*": ["src/renderer/stores/*"],

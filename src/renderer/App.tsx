@@ -19,7 +19,7 @@ import {
 } from '@ant-design/icons';
 import ProjectCreation from '@renderer/views/projects/ProjectCreation';
 import ProjectDetails from '@renderer/views/projects/ProjectDetails';
-import { ProjectSumUp } from '../types/ProjectInfo';
+import { ProjectSumUp } from '@type/ProjectInfo';
 import { fetchProjectsSumUp } from './effects/ProjectEffects';
 
 const projectListMenuKey = 'projectList';

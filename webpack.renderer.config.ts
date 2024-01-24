@@ -20,10 +20,14 @@ export const rendererConfig: Configuration = {
   resolve: {
     extensions: ['.js', '.ts', '.jsx', '.tsx', '.css', '.json', 'ttf'],
     alias: {
-      '@renderer/components': path.resolve(__dirname, 'src/renderer/components'),
+      '@type': path.resolve(__dirname, 'src/types'),
+      '@renderer/components': path.resolve(
+        __dirname,
+        'src/renderer/components',
+      ),
       '@renderer/effects': path.resolve(__dirname, 'src/renderer/effects'),
       '@renderer/stores': path.resolve(__dirname, 'src/renderer/stores'),
       '@renderer/views': path.resolve(__dirname, 'src/renderer/views'),
-    }
+    },
   },
 };

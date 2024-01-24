@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 import TextArea from 'antd/es/input/TextArea';
 import { openAlert } from '@renderer/components/Alert/Alert';
 import DependenciesTable from './details/DependenciesTable';
-import { ParsedDependency } from '../../../types/ProjectInfo';
+import { ParsedDependency } from '@type/ProjectInfo';
 import ActionButton from '@renderer/components/Button/ActionButton';
 import { DeleteOutlined } from '@ant-design/icons';
 import { navigateTo } from '@renderer/effects/MenuEffect';

@@ -5,7 +5,7 @@ import { useForm } from 'antd/es/form/Form';
 import { Form, Input, Space } from 'antd';
 import ActionButton from '@renderer/components/Button/ActionButton';
 import { openAlert } from '@renderer/components/Alert/Alert';
-import { ProjectCreationArgs } from '../../../types/ProjectListenerArgs';
+import { ProjectCreationArgs } from '@type/ProjectListenerArgs';
 import { routePaths } from '../../routes';
 import RegistryField from '@renderer/components/Form/RegistryField';
 import { fetchProjectsSumUp } from '@renderer/effects/ProjectEffects';

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import Table, { ColumnsType } from 'antd/es/table';
 import LatestVersionCell from './LatestVersionCell';
-import { ParsedDependency } from '../../../../types/ProjectInfo';
+import { ParsedDependency } from '@type/ProjectInfo';
 import ActionButton from '@renderer/components/Button/ActionButton';
 import {
   EyeOutlined,
@@ -15,7 +15,7 @@ import { Space } from 'antd';
 import { useStore } from 'effector-react';
 import { packageListStore } from '@renderer/stores/PackageListStore';
 import { createPackage, deletePackage } from '@renderer/effects/PackageEffect';
-import { GetPackagesResult } from '../../../../types/PackageListenerArgs';
+import { GetPackagesResult } from '@type/PackageListenerArgs';
 import { openAlert } from '@renderer/components/Alert/Alert';
 import { navigateTo } from '@renderer/effects/MenuEffect';
 

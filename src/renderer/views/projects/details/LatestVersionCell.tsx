@@ -38,7 +38,7 @@ const LatestVersionCell: React.FunctionComponent<Props> = (props) => {
   }, [fetchLatestVersion]);
 
   return (
-    <>
+    <div className="last-version-cell">
       {isLoading ? (
         <Loading className="cell-loading" />
       ) : latestVersion ? (
@@ -46,7 +46,7 @@ const LatestVersionCell: React.FunctionComponent<Props> = (props) => {
       ) : (
         <ErrorIcon tooltip={t('project.details.table.values.unableToFetch')} />
       )}
-    </>
+    </div>
   );
 };
 

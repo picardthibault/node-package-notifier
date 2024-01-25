@@ -5,7 +5,7 @@ import React, { FunctionComponent, useEffect, useState } from 'react';
 import Sider from 'antd/es/layout/Sider';
 import { useNavigate } from 'react-router-dom';
 import { routePaths } from '../../routes';
-import { useStore } from 'effector-react';
+import { useUnit } from 'effector-react';
 import { MenuStore, menuStore } from '@renderer/stores/MenuStore';
 import { navigateTo } from '@renderer/effects/MenuEffect';
 
@@ -25,7 +25,7 @@ const SideMenu: FunctionComponent<SideMenuProps> = (props) => {
 
   const navigate = useNavigate();
 
-  const { currentLocation } = useStore<MenuStore>(menuStore);
+  const { currentLocation } = useUnit<MenuStore>(menuStore);
 
   const [collapsed, setCollapsed] = useState<boolean>(false);
   const [menuKeys, setMenuKeys] = useState<string[]>([]);

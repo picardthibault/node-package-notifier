@@ -9,7 +9,7 @@ import {
   PackageListStore,
   updatePackageListPageConfig,
 } from '@renderer/stores/PackageListStore';
-import { useStore } from 'effector-react';
+import { useUnit } from 'effector-react';
 import Title from '@renderer/components/Title/Title';
 import { routePaths } from '../../routes';
 import { updatePackageDetails } from '@renderer/stores/PackageDetailsStore';
@@ -33,7 +33,7 @@ export const PackagesView = (): JSX.Element => {
   const [filteredPackages, setFilteredPackages] = useState<TableItemType[]>([]);
 
   const { fetchedPackages, page, pageSize } =
-    useStore<PackageListStore>(packageListStore);
+    useUnit<PackageListStore>(packageListStore);
 
   const [formInstance] = Form.useForm();
 

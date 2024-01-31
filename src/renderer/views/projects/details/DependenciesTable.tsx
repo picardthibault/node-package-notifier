@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { routePaths } from '../../../routes';
 import { updatePackageDetails } from '@renderer/stores/PackageDetailsStore';
 import { Space } from 'antd';
-import { useStore } from 'effector-react';
+import { useUnit } from 'effector-react';
 import { packageListStore } from '@renderer/stores/PackageListStore';
 import { createPackage, deletePackage } from '@renderer/effects/PackageEffect';
 import { GetPackagesResult } from '@type/PackageListenerArgs';
@@ -31,7 +31,7 @@ const DependenciesTable: React.FunctionComponent<DependenciesTableProps> = (
 
   const { t } = useTranslation();
 
-  const { fetchedPackages } = useStore(packageListStore);
+  const { fetchedPackages } = useUnit(packageListStore);
 
   useEffect(() => {
     return createPackage.done.watch(({ result }) => {

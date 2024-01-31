@@ -7,7 +7,7 @@ import LinkButton from '@renderer/components/Button/LinkButton';
 import { useTranslation } from 'react-i18next';
 import { ColumnsType } from 'antd/es/table';
 import { openAlert } from '@renderer/components/Alert/Alert';
-import { useStore } from 'effector-react';
+import { useUnit } from 'effector-react';
 import {
   PackageDetailsStore,
   packageDetailsStore,
@@ -25,10 +25,10 @@ const PackageDetails: FunctionComponent = () => {
   const { t } = useTranslation();
 
   const { packageName, registryUrl } =
-    useStore<PackageDetailsStore>(packageDetailsStore);
+    useUnit<PackageDetailsStore>(packageDetailsStore);
 
   const { previousLocation: previousSelectedKey } =
-    useStore<MenuStore>(menuStore);
+    useUnit<MenuStore>(menuStore);
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [title, setTitle] = useState<string>('');

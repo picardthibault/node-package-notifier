@@ -1,4 +1,4 @@
-import { Form, Input } from 'antd';
+import { Form, Input, InputRef } from 'antd';
 import { FormInstance, Rule } from 'antd/es/form';
 import React, { DragEvent, FunctionComponent, useRef } from 'react';
 import { openAlert } from '../Alert/Alert';
@@ -21,7 +21,7 @@ const FilePathField: FunctionComponent<Props> = (props) => {
 
   const { t } = useTranslation();
 
-  const inputRef = useRef(null);
+  const inputRef = useRef<InputRef | null>(null);
 
   const onDrop = (event: DragEvent<HTMLInputElement>) => {
     event.preventDefault();
@@ -29,7 +29,7 @@ const FilePathField: FunctionComponent<Props> = (props) => {
     if (files.length === 1) {
       formInstance.setFieldValue(name, files[0].path);
       onChange();
-      inputRef.current.focus();
+      inputRef.current?.focus();
     } else {
       openAlert('error', t('project.creation.alert.title.invalidSelection'));
     }
@@ -45,7 +45,7 @@ const FilePathField: FunctionComponent<Props> = (props) => {
           .then((selection) => {
             if (selection) {
               formInstance.setFieldValue(name, selection);
-              inputRef.current.focus();
+              inputRef.current?.focus();
               onChange();
             }
           });

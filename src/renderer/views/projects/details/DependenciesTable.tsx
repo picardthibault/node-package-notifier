@@ -21,7 +21,7 @@ import { navigateTo } from '@renderer/effects/MenuEffect';
 
 interface DependenciesTableProps {
   dependencies: ParsedDependency[];
-  registryUrl?: string;
+  registryUrl: string;
 }
 
 const DependenciesTable: React.FunctionComponent<DependenciesTableProps> = (

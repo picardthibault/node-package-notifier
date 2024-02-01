@@ -70,13 +70,14 @@ const PackageDetails: FunctionComponent = () => {
           });
 
           const tags: TableItemType[] = [];
-          if (getPackageResult.packageDetails.tags) {
-            Object.keys(getPackageResult.packageDetails.tags).forEach(
+          const fetchedTags = getPackageResult.packageDetails.tags;
+          if (fetchedTags) {
+            Object.keys(fetchedTags).forEach(
               (key, index) =>
                 tags.push({
                   key: index,
                   tagName: key,
-                  tagVersion: getPackageResult.packageDetails.tags[key],
+                  tagVersion: fetchedTags[key],
                 }),
             );
           }

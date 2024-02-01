@@ -1,10 +1,10 @@
 import log from 'electron-log';
 import { PackageStore } from '@main/store/PackageStore';
 import { PackageInfo, RegistryApi } from '../api/RegistryApi';
-import i18n from '../../i18n';
 import { PackageSuggestionArgs } from '@type/PackageListenerArgs';
 import { PackageDetails } from '@type/PackageInfo';
 import { PackageCache } from '@main/caches/PackageCache';
+import { getErrorMessage } from '../error/ErrorService';
 
 export const npmRegistryUrl = 'https://registry.npmjs.org';
 
@@ -140,17 +140,8 @@ export async function fetchPackageDetails(
     await PackageCache.get().set(registryUrl, packageName, packageDetails);
     return packageDetails;
   } catch (err) {
-    if (err instanceof Error) {
-      log.error(`Received an error while fetching "${packageName}" info.`, err);
-      return err.message;
-    } else {
-      log.error(
-        `Received an unknown error while fetching "${packageName}" info. Error : ${JSON.stringify(
-          err,
-        )}`,
-      );
-      return i18n.t('package.fetch.errors.unknownResponse');
-    }
+    log.error(`Received an error while fetching "${packageName}" info.`, err);
+    return getErrorMessage(err);
   }
 }
 
@@ -190,19 +181,10 @@ export async function fetchPackageSuggestions(
 
     return suggestions.objects.map((object) => object.package.name);
   } catch (err) {
-    if (err instanceof Error) {
-      log.error(
-        `Received an error while fetching package suggestions for "${suggestionArgs.current}" on ${registryUrl}.`,
-        err,
-      );
-      return err.message;
-    } else {
-      log.error(
-        `Received an unknown error while fetching package suggestions. Error : ${JSON.stringify(
-          err,
-        )}`,
-      );
-      return i18n.t('package.fetch.errors.unknownResponse');
-    }
+    log.error(
+      `Received an error while fetching package suggestions for "${suggestionArgs.current}" on ${registryUrl}.`,
+      err,
+    );
+    return getErrorMessage(err);
   }
 }

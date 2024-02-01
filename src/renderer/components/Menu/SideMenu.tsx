@@ -39,7 +39,9 @@ const SideMenu: FunctionComponent<SideMenuProps> = (props) => {
       menuItemsKey.push(item.key as string);
       if (isSubMenuType(item)) {
         item.children.forEach((subItem) => {
-          menuItemsKey.push(subItem.key as string);
+          if (subItem?.key) {
+            menuItemsKey.push(subItem.key as string);
+          }
         });
       }
     });

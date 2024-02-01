@@ -9,7 +9,7 @@ import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 
 const routeProvider = createMemoryRouter([{ path: '*', element: <App /> }]);
 
-createRoot(document.getElementById('root')).render(
+createRoot(document.getElementById('root') as HTMLElement).render(
   <I18nextProvider i18n={i18n}>
     <React.StrictMode>
       <ConfigProvider

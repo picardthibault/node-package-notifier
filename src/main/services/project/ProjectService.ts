@@ -240,7 +240,7 @@ const parseDependencies = (dependencies: Dependencies): ParsedDependency[] => {
  */
 export const fetchLatestVersion = async (
   dependencyName: string,
-  registryUrl: string,
+  registryUrl?: string,
 ): Promise<string | undefined> => {
   const adaptedRegistryUrl = registryUrl ? registryUrl : npmRegistryUrl;
   const packageDetails = await fetchPackageDetails(

@@ -5,7 +5,7 @@ import ErrorIcon from '@renderer/components/Icon/ErrorIcon';
 
 interface Props {
   dependencyName: string;
-  registryUrl: string;
+  registryUrl?: string;
 }
 
 const LatestVersionCell: React.FunctionComponent<Props> = (props) => {

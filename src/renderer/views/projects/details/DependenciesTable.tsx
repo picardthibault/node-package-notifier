@@ -21,7 +21,7 @@ import { navigateTo } from '@renderer/effects/MenuEffect';
 
 interface DependenciesTableProps {
   dependencies: ParsedDependency[];
-  registryUrl?: string;
+  registryUrl: string;
 }
 
 const DependenciesTable: React.FunctionComponent<DependenciesTableProps> = (
@@ -107,7 +107,7 @@ const DependenciesTable: React.FunctionComponent<DependenciesTableProps> = (
                   packageName: record.name,
                   registryUrl: registryUrl,
                 });
-                navigateTo(routePaths.packageDetails.generate());
+                void navigateTo(routePaths.packageDetails.generate());
               }}
             >
               <EyeOutlined />
@@ -118,7 +118,7 @@ const DependenciesTable: React.FunctionComponent<DependenciesTableProps> = (
                 danger={true}
                 toolTip={t('project.details.tooltip.unfollowPackage')}
                 onClick={() => {
-                  deletePackage(record.name);
+                  void deletePackage(record.name);
                 }}
               >
                 <MinusCircleOutlined />
@@ -128,7 +128,7 @@ const DependenciesTable: React.FunctionComponent<DependenciesTableProps> = (
                 type="default"
                 toolTip={t('project.details.tooltip.followPackage')}
                 onClick={() => {
-                  createPackage({
+                  void createPackage({
                     packageName: record.name,
                     registryUrl: registryUrl,
                   });

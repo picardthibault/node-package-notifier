@@ -2,7 +2,7 @@ import { MemoryCache, caching } from 'cache-manager';
 import { PackageDetails } from '@type/PackageInfo';
 
 export class PackageCache {
-  private static instance: PackageCache;
+  private static instance?: PackageCache;
 
   static get(): PackageCache {
     if (PackageCache.instance === undefined) {
@@ -26,10 +26,8 @@ export class PackageCache {
     registryUrl: string,
     packageName: string,
   ): Promise<PackageDetails | undefined> {
-    if (this.registryCache.has(registryUrl)) {
-      return this.registryCache.get(registryUrl).get(packageName);
-    }
-    return undefined;
+    const cache = this.registryCache.get(registryUrl);
+    return cache ? cache.get(packageName) : undefined;
   }
 
   public async set(
@@ -37,11 +35,12 @@ export class PackageCache {
     packageName: string,
     packageInfo: PackageDetails,
   ) {
-    if (this.registryCache.has(registryUrl)) {
-      this.registryCache.get(registryUrl).set(packageName, packageInfo);
+    const cache = this.registryCache.get(registryUrl);
+    if (cache) {
+      await cache.set(packageName, packageInfo);
     } else {
       const cache = await this.createCache();
-      cache.set(packageName, packageInfo);
+      await cache.set(packageName, packageInfo);
       this.registryCache.set(registryUrl, cache);
     }
   }

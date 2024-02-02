@@ -15,7 +15,7 @@ const LinkButton: FunctionComponent<LinkButtonProps> = (props) => {
   return (
     <div className="linkButton">
       {isBack && <LeftOutlined />}
-      <Button type="link" onClick={() => navigateTo(to)}>
+      <Button type="link" onClick={() => void navigateTo(to)}>
         {label}
       </Button>
     </div>

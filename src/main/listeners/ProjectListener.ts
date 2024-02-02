@@ -17,6 +17,7 @@ import {
   deleteProject,
 } from '@main/services/project/ProjectService';
 import { ProjectSumUp } from '@type/ProjectInfo';
+import { getErrorMessage } from '@main/services/error/ErrorService';
 
 ipcMain.handle(
   ProjectListenerChannel.PROJECT_PATH_SELECTOR,
@@ -26,7 +27,7 @@ ipcMain.handle(
       properties: ['openDirectory'],
       defaultPath: defaultPath,
     });
-    return selection?.filePaths.length > 0 ? selection.filePaths[0] : undefined;
+    return selection.filePaths.length > 0 ? selection.filePaths[0] : undefined;
   },
 );
 
@@ -55,7 +56,7 @@ ipcMain.handle(
   ): Promise<ProjectCreationResult> => {
     log.debug('Received create project IPC');
 
-    let createdProjectKey: string | undefined;
+    let createdProjectKey = '';
     let importError: string | undefined;
     try {
       createdProjectKey = await createProject(
@@ -63,8 +64,9 @@ ipcMain.handle(
         projectCreationArgs.path,
       );
     } catch (err) {
-      log.error(`Unable to create project. ${err.message}`);
-      importError = err.message;
+      const errorMessage = getErrorMessage(err);
+      log.error(`Unable to create project. ${errorMessage}`);
+      importError = errorMessage;
     }
 
     return {

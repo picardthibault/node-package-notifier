@@ -30,7 +30,7 @@ const App: FunctionComponent = () => {
   const [projectsSumUp, setProjectsSumUp] = useState<ProjectSumUp[]>([]);
 
   useEffect(() => {
-    fetchProjectsSumUp();
+    void fetchProjectsSumUp();
   }, []);
 
   useEffect(() => {
@@ -39,7 +39,7 @@ const App: FunctionComponent = () => {
     });
   });
 
-  const subMenuItems = useCallback((): Array<MenuItemType | SubMenuType> => {
+  const subMenuItems = useCallback((): (MenuItemType | SubMenuType)[] => {
     return [
       {
         key: routePaths.packageList.generate(),

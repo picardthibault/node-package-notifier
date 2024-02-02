@@ -1,10 +1,14 @@
 import log from 'electron-log';
 import { PackageStore } from '@main/store/PackageStore';
-import { PackageInfo, RegistryApi } from '../api/RegistryApi';
-import i18n from '../../i18n';
+import {
+  PackageInfo,
+  getPackageInfo,
+  getSuggestions,
+} from '../api/RegistryApi';
 import { PackageSuggestionArgs } from '@type/PackageListenerArgs';
 import { PackageDetails } from '@type/PackageInfo';
 import { PackageCache } from '@main/caches/PackageCache';
+import { getErrorMessage } from '../error/ErrorService';
 
 export const npmRegistryUrl = 'https://registry.npmjs.org';
 
@@ -24,7 +28,7 @@ function mapPackageInfoToPackageDetails(
     homePage: packageInfo.homepage,
     repository: packageInfo.repository.url,
     description: packageInfo.description,
-    latest: packageInfo['dist-tags']?.latest,
+    latest: packageInfo['dist-tags'].latest,
     tags: packageInfo['dist-tags'],
   };
 }
@@ -128,10 +132,7 @@ export async function fetchPackageDetails(
 
   // Fetch package info if necessary
   try {
-    const packageData = await RegistryApi.getPackageInfo(
-      packageName,
-      registryUrl,
-    );
+    const packageData = await getPackageInfo(packageName, registryUrl);
     const packageDetails = mapPackageInfoToPackageDetails(
       registryUrl,
       packageName,
@@ -140,17 +141,8 @@ export async function fetchPackageDetails(
     await PackageCache.get().set(registryUrl, packageName, packageDetails);
     return packageDetails;
   } catch (err) {
-    if (err instanceof Error) {
-      log.error(`Received an error while fetching "${packageName}" info.`, err);
-      return err.message;
-    } else {
-      log.error(
-        `Received an unknown error while fetching "${packageName}" info. Error : ${JSON.stringify(
-          err,
-        )}`,
-      );
-      return i18n.t('package.fetch.errors.unknownResponse');
-    }
+    log.error(`Received an error while fetching "${packageName}" info.`, err);
+    return getErrorMessage(err);
   }
 }
 
@@ -183,26 +175,17 @@ export async function fetchPackageSuggestions(
     ? suggestionArgs.registryUrl
     : npmRegistryUrl;
   try {
-    const suggestions = await RegistryApi.getSuggestions(
+    const suggestions = await getSuggestions(
       suggestionArgs.current,
       registryUrl,
     );
 
     return suggestions.objects.map((object) => object.package.name);
   } catch (err) {
-    if (err instanceof Error) {
-      log.error(
-        `Received an error while fetching package suggestions for "${suggestionArgs.current}" on ${registryUrl}.`,
-        err,
-      );
-      return err.message;
-    } else {
-      log.error(
-        `Received an unknown error while fetching package suggestions. Error : ${JSON.stringify(
-          err,
-        )}`,
-      );
-      return i18n.t('package.fetch.errors.unknownResponse');
-    }
+    log.error(
+      `Received an error while fetching package suggestions for "${suggestionArgs.current}" on ${registryUrl}.`,
+      err,
+    );
+    return getErrorMessage(err);
   }
 }

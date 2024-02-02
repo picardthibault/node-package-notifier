@@ -9,6 +9,4 @@ export interface PackageDetails {
   tags?: Tags;
 }
 
-export interface Tags {
-  [key: string]: string;
-}
+export type Tags = Record<string, string>;

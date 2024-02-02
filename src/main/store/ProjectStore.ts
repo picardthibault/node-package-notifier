@@ -7,10 +7,8 @@ export interface ProjectConfig {
   registryUrl: string;
 }
 
-export type IProjectStore = {
-  // key is the SHA1 of the project name
-  [key: string]: ProjectConfig;
-};
+// key is the SHA1 of the project name
+export type IProjectStore = Record<string, ProjectConfig>;
 
 export class ProjectStore {
   private static instance: ProjectStore | undefined;

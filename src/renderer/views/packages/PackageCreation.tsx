@@ -30,7 +30,7 @@ export const PackageCreation = (): JSX.Element => {
     return createPackage.done.watch(({ result }) => {
       if (!result) {
         openAlert('success', t('package.creation.alert.title.success'));
-        navigateTo(routePaths.packageList.generate());
+        void navigateTo(routePaths.packageList.generate());
       } else {
         openAlert(
           'error',
@@ -44,9 +44,9 @@ export const PackageCreation = (): JSX.Element => {
   });
 
   const fetchSuggestions = useCallback(() => {
-    const current = formInstance.getFieldValue('packageName');
-    const registryUrl = formInstance.getFieldValue('registryUrl');
-    window.packageManagement
+    const current = formInstance.getFieldValue('packageName') as string;
+    const registryUrl = formInstance.getFieldValue('registryUrl') as string;
+    void window.packageManagement
       .getSuggestions({
         current,
         registryUrl,
@@ -72,7 +72,7 @@ export const PackageCreation = (): JSX.Element => {
   }, [suggestionTimeout, setSuggestionTimeout]);
 
   const onFinish = () => {
-    createPackage(formInstance.getFieldsValue());
+    void createPackage(formInstance.getFieldsValue());
   };
 
   return (
@@ -106,7 +106,9 @@ export const PackageCreation = (): JSX.Element => {
         >
           <AutoComplete
             placeholder={t('package.creation.form.placeholder.name')}
-            onChange={() => debounce()}
+            onChange={() => {
+              debounce();
+            }}
             options={suggestions}
           />
         </Form.Item>

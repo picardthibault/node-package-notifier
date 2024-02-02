@@ -39,23 +39,26 @@ export const PackagesView = (): JSX.Element => {
 
   useEffect(() => {
     // Load packages
-    fetchPackages();
+    void fetchPackages();
   }, []);
 
   useEffect(() => {
     const tableItems: TableItemType[] = Object.keys(fetchedPackages).map(
-      (packageId, index) => ({
-        key: index,
-        packageId,
-        name: fetchedPackages[packageId].name,
-        registryUrl: fetchedPackages[packageId].registryUrl,
-        license: fetchedPackages[packageId].license
-          ? fetchedPackages[packageId].license
-          : t('common.na'),
-        version: fetchedPackages[packageId].latest
-          ? fetchedPackages[packageId].latest
-          : t('common.na'),
-      }),
+      (packageId, index) => {
+        const fetchedPackage = fetchedPackages[packageId];
+        return {
+          key: index,
+          packageId,
+          name: fetchedPackage.name,
+          registryUrl: fetchedPackage.registryUrl,
+          license: fetchedPackage.license
+            ? fetchedPackage.license
+            : t('common.na'),
+          version: fetchedPackage.latest
+            ? fetchedPackage.latest
+            : t('common.na'),
+        };
+      },
     );
 
     setPackages(tableItems);
@@ -93,7 +96,7 @@ export const PackagesView = (): JSX.Element => {
                 packageName: tableItem.name,
                 registryUrl: tableItem.registryUrl,
               });
-              navigateTo(routePaths.packageDetails.generate());
+              void navigateTo(routePaths.packageDetails.generate());
             }}
           >
             <EyeOutlined />
@@ -102,7 +105,7 @@ export const PackagesView = (): JSX.Element => {
             type="default"
             danger={true}
             toolTip={t('package.list.tooltips.deletePackage')}
-            onClick={() => deletePackage(tableItem.name)}
+            onClick={() => void deletePackage(tableItem.name)}
           >
             <DeleteOutlined />
           </ActionButton>
@@ -140,7 +143,7 @@ export const PackagesView = (): JSX.Element => {
         <ActionButton
           type="primary"
           toolTip={t('package.list.tooltips.createPackage')}
-          onClick={() => navigateTo(routePaths.packageCreation.generate())}
+          onClick={() => void navigateTo(routePaths.packageCreation.generate())}
         >
           <PlusOutlined />
         </ActionButton>

@@ -15,9 +15,7 @@ export interface PackageSuggestionArgs {
   registryUrl?: string;
 }
 
-export interface GetPackagesResult {
-  [key: string]: PackageDetails;
-}
+export type GetPackagesResult = Record<string, PackageDetails>;
 
 export interface GetPackageResult {
   error?: string;

@@ -8,7 +8,7 @@ export interface ProjectCreationArgs {
 
 export interface ProjectCreationResult {
   projectKey: string;
-  error: string;
+  error?: string;
 }
 
 export interface GetProjectDetailsResult {

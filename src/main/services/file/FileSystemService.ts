@@ -12,7 +12,7 @@ export const isDirectory = async (path: string): Promise<boolean> => {
 };
 
 export const readFiles = async (path: string): Promise<string[]> => {
-  const isDir = isDirectory(path);
+  const isDir = await isDirectory(path);
   if (isDir) {
     try {
       const files = await readdir(path);

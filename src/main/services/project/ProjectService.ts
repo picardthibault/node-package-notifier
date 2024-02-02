@@ -20,15 +20,13 @@ import {
 } from '@type/ProjectInfo';
 import { GetProjectDetailsResult } from '@type/ProjectListenerArgs';
 
-interface Dependencies {
-  [key: string]: string;
-}
+type Dependencies = Record<string, string>;
 
 interface PackageJson {
   version: string;
   description?: string;
   dependencies: Dependencies;
-  devDependencies: Dependencies;
+  devDependencies?: Dependencies;
 }
 
 const packageJsonFileName = 'package.json';
@@ -61,7 +59,7 @@ export async function validateProjectPath(
     return i18n.t('project.validation.errors.notDirectory');
   }
 
-  let hasPackageJson: boolean = false;
+  let hasPackageJson = false;
   try {
     hasPackageJson = await hasFiles(projectPath, [packageJsonFileName]);
   } catch (err) {
@@ -211,7 +209,7 @@ const parsePackageJson = async (projectPath: string): Promise<PackageJson> => {
   const packageJsonPath = path.join(projectPath, packageJsonFileName);
   log.info(`Parse package.json project file "${packageJsonPath}"`);
   const packageJsonContent = await readFileContent(packageJsonPath);
-  return JSON.parse(packageJsonContent.toString());
+  return JSON.parse(packageJsonContent.toString()) as PackageJson;
 };
 
 /**
@@ -220,7 +218,7 @@ const parsePackageJson = async (projectPath: string): Promise<PackageJson> => {
  * @param dependencies the dependencies of a parsed package.json file
  * @returns An array of the parsed dependencies, if the dependencies is null then return empty array
  */
-const parseDependencies = (dependencies: Dependencies): ParsedDependency[] => {
+const parseDependencies = (dependencies?: Dependencies): ParsedDependency[] => {
   if (!dependencies) {
     return [];
   }
@@ -240,7 +238,7 @@ const parseDependencies = (dependencies: Dependencies): ParsedDependency[] => {
  */
 export const fetchLatestVersion = async (
   dependencyName: string,
-  registryUrl: string,
+  registryUrl?: string,
 ): Promise<string | undefined> => {
   const adaptedRegistryUrl = registryUrl ? registryUrl : npmRegistryUrl;
   const packageDetails = await fetchPackageDetails(

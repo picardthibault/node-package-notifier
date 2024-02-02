@@ -8,17 +8,18 @@ export interface PackageConfig {
   latest?: string;
 }
 export const isPackageConfig = (object: unknown): object is PackageConfig => {
-  const objectAsPackageConfig = object as PackageConfig;
+  const objectAsPackageConfig = object as {
+    name?: string;
+    registryUrl?: string;
+  };
   return (
     objectAsPackageConfig.name !== undefined &&
     objectAsPackageConfig.registryUrl !== undefined
   );
 };
 
-export type IPackageStore = {
-  // key is the SHA1 of the package name
-  [key: string]: PackageConfig;
-};
+// key is the SHA1 of the package name
+export type IPackageStore = Record<string, PackageConfig>;
 
 export class PackageStore {
   private static instance: PackageStore | undefined;

@@ -39,7 +39,7 @@ export const PackagesView = (): JSX.Element => {
 
   useEffect(() => {
     // Load packages
-    fetchPackages();
+    void fetchPackages();
   }, []);
 
   useEffect(() => {
@@ -57,7 +57,7 @@ export const PackagesView = (): JSX.Element => {
           version: fetchedPackage.latest
             ? fetchedPackage.latest
             : t('common.na'),
-        }
+        };
       },
     );
 
@@ -96,7 +96,7 @@ export const PackagesView = (): JSX.Element => {
                 packageName: tableItem.name,
                 registryUrl: tableItem.registryUrl,
               });
-              navigateTo(routePaths.packageDetails.generate());
+              void navigateTo(routePaths.packageDetails.generate());
             }}
           >
             <EyeOutlined />
@@ -105,7 +105,7 @@ export const PackagesView = (): JSX.Element => {
             type="default"
             danger={true}
             toolTip={t('package.list.tooltips.deletePackage')}
-            onClick={() => deletePackage(tableItem.name)}
+            onClick={() => void deletePackage(tableItem.name)}
           >
             <DeleteOutlined />
           </ActionButton>
@@ -143,7 +143,7 @@ export const PackagesView = (): JSX.Element => {
         <ActionButton
           type="primary"
           toolTip={t('package.list.tooltips.createPackage')}
-          onClick={() => navigateTo(routePaths.packageCreation.generate())}
+          onClick={() => void navigateTo(routePaths.packageCreation.generate())}
         >
           <PlusOutlined />
         </ActionButton>

@@ -12,7 +12,7 @@ import { navigateTo } from '@renderer/effects/MenuEffect';
 export type SideMenuItem = MenuItemType | SubMenuType;
 
 function isSubMenuType(item: SideMenuItem): item is SubMenuType {
-  return (item as SubMenuType).children !== undefined;
+  return (item as { children?: unknown }).children !== undefined;
 }
 
 interface SideMenuProps {
@@ -57,7 +57,7 @@ const SideMenu: FunctionComponent<SideMenuProps> = (props) => {
   }, [menuKeys, currentLocation]);
 
   const onClick: MenuProps['onClick'] = (menuItem) => {
-    navigateTo(menuItem.key);
+    void navigateTo(menuItem.key);
     navigate(menuItem.key);
   };
 
@@ -65,7 +65,9 @@ const SideMenu: FunctionComponent<SideMenuProps> = (props) => {
     <Sider
       collapsible
       collapsed={collapsed}
-      onCollapse={(value) => setCollapsed(value)}
+      onCollapse={(value) => {
+        setCollapsed(value);
+      }}
       width="300"
       trigger={
         collapsed ? (

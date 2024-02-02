@@ -1,6 +1,10 @@
 import log from 'electron-log';
 import { PackageStore } from '@main/store/PackageStore';
-import { PackageInfo, RegistryApi } from '../api/RegistryApi';
+import {
+  PackageInfo,
+  getPackageInfo,
+  getSuggestions,
+} from '../api/RegistryApi';
 import { PackageSuggestionArgs } from '@type/PackageListenerArgs';
 import { PackageDetails } from '@type/PackageInfo';
 import { PackageCache } from '@main/caches/PackageCache';
@@ -24,7 +28,7 @@ function mapPackageInfoToPackageDetails(
     homePage: packageInfo.homepage,
     repository: packageInfo.repository.url,
     description: packageInfo.description,
-    latest: packageInfo['dist-tags']?.latest,
+    latest: packageInfo['dist-tags'].latest,
     tags: packageInfo['dist-tags'],
   };
 }
@@ -128,10 +132,7 @@ export async function fetchPackageDetails(
 
   // Fetch package info if necessary
   try {
-    const packageData = await RegistryApi.getPackageInfo(
-      packageName,
-      registryUrl,
-    );
+    const packageData = await getPackageInfo(packageName, registryUrl);
     const packageDetails = mapPackageInfoToPackageDetails(
       registryUrl,
       packageName,
@@ -174,7 +175,7 @@ export async function fetchPackageSuggestions(
     ? suggestionArgs.registryUrl
     : npmRegistryUrl;
   try {
-    const suggestions = await RegistryApi.getSuggestions(
+    const suggestions = await getSuggestions(
       suggestionArgs.current,
       registryUrl,
     );

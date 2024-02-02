@@ -27,7 +27,7 @@ ipcMain.handle(
       properties: ['openDirectory'],
       defaultPath: defaultPath,
     });
-    return selection?.filePaths.length > 0 ? selection.filePaths[0] : undefined;
+    return selection.filePaths.length > 0 ? selection.filePaths[0] : undefined;
   },
 );
 
@@ -56,7 +56,7 @@ ipcMain.handle(
   ): Promise<ProjectCreationResult> => {
     log.debug('Received create project IPC');
 
-    let createdProjectKey: string = '';
+    let createdProjectKey = '';
     let importError: string | undefined;
     try {
       createdProjectKey = await createProject(

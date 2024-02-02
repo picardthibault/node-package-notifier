@@ -45,7 +45,7 @@ ipcMain.handle(
   async (): Promise<GetPackagesResult> => {
     log.debug('Received get packages IPC');
     const packages = PackageStore.get().getPackages();
-    const result: { [key: string]: PackageDetails } = {};
+    const result: Record<string, PackageDetails> = {};
     for (const key of Object.keys(packages)) {
       const packageDetails = await getPackage(
         packages[key].registryUrl,

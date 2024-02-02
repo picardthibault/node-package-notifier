@@ -51,7 +51,7 @@ const ProjectDetails: FunctionComponent = () => {
 
     // Fetch project details
     if (id) {
-      window.projectManagement.getProjectDetails(id).then((result) => {
+      void window.projectManagement.getProjectDetails(id).then((result) => {
         setIsLoading(false);
         setTitle(result.projectDetails.name);
         setRegistryUrl(result.projectDetails.registryUrl);
@@ -73,7 +73,9 @@ const ProjectDetails: FunctionComponent = () => {
             description: result.projectDetails.parsedProject.description,
           });
           setDependencies(result.projectDetails.parsedProject.dependencies);
-          setDevDependencies(result.projectDetails.parsedProject.devDependencies);
+          setDevDependencies(
+            result.projectDetails.parsedProject.devDependencies,
+          );
         } else {
           openAlert(
             'error',
@@ -114,13 +116,15 @@ const ProjectDetails: FunctionComponent = () => {
 
   const onDeleteClick = useCallback(() => {
     if (id) {
-      window.projectManagement.delete(id).then(() => {
+      void window.projectManagement.delete(id).then(() => {
         openAlert(
           'success',
-          t('project.details.alert.title.projectRemoved', { projectName: title }),
+          t('project.details.alert.title.projectRemoved', {
+            projectName: title,
+          }),
         );
-        fetchProjectsSumUp();
-        navigateTo(routePaths.packageList.generate());
+        void fetchProjectsSumUp();
+        void navigateTo(routePaths.packageList.generate());
       });
     }
   }, [id, title]);

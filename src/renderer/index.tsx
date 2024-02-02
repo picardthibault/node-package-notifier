@@ -9,30 +9,35 @@ import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 
 const routeProvider = createMemoryRouter([{ path: '*', element: <App /> }]);
 
-createRoot(document.getElementById('root') as HTMLElement).render(
-  <I18nextProvider i18n={i18n}>
-    <React.StrictMode>
-      <ConfigProvider
-        theme={{
-          token: {
-            colorPrimary: '#032b43',
-            fontFamily: 'Heebo',
-          },
-          components: {
-            Layout: {
-              colorBgBody: '#FFFFFF',
+const root = document.getElementById('root');
+if (root) {
+  createRoot(root).render(
+    <I18nextProvider i18n={i18n}>
+      <React.StrictMode>
+        <ConfigProvider
+          theme={{
+            token: {
+              colorPrimary: '#032b43',
+              fontFamily: 'Heebo',
             },
-            Button: {
-              borderRadius: 4,
+            components: {
+              Layout: {
+                colorBgBody: '#FFFFFF',
+              },
+              Button: {
+                borderRadius: 4,
+              },
+              Table: {
+                borderRadius: 4,
+              },
             },
-            Table: {
-              borderRadius: 4,
-            },
-          },
-        }}
-      >
-        <RouterProvider router={routeProvider} />
-      </ConfigProvider>
-    </React.StrictMode>
-  </I18nextProvider>,
-);
+          }}
+        >
+          <RouterProvider router={routeProvider} />
+        </ConfigProvider>
+      </React.StrictMode>
+    </I18nextProvider>,
+  );
+} else {
+  console.error('Unable to found root element');
+}

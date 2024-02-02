@@ -38,7 +38,7 @@ const PackageDetails: FunctionComponent = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    window.packageManagement
+    void window.packageManagement
       .getPackage(packageName, registryUrl)
       .then((getPackageResult) => {
         setTitle(
@@ -72,13 +72,12 @@ const PackageDetails: FunctionComponent = () => {
           const tags: TableItemType[] = [];
           const fetchedTags = getPackageResult.packageDetails.tags;
           if (fetchedTags) {
-            Object.keys(fetchedTags).forEach(
-              (key, index) =>
-                tags.push({
-                  key: index,
-                  tagName: key,
-                  tagVersion: fetchedTags[key],
-                }),
+            Object.keys(fetchedTags).forEach((key, index) =>
+              tags.push({
+                key: index,
+                tagName: key,
+                tagVersion: fetchedTags[key],
+              }),
             );
           }
           setTags(tags);
@@ -106,8 +105,8 @@ const PackageDetails: FunctionComponent = () => {
     <Tooltip title={t('package.details.tooltip.openHomePage')}>
       <div
         onClick={() => {
-          const homePage = formInstance.getFieldValue('homePage');
-          window.packageManagement.openPackageHomePage(homePage);
+          const homePage = formInstance.getFieldValue('homePage') as string;
+          void window.packageManagement.openPackageHomePage(homePage);
         }}
       >
         <EyeOutlined />

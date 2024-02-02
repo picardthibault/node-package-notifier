@@ -39,9 +39,9 @@ const FilePathField: FunctionComponent<Props> = (props) => {
   const folderAddon = (
     <div
       onClick={() => {
-        const currentPath = formInstance.getFieldValue(name);
-        window.projectManagement
-          .projectPathSelector(currentPath ? currentPath : undefined)
+        const currentPath = formInstance.getFieldValue(name) as string;
+        void window.projectManagement
+          .projectPathSelector(currentPath ? currentPath : '')
           .then((selection) => {
             if (selection) {
               formInstance.setFieldValue(name, selection);

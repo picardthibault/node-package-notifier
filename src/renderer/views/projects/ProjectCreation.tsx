@@ -26,23 +26,23 @@ const ProjectCreation: FunctionComponent = () => {
       formInstance.setFields([
         {
           name: fieldName,
-          value: formInstance.getFieldValue(fieldName),
+          value: formInstance.getFieldValue(fieldName) as string,
           errors: [],
         },
       ]);
     }
   };
 
-  const onFinish = async () => {
+  const onFinish = () => {
     setIsLoading(true);
 
     const projectCreationArgs: ProjectCreationArgs = {
-      name: formInstance.getFieldValue('projectName'),
-      path: formInstance.getFieldValue('projectPath'),
-      registryUrl: formInstance.getFieldValue('registryUrl'),
+      name: formInstance.getFieldValue('projectName') as string,
+      path: formInstance.getFieldValue('projectPath') as string,
+      registryUrl: formInstance.getFieldValue('registryUrl') as string,
     };
 
-    window.projectManagement
+    void window.projectManagement
       .create(projectCreationArgs)
       .then((projectCreationResult) => {
         setIsLoading(false);
@@ -54,8 +54,8 @@ const ProjectCreation: FunctionComponent = () => {
           );
         } else {
           openAlert('success', t('project.creation.alert.title.success'));
-          fetchProjectsSumUp();
-          navigateTo(
+          void fetchProjectsSumUp();
+          void navigateTo(
             routePaths.projectDetails.generate(
               projectCreationResult.projectKey,
             ),
@@ -91,7 +91,9 @@ const ProjectCreation: FunctionComponent = () => {
               async validator(_, value): Promise<void> {
                 if (value) {
                   const isProjectNameUsed =
-                    await window.projectManagement.isProjectNameUsed(value);
+                    await window.projectManagement.isProjectNameUsed(
+                      value as unknown as string,
+                    );
                   if (isProjectNameUsed) {
                     throw new Error(
                       t('project.creation.form.rules.projectName'),
@@ -104,7 +106,9 @@ const ProjectCreation: FunctionComponent = () => {
         >
           <Input
             placeholder={t('project.creation.form.placeholder.projectName')}
-            onChange={() => resetFieldError('projectName')}
+            onChange={() => {
+              resetFieldError('projectName');
+            }}
           />
         </Form.Item>
 
@@ -114,7 +118,9 @@ const ProjectCreation: FunctionComponent = () => {
           name="projectPath"
           tooltip={t('project.creation.tooltip.projectPath')}
           placeholder={t('project.creation.form.placeholder.projectPath')}
-          onChange={() => resetFieldError('projectPath')}
+          onChange={() => {
+            resetFieldError('projectPath');
+          }}
           rules={[
             {
               required: true,

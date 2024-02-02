@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+
 import { contextBridge, ipcRenderer } from 'electron';
 import {
   GetPackagesResult,

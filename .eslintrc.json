@@ -26,8 +26,5 @@
     "import/resolver": {
       "typescript": true
     }
-  },
-  "ignorePatterns": [
-    "webpack"
-  ]
+  }
 }

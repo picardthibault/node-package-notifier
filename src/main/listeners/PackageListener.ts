@@ -16,7 +16,7 @@ import {
   fetchPackageSuggestions,
   getPackage,
 } from '@main/services/package/PackageService';
-import { getSha1 } from '@main/helpers/HashHelper';
+import { getSha1 } from '@main/helpers/KeyStoreHelper';
 import opener from 'opener';
 
 ipcMain.handle(

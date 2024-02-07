@@ -40,7 +40,7 @@ const packageJsonFileName = 'package.json';
 export function isProjectNameUsed(projectName: string): boolean {
   log.info(`Checking if project name "${projectName}" is already used`);
 
-  return ProjectStore.get().hasProject(projectName);
+  return ProjectStore.get().hasProject(projectName.trim());
 }
 
 /**
@@ -89,9 +89,10 @@ export async function createProject(
   projectPath: string,
   registryUrl?: string,
 ): Promise<string> {
-  log.info(`Importing project with name "${projectName}"`);
+  const trimedProjectName = projectName.trim();
+  log.info(`Importing project with name "${trimedProjectName}"`);
 
-  if (isProjectNameUsed(projectName)) {
+  if (isProjectNameUsed(trimedProjectName)) {
     throw new Error(i18n.t('project.validation.errors.nameAlreadyUsed'));
   }
 
@@ -102,7 +103,7 @@ export async function createProject(
 
   const adaptedRegistryUrl = adaptRegistryUrl(registryUrl);
   const projectKey = ProjectStore.get().addProject(
-    projectName,
+    trimedProjectName,
     projectPath,
     adaptedRegistryUrl,
   );

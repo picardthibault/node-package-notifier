@@ -117,7 +117,7 @@ export const PackageCreation = (): JSX.Element => {
         <div style={{ textAlign: 'center' }}>
           <Space>
             <ActionButton type="primary" htmlType="submit">
-              {t('package.creation.buttons.create')}
+              {t('package.creation.buttons.follow')}
             </ActionButton>
           </Space>
         </div>

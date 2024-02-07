@@ -47,15 +47,15 @@
                 }
             },
             "tooltips": {
-                "createPackage": "Create new package",
+                "followPackage": "Follow new package",
                 "detailsPackage": "View package details",
-                "deletePackage": "Delete package",
+                "unfollowPackage": "Unfollow package",
                 "filterPackages": "Filter list based on selected filters",
                 "resetFilters": "Remove selected filters"
             }
         },
         "creation": {
-            "title": "Create Package",
+            "title": "Follow Package",
             "form": {
                 "field": {
                     "name": "Package name"
@@ -68,12 +68,12 @@
                 "registryUrl": "The base url of the registry on which the package is hosted. If not provided, the npm registry will be used."
             },
             "buttons": {
-                "create": "Create"
+                "follow": "Follow"
             },
             "alert": {
                 "title": {
-                    "success": "Package has been successfully created",
-                    "error": "Unable to create package"
+                    "success": "Package has been successfully followed",
+                    "error": "Unable to follow package"
                 },
                 "description": {
                     "error": "Error while fetching package tags: \"{{cause}}\""

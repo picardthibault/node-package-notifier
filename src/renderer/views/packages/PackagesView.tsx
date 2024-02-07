@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Form, Input, Space, Table } from 'antd';
-import { DeleteOutlined, PlusOutlined, EyeOutlined } from '@ant-design/icons';
+import {
+  MinusCircleOutlined,
+  PlusOutlined,
+  EyeOutlined,
+} from '@ant-design/icons';
 import { ColumnsType } from 'antd/es/table';
 import { useTranslation } from 'react-i18next';
 import ActionButton from '@renderer/components/Button/ActionButton';
@@ -104,10 +108,10 @@ export const PackagesView = (): JSX.Element => {
           <ActionButton
             type="default"
             danger={true}
-            toolTip={t('package.list.tooltips.deletePackage')}
+            toolTip={t('package.list.tooltips.unfollowPackage')}
             onClick={() => void deletePackage(tableItem.name)}
           >
-            <DeleteOutlined />
+            <MinusCircleOutlined />
           </ActionButton>
         </Space>
       ),
@@ -142,7 +146,7 @@ export const PackagesView = (): JSX.Element => {
       >
         <ActionButton
           type="primary"
-          toolTip={t('package.list.tooltips.createPackage')}
+          toolTip={t('package.list.tooltips.followPackage')}
           onClick={() => void navigateTo(routePaths.packageCreation.generate())}
         >
           <PlusOutlined />

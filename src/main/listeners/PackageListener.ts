@@ -16,7 +16,6 @@ import {
   fetchPackageSuggestions,
   getPackage,
 } from '@main/services/package/PackageService';
-import { getSha1 } from '@main/helpers/KeyStoreHelper';
 import opener from 'opener';
 
 ipcMain.handle(
@@ -32,10 +31,9 @@ ipcMain.handle(
 
 ipcMain.handle(
   PackageListenerChannel.DELETE,
-  (event, packageName: string): Promise<void> => {
+  (event, packageKey: string): Promise<void> => {
     log.debug('Received delete package IPC');
-    const packageId = getSha1(packageName);
-    deletePackage(packageId);
+    deletePackage(packageKey);
     return Promise.resolve();
   },
 );
@@ -46,18 +44,18 @@ ipcMain.handle(
     log.debug('Received get packages IPC');
     const packages = PackageStore.get().getPackages();
     const result: Record<string, PackageDetails> = {};
-    for (const key of Object.keys(packages)) {
+    for (const packageKey of Object.keys(packages)) {
       const packageDetails = await getPackage(
-        packages[key].registryUrl,
-        packages[key].name,
+        packages[packageKey].registryUrl,
+        packages[packageKey].name,
       );
       if (typeof packageDetails === 'string') {
         log.warn(
-          `Unable to fetch package "${packages[key].name}" details. Received error : ${packageDetails}`,
+          `Unable to fetch package "${packages[packageKey].name}" details. Received error : ${packageDetails}`,
         );
-        result[key] = { ...packages[key] };
+        result[packageKey] = { ...packages[packageKey] };
       } else {
-        result[key] = packageDetails;
+        result[packageKey] = packageDetails;
       }
     }
     return result;

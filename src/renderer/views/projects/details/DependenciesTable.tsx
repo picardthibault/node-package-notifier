@@ -59,16 +59,9 @@ const DependenciesTable: React.FunctionComponent<DependenciesTableProps> = (
     });
   });
 
-  const isFollowed = (
-    packageName: string,
-    followedPackages: GetPackagesResult,
-  ) =>
-    Object.keys(followedPackages).filter(
-      (packageId) => fetchedPackages[packageId].name === packageName,
-    ).length > 0;
-
   const dependenciesTableColumns: (
     followedPackages: GetPackagesResult,
+    registryUrl: string,
   ) => ColumnsType<ParsedDependency> = (
     followedPackages: GetPackagesResult,
   ) => [
@@ -97,6 +90,17 @@ const DependenciesTable: React.FunctionComponent<DependenciesTableProps> = (
       key: 'actions',
       width: '110px',
       render: (record: ParsedDependency) => {
+        let followedPackageId: string | undefined;
+        for (const packageId of Object.keys(followedPackages)) {
+          if (
+            followedPackages[packageId].name === record.name &&
+            followedPackages[packageId].registryUrl === registryUrl
+          ) {
+            followedPackageId = packageId;
+            break;
+          }
+        }
+
         return (
           <Space>
             <ActionButton
@@ -112,13 +116,15 @@ const DependenciesTable: React.FunctionComponent<DependenciesTableProps> = (
             >
               <EyeOutlined />
             </ActionButton>
-            {isFollowed(record.name, followedPackages) ? (
+            {followedPackageId ? (
               <ActionButton
                 type="default"
                 danger={true}
                 toolTip={t('project.details.tooltip.unfollowPackage')}
                 onClick={() => {
-                  void deletePackage(record.name);
+                  void deletePackage(
+                    followedPackageId ? followedPackageId : '',
+                  );
                 }}
               >
                 <MinusCircleOutlined />
@@ -145,7 +151,7 @@ const DependenciesTable: React.FunctionComponent<DependenciesTableProps> = (
 
   return (
     <Table
-      columns={dependenciesTableColumns(fetchedPackages)}
+      columns={dependenciesTableColumns(fetchedPackages, registryUrl)}
       dataSource={dependencies.map((dependency) => ({
         ...dependency,
         key: dependency.name,

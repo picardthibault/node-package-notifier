@@ -32,13 +32,7 @@ export const PackageCreation = (): JSX.Element => {
         openAlert('success', t('package.creation.alert.title.success'));
         void navigateTo(routePaths.packageList.generate());
       } else {
-        openAlert(
-          'error',
-          t('package.creation.alert.title.error'),
-          t('package.creation.alert.description.error', {
-            cause: result,
-          }),
-        );
+        openAlert('error', t('package.creation.alert.title.error'), result);
       }
     });
   });

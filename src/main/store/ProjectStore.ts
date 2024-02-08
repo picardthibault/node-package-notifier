@@ -1,5 +1,5 @@
 import Store = require('electron-store');
-import { getSha1 } from '@main/helpers/HashHelper';
+import { generateKey } from '@main/helpers/KeyStoreHelper';
 
 export interface ProjectConfig {
   name: string;
@@ -7,7 +7,6 @@ export interface ProjectConfig {
   registryUrl: string;
 }
 
-// key is the SHA1 of the project name
 export type IProjectStore = Record<string, ProjectConfig>;
 
 export class ProjectStore {
@@ -29,8 +28,10 @@ export class ProjectStore {
   }
 
   hasProject(projectName: string): boolean {
-    const projectKey = getSha1(projectName);
-    return this.store.has(projectKey);
+    const projectNames = Object.keys(this.store.store).map(
+      (key) => this.store.store[key].name,
+    );
+    return projectNames.includes(projectName);
   }
 
   addProject(
@@ -38,7 +39,7 @@ export class ProjectStore {
     projectPath: string,
     registryUrl: string,
   ): string {
-    const projectKey = getSha1(projectName);
+    const projectKey = generateKey();
     this.store.set(projectKey, {
       name: projectName,
       path: projectPath,

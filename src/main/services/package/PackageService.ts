@@ -65,8 +65,8 @@ export async function updateAllStoredPackages(): Promise<string[]> {
   const packageWithNewVersion: string[] = [];
 
   const packages = PackageStore.get().getPackages();
-  for (const key of Object.keys(packages)) {
-    const packageToUpdate = packages[key];
+  for (const packageKey of Object.keys(packages)) {
+    const packageToUpdate = packages[packageKey];
     try {
       log.debug(`Update package "${packageToUpdate.name}" start`);
       const adaptedRegistryUrl = adaptRegistryUrl(packageToUpdate.registryUrl);
@@ -80,12 +80,9 @@ export async function updateAllStoredPackages(): Promise<string[]> {
           `Unable to update "${packageToUpdate.name}" package data. Received error : ${newPackageDetails}`,
         );
       } else {
-        const newPackageKey = PackageStore.get().updatePackage(
-          key,
-          newPackageDetails,
-        );
+        PackageStore.get().updatePackage(packageKey, newPackageDetails);
         if (packageToUpdate.latest !== newPackageDetails.latest) {
-          packageWithNewVersion.push(newPackageKey);
+          packageWithNewVersion.push(packageKey);
         }
         log.debug(`Update package "${packageToUpdate.name}" end`);
       }

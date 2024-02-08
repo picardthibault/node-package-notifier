@@ -9,6 +9,6 @@ export const createPackage = createEffect((creationArgs: PackageCreationArgs) =>
   window.packageManagement.create(creationArgs),
 );
 
-export const deletePackage = createEffect((packageName: string) =>
-  window.packageManagement.delete(packageName),
+export const deletePackage = createEffect((packageKey: string) =>
+  window.packageManagement.delete(packageKey),
 );

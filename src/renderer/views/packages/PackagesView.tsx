@@ -21,7 +21,7 @@ import { deletePackage, fetchPackages } from '@renderer/effects/PackageEffect';
 import { navigateTo } from '@renderer/effects/MenuEffect';
 
 interface TableItemType {
-  key: number;
+  key: string;
   packageId: string;
   name: string;
   registryUrl: string;
@@ -48,10 +48,10 @@ export const PackagesView = (): JSX.Element => {
 
   useEffect(() => {
     const tableItems: TableItemType[] = Object.keys(fetchedPackages).map(
-      (packageId, index) => {
+      (packageId) => {
         const fetchedPackage = fetchedPackages[packageId];
         return {
-          key: index,
+          key: packageId,
           packageId,
           name: fetchedPackage.name,
           registryUrl: fetchedPackage.registryUrl,
@@ -109,7 +109,7 @@ export const PackagesView = (): JSX.Element => {
             type="default"
             danger={true}
             toolTip={t('package.list.tooltips.unfollowPackage')}
-            onClick={() => void deletePackage(tableItem.name)}
+            onClick={() => void deletePackage(tableItem.packageId)}
           >
             <MinusCircleOutlined />
           </ActionButton>

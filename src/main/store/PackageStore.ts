@@ -1,5 +1,5 @@
 import Store = require('electron-store');
-import { getSha1 } from '@main/helpers/HashHelper';
+import { generateKey } from '@main/helpers/KeyStoreHelper';
 import { PackageDetails } from '@type/PackageInfo';
 
 export interface PackageConfig {
@@ -18,7 +18,6 @@ export const isPackageConfig = (object: unknown): object is PackageConfig => {
   );
 };
 
-// key is the SHA1 of the package name
 export type IPackageStore = Record<string, PackageConfig>;
 
 export class PackageStore {
@@ -50,7 +49,7 @@ export class PackageStore {
   }
 
   addPackage(packageDetails: PackageDetails): string {
-    const packageKey = getSha1(packageDetails.name);
+    const packageKey = generateKey();
     this.store.set(
       packageKey,
       this.mapPackageDetailsToPackageConfig(packageDetails),
@@ -58,27 +57,19 @@ export class PackageStore {
     return packageKey;
   }
 
-  updatePackage(
-    previousKey: string,
-    newPackageDetails: PackageDetails,
-  ): string {
-    const newPackageKey = getSha1(newPackageDetails.name);
-    if (previousKey !== newPackageKey) {
-      this.store.delete(previousKey);
-    }
+  updatePackage(packageKey: string, newPackageDetails: PackageDetails) {
     this.store.set(
-      newPackageKey,
+      packageKey,
       this.mapPackageDetailsToPackageConfig(newPackageDetails),
     );
-    return newPackageKey;
   }
 
-  deletePackage(packageId: string): void {
-    this.store.delete(packageId);
+  deletePackage(packageKey: string): void {
+    this.store.delete(packageKey);
   }
 
-  getPackage(key: string): PackageConfig {
-    return this.store.get(key);
+  getPackage(packagekey: string): PackageConfig {
+    return this.store.get(packagekey);
   }
 
   getPackages(): IPackageStore {

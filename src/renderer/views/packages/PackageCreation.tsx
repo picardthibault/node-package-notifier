@@ -18,6 +18,7 @@ interface PackageFormField {
 export const PackageCreation = (): JSX.Element => {
   const { t } = useTranslation();
 
+  const [creationLoading, setCreationLoading] = useState<boolean>(false);
   const [suggestions, setSuggestions] = useState<
     { label: string; value: string }[]
   >([]);
@@ -28,6 +29,7 @@ export const PackageCreation = (): JSX.Element => {
 
   useEffect(() => {
     return createPackage.done.watch(({ result }) => {
+      setCreationLoading(false);
       if (!result) {
         openAlert('success', t('package.creation.alert.title.success'));
         void navigateTo(routePaths.packageList.generate());
@@ -66,6 +68,7 @@ export const PackageCreation = (): JSX.Element => {
   }, [suggestionTimeout, setSuggestionTimeout]);
 
   const onFinish = () => {
+    setCreationLoading(true);
     void createPackage(formInstance.getFieldsValue());
   };
 
@@ -110,7 +113,11 @@ export const PackageCreation = (): JSX.Element => {
 
         <div style={{ textAlign: 'center' }}>
           <Space>
-            <ActionButton type="primary" htmlType="submit">
+            <ActionButton
+              type="primary"
+              htmlType="submit"
+              loading={creationLoading}
+            >
               {t('package.creation.buttons.follow')}
             </ActionButton>
           </Space>

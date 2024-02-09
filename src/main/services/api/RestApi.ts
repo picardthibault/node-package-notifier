@@ -34,6 +34,10 @@ export const requestGet = async <T>(url: string): Promise<ApiResponse<T>> => {
       );
     });
 
+    setTimeout(() => {
+      reject(new Error('Request has reached timeout'));
+    }, 60 * 1000);
+
     apiRequest.end();
   });
 };

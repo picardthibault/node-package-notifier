@@ -48,6 +48,16 @@ export class PackageStore {
     };
   }
 
+  hasPackage(packageName: string, registryUrl: string): boolean {
+    return (
+      Object.keys(this.store.store).find(
+        (packageKey) =>
+          this.store.store[packageKey].name === packageName &&
+          this.store.store[packageKey].registryUrl === registryUrl,
+      ) !== undefined
+    );
+  }
+
   addPackage(packageDetails: PackageDetails): string {
     const packageKey = generateKey();
     this.store.set(

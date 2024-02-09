@@ -9,6 +9,7 @@ import { PackageSuggestionArgs } from '@type/PackageListenerArgs';
 import { PackageDetails } from '@type/PackageInfo';
 import { PackageCache } from '@main/caches/PackageCache';
 import { getErrorMessage } from '../error/ErrorService';
+import i18n from '../../i18n';
 
 export const npmRegistryUrl = 'https://registry.npmjs.org';
 
@@ -44,14 +45,20 @@ export async function createPackage(
   packageName: string,
   registryUrl?: string,
 ): Promise<string | undefined> {
+  const trimedPackageName = packageName.trim();
   const adaptedRegistryUrl = adaptRegistryUrl(registryUrl);
+  if (PackageStore.get().hasPackage(trimedPackageName, adaptedRegistryUrl)) {
+    return i18n.t('package.validation.errors.alreadyFollowed');
+  }
   const packageDetails = await fetchPackageDetails(
     adaptedRegistryUrl,
-    packageName,
+    trimedPackageName,
     true,
   );
   if (typeof packageDetails === 'string') {
-    return packageDetails;
+    return i18n.t('package.validation.errors.failedTofetchPackageDetails', {
+      cause: packageDetails,
+    });
   }
   PackageStore.get().addPackage(packageDetails);
 }

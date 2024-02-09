@@ -77,6 +77,11 @@ export const PackagesView = (): JSX.Element => {
       sorter: (a, b) => a.name.localeCompare(b.name),
     },
     {
+      key: 'registryUrl',
+      title: t('package.list.table.columns.registryUrl'),
+      dataIndex: 'registryUrl',
+    },
+    {
       key: 'license',
       title: t('package.list.table.columns.license'),
       dataIndex: 'license',

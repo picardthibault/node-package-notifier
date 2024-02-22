@@ -1,8 +1,8 @@
 import log from 'electron-log';
 import i18n from '../../i18n';
-import { ApiResponse, RestApi } from './RestApi';
+import { ApiResponse, requestGet } from './RestApi';
 
-interface PackageInfo {
+export interface PackageInfo {
   description: string;
   'dist-tags': {
     latest: string;
@@ -23,41 +23,39 @@ interface SearchObjects {
   }[];
 }
 
-export class RegistryApi {
-  static handleApiResponse<T>(url: string, response: ApiResponse<T>): T {
-    log.debug(`Received response from <${url}> with status ${response.status}`);
+const handleApiResponse = <T>(url: string, response: ApiResponse<T>): T => {
+  log.debug(`Received response from <${url}> with status ${response.status}`);
 
-    switch (response.status) {
-      case 200:
-        return response.body;
-      case 404:
-        throw new Error(i18n.t('package.fetch.errors.notFound'));
-      case 503:
-        throw new Error(i18n.t('package.fetch.errors.notAvailable'));
-      default:
-        throw new Error(i18n.t('package.fetch.errors.unknownResponse'));
-    }
+  switch (response.status) {
+    case 200:
+      return response.body;
+    case 404:
+      throw new Error(i18n.t('package.fetch.errors.notFound'));
+    case 503:
+      throw new Error(i18n.t('package.fetch.errors.notAvailable'));
+    default:
+      throw new Error(i18n.t('package.fetch.errors.unknownResponse'));
   }
+};
 
-  static async getPackageInfo(
-    packageName: string,
-    registryUrl: string,
-  ): Promise<PackageInfo> {
-    const url = `${registryUrl}/${packageName}`;
+export const getPackageInfo = async (
+  packageName: string,
+  registryUrl: string,
+): Promise<PackageInfo> => {
+  const url = `${registryUrl}/${packageName}`;
 
-    const response = await RestApi.requestGet<PackageInfo>(url);
+  const response = await requestGet<PackageInfo>(url);
 
-    return RegistryApi.handleApiResponse(url, response);
-  }
+  return handleApiResponse(url, response);
+};
 
-  static async getSuggestions(
-    current: string,
-    registryUrl: string,
-  ): Promise<SearchObjects> {
-    const url = `${registryUrl}/-/v1/search?text=${current}&popularity=1.0&quality=0.0&maintenance=0.0`;
+export const getSuggestions = async (
+  current: string,
+  registryUrl: string,
+): Promise<SearchObjects> => {
+  const url = `${registryUrl}/-/v1/search?text=${current}&popularity=1.0&quality=0.0&maintenance=0.0`;
 
-    const response = await RestApi.requestGet<SearchObjects>(url);
+  const response = await requestGet<SearchObjects>(url);
 
-    return RegistryApi.handleApiResponse(url, response);
-  }
-}
+  return handleApiResponse(url, response);
+};

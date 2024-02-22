@@ -23,9 +23,6 @@ export const rules: Required<ModuleOptions>['rules'] = [
     exclude: /(node_modules|\.webpack)/,
     use: {
       loader: 'ts-loader',
-      options: {
-        transpileOnly: true,
-      },
     },
   },
   {

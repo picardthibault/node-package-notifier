@@ -22,7 +22,7 @@ export function createMainWindow(
   if (app.isPackaged) {
     mainWindow.removeMenu();
   }
-  mainWindow.loadURL(mainWindowEntry);
+  void mainWindow.loadURL(mainWindowEntry);
 
   return mainWindow;
 }

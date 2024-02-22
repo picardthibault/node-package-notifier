@@ -1,10 +1,11 @@
 import './listeners/index';
-import './helpers/LogConfiguration';
+import '@main/helpers/LogConfiguration';
 import { app, BrowserWindow, Menu, nativeImage, Tray } from 'electron';
 import * as path from 'path';
-import { createMainWindow } from './helpers/AppLifeCycleHelper';
+import { createMainWindow } from '@main/helpers/AppLifeCycleHelper';
 import { launchUpdatePackageJob } from './jobs/PackageJobs';
 import log from 'electron-log';
+import i18n from './i18n';
 
 if (process.env.ENVIRONMENT && process.env.ENVIRONMENT === 'DEV') {
   app.setPath('userData', app.getPath('userData') + '-dev');
@@ -62,18 +63,18 @@ app.on('ready', () => {
     path.join(ressourcePathFolder, 'logo.png'),
   );
   const trayIcon = new Tray(icon);
-  trayIcon.setToolTip('Node Package Notifier');
+  trayIcon.setToolTip(i18n.t('tray.tooltip'));
   trayIcon.addListener('click', reopenApp);
 
   // Create Tray menu
   const trayMenu = Menu.buildFromTemplate([
     {
-      label: 'Open',
+      label: i18n.t('tray.open'),
       type: 'normal',
       click: reopenApp,
     },
     {
-      label: 'Quit',
+      label: i18n.t('tray.close'),
       type: 'normal',
       click: quitApp,
     },

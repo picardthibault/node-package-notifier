@@ -1,88 +1,72 @@
 import React, { useEffect, useState } from 'react';
-import { PackageConfig } from '../../main/store/PackageStore';
-import { IpcRendererEvent } from 'electron';
 import { Form, Input, Space, Table } from 'antd';
-import { DeleteOutlined, PlusOutlined, EyeOutlined } from '@ant-design/icons';
+import {
+  MinusCircleOutlined,
+  PlusOutlined,
+  EyeOutlined,
+} from '@ant-design/icons';
 import { ColumnsType } from 'antd/es/table';
-import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import ActionButton from '../components/Button/ActionButton';
+import ActionButton from '@renderer/components/Button/ActionButton';
 import {
   packageListStore,
   PackageListStore,
   updatePackageListPageConfig,
-} from '../stores/PackageListStore';
-import { useStore } from 'effector-react';
-import Title from '../components/Title/Title';
-import { routePaths } from '../routes';
+} from '@renderer/stores/PackageListStore';
+import { useUnit } from 'effector-react';
+import Title from '@renderer/components/Title/Title';
+import { routePaths } from '../../routes';
+import { updatePackageDetails } from '@renderer/stores/PackageDetailsStore';
+import { deletePackage, fetchPackages } from '@renderer/effects/PackageEffect';
+import { navigateTo } from '@renderer/effects/MenuEffect';
 
 interface TableItemType {
-  key: number;
+  key: string;
   packageId: string;
   name: string;
+  registryUrl: string;
   license: string;
   version: string;
 }
 
 export const PackagesView = (): JSX.Element => {
-  const navigate = useNavigate();
-
   const { t } = useTranslation();
 
   const [packages, setPackages] = useState<TableItemType[]>([]);
   const [hasFilter, setHasFilter] = useState<boolean>(false);
   const [filteredPackages, setFilteredPackages] = useState<TableItemType[]>([]);
 
-  const { page, pageSize } = useStore<PackageListStore>(packageListStore);
+  const { fetchedPackages, page, pageSize } =
+    useUnit<PackageListStore>(packageListStore);
 
   const [formInstance] = Form.useForm();
 
   useEffect(() => {
     // Load packages
-    window.packageManagement.getAll();
+    void fetchPackages();
   }, []);
 
   useEffect(() => {
-    const packagesListener = (
-      event: IpcRendererEvent,
-      packages: { [key: string]: PackageConfig },
-    ) => {
-      const tableItems: TableItemType[] = Object.keys(packages).map(
-        (packageId, index) => ({
-          key: index,
+    const tableItems: TableItemType[] = Object.keys(fetchedPackages).map(
+      (packageId) => {
+        const fetchedPackage = fetchedPackages[packageId];
+        return {
+          key: packageId,
           packageId,
-          name: packages[packageId].name,
-          license: packages[packageId].license
-            ? packages[packageId].license
+          name: fetchedPackage.name,
+          registryUrl: fetchedPackage.registryUrl,
+          license: fetchedPackage.license
+            ? fetchedPackage.license
             : t('common.na'),
-          version: packages[packageId].latest
-            ? packages[packageId].latest
+          version: fetchedPackage.latest
+            ? fetchedPackage.latest
             : t('common.na'),
-        }),
-      );
-
-      setPackages(tableItems);
-    };
-
-    const cleanListener =
-      window.packageManagement.getAllListener(packagesListener);
-
-    return () => {
-      cleanListener();
-    };
-  }, [setPackages]);
-
-  useEffect(() => {
-    const deletePackageListener = () => window.packageManagement.getAll();
-
-    const cleanListener = window.packageManagement.deleteListener(
-      deletePackageListener,
+        };
+      },
     );
 
-    return () => {
-      cleanListener();
-    };
-  });
+    setPackages(tableItems);
+  }, [fetchedPackages]);
 
   const tableColumns: ColumnsType<TableItemType> = [
     {
@@ -91,6 +75,11 @@ export const PackagesView = (): JSX.Element => {
       dataIndex: 'name',
       defaultSortOrder: 'ascend',
       sorter: (a, b) => a.name.localeCompare(b.name),
+    },
+    {
+      key: 'registryUrl',
+      title: t('package.list.table.columns.registryUrl'),
+      dataIndex: 'registryUrl',
     },
     {
       key: 'license',
@@ -111,17 +100,23 @@ export const PackagesView = (): JSX.Element => {
           <ActionButton
             type="primary"
             toolTip={t('package.list.tooltips.detailsPackage')}
-            onClick={() => navigate(`/package/${tableItem.packageId}`)}
+            onClick={() => {
+              updatePackageDetails({
+                packageName: tableItem.name,
+                registryUrl: tableItem.registryUrl,
+              });
+              void navigateTo(routePaths.packageDetails.generate());
+            }}
           >
             <EyeOutlined />
           </ActionButton>
           <ActionButton
             type="default"
             danger={true}
-            toolTip={t('package.list.tooltips.deletePackage')}
-            onClick={() => window.packageManagement.delete(tableItem.packageId)}
+            toolTip={t('package.list.tooltips.unfollowPackage')}
+            onClick={() => void deletePackage(tableItem.packageId)}
           >
-            <DeleteOutlined />
+            <MinusCircleOutlined />
           </ActionButton>
         </Space>
       ),
@@ -130,7 +125,9 @@ export const PackagesView = (): JSX.Element => {
 
   const onFilter = () => {
     setHasFilter(true);
-    const packageNameFilter = formInstance.getFieldValue('packageNameFilter');
+    const packageNameFilter = (
+      formInstance.getFieldValue('packageNameFilter') as string
+    ).toLocaleLowerCase();
     setFilteredPackages(
       packages.filter((pack) => pack.name.includes(packageNameFilter)),
     );
@@ -154,8 +151,8 @@ export const PackagesView = (): JSX.Element => {
       >
         <ActionButton
           type="primary"
-          toolTip={t('package.list.tooltips.createPackage')}
-          onClick={() => navigate(routePaths.packageCreation.generate())}
+          toolTip={t('package.list.tooltips.followPackage')}
+          onClick={() => void navigateTo(routePaths.packageCreation.generate())}
         >
           <PlusOutlined />
         </ActionButton>

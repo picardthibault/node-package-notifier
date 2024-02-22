@@ -3,9 +3,15 @@ export const routePaths = {
     generate: () => '/',
   },
   packageCreation: {
-    generate: () => '/create',
+    generate: () => '/package/create',
   },
   packageDetails: {
-    generate: (id: string) => `/package/${id}`,
+    generate: () => '/package/details',
+  },
+  projectCreation: {
+    generate: () => '/project/create',
+  },
+  projectDetails: {
+    generate: (projectKey: string) => `/project/details/${projectKey}`,
   },
 };

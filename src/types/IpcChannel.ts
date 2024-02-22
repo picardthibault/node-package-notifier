@@ -1,15 +1,19 @@
-export enum PackageManagementChannel {
-  CREATE = 'packageManagementChannelCreate',
-  CREATE_LISTENER = 'packageManagementChannelCreateListener',
-  UPDATE = 'packageManagementChannelUpdate',
-  UPDATE_LISTENER = 'packageManagementChannelUpdateListener',
-  DELETE = 'packageManagementChannelDelete',
-  DELETE_LISTENER = 'packageManagementChannelDeleteListener',
-  GET_ALL = 'packageManagementChannelGetAll',
-  GET_ALL_LISTENER = 'packageManagementChannelGetAllListener',
-  GET = 'packageManagementChannelGet',
-  FETCH_TAGS = 'packageManagementChannelFetchTags',
-  FETCH_TAGS_LISTENER = 'packageManagementChannelFetchTagsListener',
-  GET_SUGGESTIONS = 'packageManagementChannelGetSuggestion',
-  GET_SUGGESTIONS_LISTENER = 'packageManagementChannelGetSuggestionListener',
+export enum PackageListenerChannel {
+  CREATE = 'packageChannelCreate',
+  DELETE = 'packageChannelDelete',
+  GET_PACKAGES = 'packageChannelGetPackages',
+  GET_PACKAGE = 'packageChannelGetPackage',
+  OPEN_HOME_PAGE = 'packageChannelOpenHomePage',
+  GET_SUGGESTIONS = 'packageChannelGetSuggestion',
+}
+
+export enum ProjectListenerChannel {
+  PROJECT_PATH_SELECTOR = 'projectChannelProjectPathSelector',
+  IS_PROJECT_NAME_USED = 'projectChannelIsProjectNameUsed',
+  IS_PROJECT_PATH_VALID = 'projectChannelIsProjectPathValid',
+  CREATE = 'projectChannelCreate',
+  DELETE = 'projectChannelDelete',
+  GET_PROJECTS_SUM_UP = 'projectChannelGetProjectsSumUp',
+  GET_PROJECT_DETAILS = 'projectChannelGetProjectDetails',
+  FETCH_LATEST_VERSION = 'projectChannelFetchLatestVersion',
 }

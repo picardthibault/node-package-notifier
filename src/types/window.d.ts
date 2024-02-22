@@ -1,48 +1,56 @@
-import { PackageCreationArgs, PackageUpdateArgs } from './PackageManagement';
 import { IpcRendererEvent } from 'electron';
-import { PackageConfig } from '../main/store/PackageStore';
-import { PackageData } from './PackageInfo';
+import {
+  PackageCreationArgs,
+  GetPackagesResult,
+  GetPackageResult,
+} from './PackageListenerArgs';
+import {
+  ProjectCreationArgs,
+  ProjectCreationResult,
+  GetProjectDetailsResult,
+} from './ProjectListenerArgs';
+import { ProjectSumUp } from './ProjectInfo';
 
 export {};
 
 declare global {
   interface Window {
     packageManagement: {
-      create: (creationArgs: PackageCreationArgs) => void;
-      createListener: (
-        listener: (
-          event: IpcRendererEvent,
-          errorMessage: string | undefined,
-        ) => void,
-      ) => void;
-      update: (updateArgs: PackageUpdateArgs) => void;
-      updateListener: (
-        listener: (event: IpcRendererEvent, isUpdated: boolean) => void,
-      ) => void;
-      delete: (packageId: string) => void;
-      deleteListener: (listener: () => void) => () => void;
-      getAll: () => void;
-      getAllListener: (
-        listener: (
-          event: IpcRendererEvent,
-          packages: { [key: string]: PackageConfig },
-        ) => void,
-      ) => () => void;
-      get: (packageId: string) => PackageData;
-      fetchTags: (packageId: string) => void;
-      fetchTagsListener: (
-        listener: (
-          event: IpcRendererEvent,
-          fetchResult: Tags | string | undefined,
-        ) => void,
-      ) => () => void;
-      getSuggestions: (suggestionArgs: PackageSuggestionArgs) => void;
+      create: (
+        creationArgs: PackageCreationArgs,
+      ) => Promise<string | undefined>;
+      delete: (packageKey: string) => Promise<void>;
+      getPackages: () => Promise<GetPackagesResult>;
+      getPackage: (
+        packageName: string,
+        registryUrl: string,
+      ) => Promise<GetPackageResult>;
+      getSuggestions: (
+        suggestionArgs: PackageSuggestionArgs,
+      ) => Promise<string[] | string>;
+      openPackageHomePage: (packageHomePage: string) => Promise<void>;
       getSuggestionsListener: (
         listener: (
           event: IpcRendererEvent,
           suggestions: string[] | string,
         ) => void,
       ) => () => void;
+    };
+    projectManagement: {
+      projectPathSelector: (defaultPath: string) => Promise<string | undefined>;
+      isProjectNameUsed: (projectName: string) => Promise<boolean>;
+      isProjectPathValid: (projectPath: string) => Promise<string | undefined>;
+      create: (
+        projectCreationArgs: ProjectCreationArgs,
+      ) => Promise<ProjectCreationResult>;
+      delete: (projectKey: string) => Promise<void>;
+      getProjectsSumUp: () => Promise<ProjectSumUp[]>;
+      getProjectDetails: (
+        projectKey: string,
+      ) => Promise<GetProjectDetailsResult>;
+      fetchLatestVersion: (
+        fetchLatestVersionArgs: FetchLatestVersionArgs,
+      ) => Promise<string | undefined>;
     };
   }
 }

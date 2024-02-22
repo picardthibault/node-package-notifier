@@ -1,5 +1,16 @@
 {
+    "tray": {
+        "open": "Open",
+        "close": "Close",
+        "tooltip": "Node Package Notifier"
+    },
     "package": {
+        "validation": {
+            "errors": {
+                "failedTofetchPackageDetails": "Unable to fetch package details. Cause: \"{{cause}}\"",
+                "alreadyFollowed": "The package of this registry is already followed"
+            }
+        },
         "newVersion": {
             "title": "{{name}} new version",
             "body": "Version {{version}} of {{name}} has been released, feel free to update your project !"
@@ -10,6 +21,24 @@
                 "notAvailable": "Registry is not available.",
                 "unknownResponse": "Registry returns an unknown response."
             }
+        }
+    },
+    "project": {
+        "validation": {
+            "errors": {
+                "notDirectory": "The selected path does not correspond to an existing directory",
+                "noPackageJson": "The selected path corresponds to a directory which does not contain a \"package.json\" file",
+                "nameAlreadyUsed": "The selected name is already used for another project."
+            }
+        },
+        "parse": {
+            "error": "Unable to parse project \"package.json\" file"
+        }
+    },
+    "fileSystem": {
+        "errors": {
+            "fileDoesNotExist": "Path \"{{path}}\" doesn't correspond to an existing file",
+            "errorWhileReadingFile": "An error occurred while reading \"{{path}}\". Please verify the existance of the file and its read right"
         }
     }
 }

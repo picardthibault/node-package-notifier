@@ -1,92 +1,78 @@
-import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron';
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+
+import { contextBridge, ipcRenderer } from 'electron';
 import {
+  GetPackagesResult,
   PackageCreationArgs,
+  GetPackageResult,
   PackageSuggestionArgs,
-  PackageUpdateArgs,
-} from '../types/PackageManagement';
-import { PackageManagementChannel } from '../types/IpcChannel';
-import { PackageConfig } from '../main/store/PackageStore';
-import { PackageData, Tags } from '../types/PackageInfo';
+} from '../types/PackageListenerArgs';
+import {
+  PackageListenerChannel,
+  ProjectListenerChannel,
+} from '../types/IpcChannel';
+import {
+  ProjectCreationArgs,
+  ProjectCreationResult,
+  GetProjectDetailsResult,
+  FetchLatestVersionArgs,
+} from '../types/ProjectListenerArgs';
+import { ProjectSumUp } from '../types/ProjectInfo';
 
 contextBridge.exposeInMainWorld('packageManagement', {
-  create: (creationArgs: PackageCreationArgs) =>
-    ipcRenderer.send(PackageManagementChannel.CREATE, creationArgs),
-  createListener: (
-    listener: (
-      event: IpcRendererEvent,
-      errorMessage: string | undefined,
-    ) => void,
-  ) => {
-    ipcRenderer.on(PackageManagementChannel.CREATE_LISTENER, listener);
-    return () =>
-      ipcRenderer.removeListener(
-        PackageManagementChannel.CREATE_LISTENER,
-        listener,
-      );
-  },
-  update: (updateArgs: PackageUpdateArgs) =>
-    ipcRenderer.send(PackageManagementChannel.UPDATE, updateArgs),
-  updateListener: (
-    listener: (event: IpcRendererEvent, isUpdated: boolean) => void,
-  ) => {
-    ipcRenderer.on(PackageManagementChannel.UPDATE_LISTENER, listener);
-    return () =>
-      ipcRenderer.removeListener(
-        PackageManagementChannel.UPDATE_LISTENER,
-        listener,
-      );
-  },
-  delete: (packageId: string) =>
-    ipcRenderer.send(PackageManagementChannel.DELETE, packageId),
-  deleteListener: (listener: () => void) => {
-    ipcRenderer.on(PackageManagementChannel.DELETE_LISTENER, listener);
-    return () =>
-      ipcRenderer.removeListener(
-        PackageManagementChannel.DELETE_LISTENER,
-        listener,
-      );
-  },
-  getAll: () => ipcRenderer.send(PackageManagementChannel.GET_ALL),
-  getAllListener: (
-    listener: (
-      event: IpcRendererEvent,
-      args: { [key: string]: PackageConfig },
-    ) => void,
-  ) => {
-    ipcRenderer.on(PackageManagementChannel.GET_ALL_LISTENER, listener);
-    return () =>
-      ipcRenderer.removeListener(
-        PackageManagementChannel.GET_ALL_LISTENER,
-        listener,
-      );
-  },
-  get: (packageId: string): PackageData =>
-    ipcRenderer.sendSync(PackageManagementChannel.GET, packageId),
-  fetchTags: (packageId: string) =>
-    ipcRenderer.send(PackageManagementChannel.FETCH_TAGS, packageId),
-  fetchTagsListener: (
-    listener: (
-      event: IpcRendererEvent,
-      fetchResult: Tags | string | undefined,
-    ) => void,
-  ) => {
-    ipcRenderer.on(PackageManagementChannel.FETCH_TAGS_LISTENER, listener);
-    return () =>
-      ipcRenderer.removeListener(
-        PackageManagementChannel.FETCH_TAGS_LISTENER,
-        listener,
-      );
-  },
-  getSuggestions: (suggestionArgs: PackageSuggestionArgs) =>
-    ipcRenderer.send(PackageManagementChannel.GET_SUGGESTIONS, suggestionArgs),
-  getSuggestionsListener: (
-    listener: (event: IpcRendererEvent, suggestions: string[] | string) => void,
-  ) => {
-    ipcRenderer.on(PackageManagementChannel.GET_SUGGESTIONS_LISTENER, listener);
-    return () =>
-      ipcRenderer.removeListener(
-        PackageManagementChannel.GET_SUGGESTIONS_LISTENER,
-        listener,
-      );
-  },
+  create: (creationArgs: PackageCreationArgs): Promise<string | undefined> =>
+    ipcRenderer.invoke(PackageListenerChannel.CREATE, creationArgs),
+  delete: (packageKey: string) =>
+    ipcRenderer.invoke(PackageListenerChannel.DELETE, packageKey),
+  getPackages: (): Promise<GetPackagesResult> =>
+    ipcRenderer.invoke(PackageListenerChannel.GET_PACKAGES),
+  getPackage: (
+    packageName: string,
+    registryUrl: string,
+  ): Promise<GetPackageResult> =>
+    ipcRenderer.invoke(PackageListenerChannel.GET_PACKAGE, {
+      packageName: packageName,
+      registryUrl: registryUrl,
+    }),
+  openPackageHomePage: (packageHomePage: string): Promise<void> =>
+    ipcRenderer.invoke(PackageListenerChannel.OPEN_HOME_PAGE, packageHomePage),
+  getSuggestions: (
+    suggestionArgs: PackageSuggestionArgs,
+  ): Promise<string[] | string> =>
+    ipcRenderer.invoke(PackageListenerChannel.GET_SUGGESTIONS, suggestionArgs),
+});
+
+contextBridge.exposeInMainWorld('projectManagement', {
+  projectPathSelector: (defaultPath: string): Promise<string | undefined> =>
+    ipcRenderer.invoke(
+      ProjectListenerChannel.PROJECT_PATH_SELECTOR,
+      defaultPath,
+    ),
+  isProjectNameUsed: (projectName: string): Promise<boolean> =>
+    ipcRenderer.invoke(
+      ProjectListenerChannel.IS_PROJECT_NAME_USED,
+      projectName,
+    ),
+  isProjectPathValid: (projectPath: string): Promise<string | undefined> =>
+    ipcRenderer.invoke(
+      ProjectListenerChannel.IS_PROJECT_PATH_VALID,
+      projectPath,
+    ),
+  create: (
+    projectCreationArgs: ProjectCreationArgs,
+  ): Promise<ProjectCreationResult> =>
+    ipcRenderer.invoke(ProjectListenerChannel.CREATE, projectCreationArgs),
+  delete: (projectKey: string) =>
+    ipcRenderer.invoke(ProjectListenerChannel.DELETE, projectKey),
+  getProjectsSumUp: (): Promise<ProjectSumUp[]> =>
+    ipcRenderer.invoke(ProjectListenerChannel.GET_PROJECTS_SUM_UP),
+  getProjectDetails: (projectKey: string): Promise<GetProjectDetailsResult> =>
+    ipcRenderer.invoke(ProjectListenerChannel.GET_PROJECT_DETAILS, projectKey),
+  fetchLatestVersion: (
+    fetchLatestVersionArgs: FetchLatestVersionArgs,
+  ): Promise<string | undefined> =>
+    ipcRenderer.invoke(
+      ProjectListenerChannel.FETCH_LATEST_VERSION,
+      fetchLatestVersionArgs,
+    ),
 });

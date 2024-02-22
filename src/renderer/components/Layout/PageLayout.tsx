@@ -2,12 +2,21 @@ import React, { FunctionComponent } from 'react';
 import { Content } from 'antd/es/layout/layout';
 import { Layout } from 'antd';
 import { Outlet } from 'react-router-dom';
-import SideMenu from '../Menu/SideMenu';
+import SideMenu, { SideMenuItem } from '../Menu/SideMenu';
 
-const PageLayout: FunctionComponent = () => {
+interface PageLayoutProps {
+  subMenuItems: SideMenuItem[];
+  defaultOpenMenuKeys?: string[];
+}
+
+const PageLayout: FunctionComponent<PageLayoutProps> = (props) => {
+  const { subMenuItems, defaultOpenMenuKeys } = props;
   return (
     <Layout>
-      <SideMenu />
+      <SideMenu
+        items={subMenuItems}
+        defaultOpenMenuKeys={defaultOpenMenuKeys}
+      />
       <Content>
         <Outlet />
       </Content>

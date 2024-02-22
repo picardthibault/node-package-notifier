@@ -11,8 +11,18 @@
     "outDir": "dist",
     "moduleResolution": "node",
     "resolveJsonModule": true,
+    "strict": true,
     "paths": {
-      "*": ["node_modules/*"]
+      "@type/*": ["src/types/*"],
+      "@renderer/components/*": ["src/renderer/components/*"],
+      "@renderer/effects/*": ["src/renderer/effects/*"],
+      "@renderer/stores/*": ["src/renderer/stores/*"],
+      "@renderer/views/*": ["src/renderer/views/*"],
+      "@main/caches/*": ["src/main/caches/*"],
+      "@main/helpers/*": ["src/main/helpers/*"],
+      "@main/services/*": ["src/main/services/*"],
+      "@main/store/*": ["src/main/store/*"],
+      "*": ["node_modules/*"]      
     },
     "jsx": "react",
     "typeRoots": ["./node_modules/@types", "./src/types"]

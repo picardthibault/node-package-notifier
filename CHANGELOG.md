@@ -1,5 +1,22 @@
 # Changelog
 
+## V2.0.0
+
+### Added
+- Add the project section that can be used to consult project direct dependencies version
+- Add the possibility to open a package home page directly in the default browser
+- Add a timeout to registry request
+
+### Modified
+- Improve navigation
+- Improve package list filter
+- Improve code quality
+- Update dependencies
+
+### Fix
+- Fix a bug that enables to follow multiple time the same package
+- Fix a bug that prevents to follow two package with the same name but on distinct registry
+
 ## V1.2.0
 
 ### Added

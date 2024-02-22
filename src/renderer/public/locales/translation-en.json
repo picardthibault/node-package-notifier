@@ -1,13 +1,29 @@
 {
     "common": {
         "na": "N/A",
-        "back": "Back"
+        "back": "Back",
+        "form": {
+            "rules": {
+                "required": "This field is required"
+            }
+        }
+    },
+    "form": {
+        "field": {
+            "registryUrl": "Registry"
+        },
+        "placeholder": {
+            "registryUrl": "https://registry.npmjs.org"
+        },
+        "rules": {
+            "url": "This field should be a valid url"
+        }
     },
     "sideMenu": {
         "items": {
             "packageList": "Package List",
             "projectList": "Project List",
-            "addProject": "Add a new Project"
+            "addProject": "Import a Project"
         }
     },
     "package": {
@@ -26,47 +42,39 @@
             "table": {
                 "columns": {
                     "name": "Name",
+                    "registryUrl": "Registry",
                     "license": "License",
                     "version": "Current version"
                 }
             },
             "tooltips": {
-                "createPackage": "Create new package",
+                "followPackage": "Follow new package",
                 "detailsPackage": "View package details",
-                "deletePackage": "Delete package",
+                "unfollowPackage": "Unfollow package",
                 "filterPackages": "Filter list based on selected filters",
                 "resetFilters": "Remove selected filters"
             }
         },
         "creation": {
-            "title": "Create Package",
+            "title": "Follow Package",
             "form": {
                 "field": {
-                    "name": "Package name",
-                    "registryUrl": "Registry"
+                    "name": "Package name"
                 },
                 "placeholder": {
-                    "name": "electron",
-                    "registryUrl": "https://registry.npmjs.org"
-                },
-                "rules": {
-                    "required": "This field is required",
-                    "url": "This field should be a valid url"
+                    "name": "electron"
                 }
             },
             "tooltip": {
-                "registryUrl": "The base url of the registry on which the package is hosted. If not provided, the package will be fetched on the npm registry."
+                "registryUrl": "The base url of the registry on which the package is hosted. If not provided, the npm registry will be used."
             },
             "buttons": {
-                "create": "Create"
+                "follow": "Follow"
             },
             "alert": {
                 "title": {
-                    "success": "Package has been successfully created",
-                    "error": "Unable to create package"
-                },
-                "description": {
-                    "error": "Error while fetching package tags: \"{{cause}}\""
+                    "success": "Package has been successfully followed",
+                    "error": "Unable to follow package"
                 }
             }
         },
@@ -88,10 +96,95 @@
             },
             "alert": {
                 "title": {
-                    "error": "Unable to fetch package tags"
+                    "error": "Unable to fetch package details"
                 },
                 "description": {
-                    "error": "Error occurred while fetching package tags: \" {{cause}}\""
+                    "error": "An error occurred while fetching package details: \"{{cause}}\""
+                }
+            },
+            "tooltip": {
+                "openHomePage": "Open package home page in browser"
+            }
+        }
+    },
+    "project": {
+        "creation": {
+            "title": "Create Project",
+            "form": {
+                "field": {
+                    "projectName": "Project name",
+                    "projectPath": "Project path"
+                },
+                "placeholder": {
+                    "projectName": "My Awesome Project",
+                    "projectPath": "C:\\MyAwesomeProject"
+                },
+                "rules": {
+                    "projectName": "This name is already used by another project."
+                }
+            },
+            "tooltip": {
+                "projectName": "The name that will be used in NPN for the project",
+                "projectPath": "The path to the directory where you \"package.json\" file lives",
+                "registryUrl": "The base url of the registry on which the project fetch its packages. If not provided, the npm registry will be used."
+            },
+            "alert": {
+                "title": {
+                    "success": "Project has been successufuly created.",
+                    "error": "Unable to create project.",
+                    "invalidSelection": "You should drag and drop only one folder."
+                }
+            },
+            "buttons": {
+                "create": "Create"
+            }
+        },
+        "details": {
+            "form": {
+               "field": {
+                "projectPath": "Project path",
+                "registryUrl": "Registry",
+                "version": "Version",
+                "description": "Description"
+               } 
+            },
+            "tabs": {
+                "label": {
+                    "dependencies": "Dependencies",
+                    "devDependencies": "Dev dependencies"
+                }
+            },
+            "table": {
+                "columns": {
+                    "name": "Name",
+                    "version": "Version",
+                    "latestVersion": "Latest version",
+                    "actions": "Actions"
+                },
+                "values": {
+                    "unableToFetch": "Unable to fetch"
+                }
+            },
+            "tooltip": {
+                "viewPackage": "Open package details.",
+                "followPackage": "Follow this package and receive notifications when new version are published.",
+                "unfollowPackage": "Unfollow this package and stop receiving notifications when new version are released.",
+                "deleteProject": "Remove the project from your project list."
+            },
+            "alert": {
+                "title": {
+                    "loadProjectError": "Unable to load project details.",
+                    "fetchLatestVerionError": "Unable to fetch latest version.",
+                    "dependencyFollowed": "Dependency is now followed.",
+                    "dependencyFollowError": "Unable to follow the selected dependency.",
+                    "dependencyUnfollowed": "Dependency is now unfollowed.",
+                    "projectRemoved": "Project \"{{projectName}}\" has been removed."
+                },
+                "description": {
+                    "loadProjectError": "An error occurred while loading project details: {{cause}}.",
+                    "noProjectData": "Unable to extract project details",
+                    "fetchLatestVerionError": "An error occurred while fetching latest version of \"{{package}}\".",
+                    "dependencyFollowError": "An error occurred while fetching dependency details : \"{{cause}}\"."
                 }
             }
         }

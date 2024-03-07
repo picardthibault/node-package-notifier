@@ -18,6 +18,7 @@ import { DeleteOutlined } from '@ant-design/icons';
 import { navigateTo } from '@renderer/effects/MenuEffect';
 import { routePaths } from '../../routes';
 import { fetchProjectsSumUp } from '@renderer/effects/ProjectEffects';
+import { createPackage, deletePackage } from '@renderer/effects/PackageEffect';
 
 const dependenciesTabKey = 'dependencies';
 const devDepenciesTabKey = 'devDependencies';
@@ -90,6 +91,32 @@ const ProjectDetails: FunctionComponent = () => {
   useEffect(() => {
     fetchProjectDetails();
   }, [fetchProjectDetails]);
+
+  useEffect(() => {
+    return createPackage.done.watch(({ result }) => {
+      if (!result) {
+        openAlert(
+          'success',
+          t('project.details.alert.title.dependencyFollowed'),
+        );
+      } else {
+        openAlert(
+          'error',
+          t('project.details.alert.title.dependencyFollowError'),
+          t('project.details.alert.description.dependencyFollowError'),
+        );
+      }
+    });
+  });
+
+  useEffect(() => {
+    return deletePackage.done.watch(() => {
+      openAlert(
+        'success',
+        t('project.details.alert.title.dependencyUnfollowed'),
+      );
+    });
+  });
 
   const tabItems: TabsProps['items'] = [
     {

@@ -1,6 +1,11 @@
 # Changelog
 
-## V2.0.0
+## v2.1.0
+
+### Fix
+- Fix a bug on follow/unfollow alert present on project details view
+
+## v2.0.0
 
 ### Added
 - Add the project section that can be used to consult project direct dependencies version

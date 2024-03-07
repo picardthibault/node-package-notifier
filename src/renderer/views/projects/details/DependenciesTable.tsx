@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import Table, { ColumnsType } from 'antd/es/table';
 import LatestVersionCell from './LatestVersionCell';
 import { ParsedDependency } from '@type/ProjectInfo';
@@ -16,7 +16,6 @@ import { useUnit } from 'effector-react';
 import { packageListStore } from '@renderer/stores/PackageListStore';
 import { createPackage, deletePackage } from '@renderer/effects/PackageEffect';
 import { GetPackagesResult } from '@type/PackageListenerArgs';
-import { openAlert } from '@renderer/components/Alert/Alert';
 import { navigateTo } from '@renderer/effects/MenuEffect';
 
 interface DependenciesTableProps {
@@ -32,32 +31,6 @@ const DependenciesTable: React.FunctionComponent<DependenciesTableProps> = (
   const { t } = useTranslation();
 
   const { fetchedPackages } = useUnit(packageListStore);
-
-  useEffect(() => {
-    return createPackage.done.watch(({ result }) => {
-      if (!result) {
-        openAlert(
-          'success',
-          t('project.details.alert.title.dependencyFollowed'),
-        );
-      } else {
-        openAlert(
-          'error',
-          t('project.details.alert.title.dependencyFollowError'),
-          t('project.details.alert.description.dependencyFollowError'),
-        );
-      }
-    });
-  });
-
-  useEffect(() => {
-    return deletePackage.done.watch(() => {
-      openAlert(
-        'success',
-        t('project.details.alert.title.dependencyUnfollowed'),
-      );
-    });
-  });
 
   const dependenciesTableColumns: (
     followedPackages: GetPackagesResult,

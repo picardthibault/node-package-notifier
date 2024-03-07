@@ -19,14 +19,19 @@ import { navigateTo } from '@renderer/effects/MenuEffect';
 import { routePaths } from '../../routes';
 import { fetchProjectsSumUp } from '@renderer/effects/ProjectEffects';
 import { createPackage, deletePackage } from '@renderer/effects/PackageEffect';
-
-const dependenciesTabKey = 'dependencies';
-const devDepenciesTabKey = 'devDependencies';
+import {
+  dependenciesTabKey,
+  devDepenciesTabKey,
+  projectDetailsStore,
+} from '@renderer/stores/ProjectDetailsStore';
+import { useUnit } from 'effector-react';
 
 const ProjectDetails: FunctionComponent = () => {
   const { id } = useParams<{ id: string }>();
 
   const { t } = useTranslation();
+
+  const tabConfigStore = useUnit(projectDetailsStore);
 
   const [formInstance] = Form.useForm();
 
@@ -124,8 +129,10 @@ const ProjectDetails: FunctionComponent = () => {
       label: t('project.details.tabs.label.dependencies'),
       children: (
         <DependenciesTable
+          tabKey={dependenciesTabKey}
           dependencies={dependencies}
           registryUrl={registryUrl}
+          pageConfig={tabConfigStore.dependencies}
         />
       ),
     },
@@ -134,8 +141,10 @@ const ProjectDetails: FunctionComponent = () => {
       label: t('project.details.tabs.label.devDependencies'),
       children: (
         <DependenciesTable
+          tabKey={devDepenciesTabKey}
           dependencies={devDependencies}
           registryUrl={registryUrl}
+          pageConfig={tabConfigStore.devDependencies}
         />
       ),
     },

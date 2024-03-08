@@ -20,10 +20,12 @@ import { routePaths } from '../../routes';
 import { fetchProjectsSumUp } from '@renderer/effects/ProjectEffects';
 import { createPackage, deletePackage } from '@renderer/effects/PackageEffect';
 import {
+  TabKey,
   dependenciesTabKey,
   devDepenciesTabKey,
-  projectDetailsStore,
-} from '@renderer/stores/ProjectDetailsStore';
+  dependenciesTabStore,
+  updateActiveTab,
+} from '@renderer/stores/DependenciesTabStore';
 import { useUnit } from 'effector-react';
 
 const ProjectDetails: FunctionComponent = () => {
@@ -31,7 +33,7 @@ const ProjectDetails: FunctionComponent = () => {
 
   const { t } = useTranslation();
 
-  const tabConfigStore = useUnit(projectDetailsStore);
+  const tabConfigStore = useUnit(dependenciesTabStore);
 
   const [formInstance] = Form.useForm();
 
@@ -205,7 +207,11 @@ const ProjectDetails: FunctionComponent = () => {
               </Form.Item>
             </Form>
           </div>
-          <Tabs defaultActiveKey={dependenciesTabKey} items={tabItems} />
+          <Tabs
+            defaultActiveKey={tabConfigStore.activeTab}
+            items={tabItems}
+            onChange={(activeKey) => updateActiveTab(activeKey as TabKey)}
+          />
           <div className="actionFooter">
             <ActionButton
               danger

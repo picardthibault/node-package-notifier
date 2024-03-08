@@ -9,12 +9,14 @@ export interface TabPageConfiguration {
   pageSize: number;
 }
 
-export interface ProjectDetailsStore {
+export interface DependenciesTabStore {
+  activeTab: TabKey;
   dependencies: TabPageConfiguration;
   devDependencies: TabPageConfiguration;
 }
 
-export const projectDetailsStore = createStore<ProjectDetailsStore>({
+const initialState: DependenciesTabStore = {
+  activeTab: dependenciesTabKey,
   dependencies: {
     page: 1,
     pageSize: 10,
@@ -23,7 +25,10 @@ export const projectDetailsStore = createStore<ProjectDetailsStore>({
     page: 1,
     pageSize: 10,
   },
-});
+};
+
+export const dependenciesTabStore =
+  createStore<DependenciesTabStore>(initialState);
 
 export const updateTabPageConfig = createEvent<{
   tabKey: TabKey;
@@ -31,7 +36,7 @@ export const updateTabPageConfig = createEvent<{
   pageSize: number;
 }>();
 
-projectDetailsStore.on(updateTabPageConfig, (state, payload) => {
+dependenciesTabStore.on(updateTabPageConfig, (state, payload) => {
   const newState = { ...state };
   newState[payload.tabKey] = {
     ...newState[payload.tabKey],
@@ -40,3 +45,14 @@ projectDetailsStore.on(updateTabPageConfig, (state, payload) => {
   };
   return newState;
 });
+
+export const updateActiveTab = createEvent<TabKey>();
+
+dependenciesTabStore.on(updateActiveTab, (state, payload) => ({
+  ...state,
+  activeTab: payload,
+}));
+
+export const resetDependenciesTabStore = createEvent();
+
+dependenciesTabStore.on(resetDependenciesTabStore, () => initialState);

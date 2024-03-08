@@ -21,7 +21,7 @@ import {
   TabPageConfiguration,
   TabKey,
   updateTabPageConfig,
-} from '@renderer/stores/ProjectDetailsStore';
+} from '@renderer/stores/DependenciesTabStore';
 
 interface DependenciesTableProps {
   tabKey: TabKey;

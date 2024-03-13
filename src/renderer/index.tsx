@@ -22,7 +22,7 @@ if (root) {
             },
             components: {
               Layout: {
-                colorBgBody: '#FFFFFF',
+                bodyBg: '#FFFFFF',
               },
               Button: {
                 borderRadius: 4,

@@ -19,14 +19,21 @@ import { navigateTo } from '@renderer/effects/MenuEffect';
 import { routePaths } from '../../routes';
 import { fetchProjectsSumUp } from '@renderer/effects/ProjectEffects';
 import { createPackage, deletePackage } from '@renderer/effects/PackageEffect';
-
-const dependenciesTabKey = 'dependencies';
-const devDepenciesTabKey = 'devDependencies';
+import {
+  TabKey,
+  dependenciesTabKey,
+  devDepenciesTabKey,
+  dependenciesTabStore,
+  updateActiveTab,
+} from '@renderer/stores/DependenciesTabStore';
+import { useUnit } from 'effector-react';
 
 const ProjectDetails: FunctionComponent = () => {
   const { id } = useParams<{ id: string }>();
 
   const { t } = useTranslation();
+
+  const tabConfigStore = useUnit(dependenciesTabStore);
 
   const [formInstance] = Form.useForm();
 
@@ -124,8 +131,10 @@ const ProjectDetails: FunctionComponent = () => {
       label: t('project.details.tabs.label.dependencies'),
       children: (
         <DependenciesTable
+          tabKey={dependenciesTabKey}
           dependencies={dependencies}
           registryUrl={registryUrl}
+          pageConfig={tabConfigStore.dependencies}
         />
       ),
     },
@@ -134,8 +143,10 @@ const ProjectDetails: FunctionComponent = () => {
       label: t('project.details.tabs.label.devDependencies'),
       children: (
         <DependenciesTable
+          tabKey={devDepenciesTabKey}
           dependencies={devDependencies}
           registryUrl={registryUrl}
+          pageConfig={tabConfigStore.devDependencies}
         />
       ),
     },
@@ -196,7 +207,11 @@ const ProjectDetails: FunctionComponent = () => {
               </Form.Item>
             </Form>
           </div>
-          <Tabs defaultActiveKey={dependenciesTabKey} items={tabItems} />
+          <Tabs
+            defaultActiveKey={tabConfigStore.activeTab}
+            items={tabItems}
+            onChange={(activeKey) => updateActiveTab(activeKey as TabKey)}
+          />
           <div className="actionFooter">
             <ActionButton
               danger

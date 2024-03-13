@@ -8,6 +8,7 @@ import { routePaths } from '../../routes';
 import { useUnit } from 'effector-react';
 import { MenuStore, menuStore } from '@renderer/stores/MenuStore';
 import { navigateTo } from '@renderer/effects/MenuEffect';
+import { resetDependenciesTabStore } from '@renderer/stores/DependenciesTabStore';
 
 export type SideMenuItem = MenuItemType | SubMenuType;
 
@@ -57,6 +58,7 @@ const SideMenu: FunctionComponent<SideMenuProps> = (props) => {
   }, [menuKeys, currentLocation]);
 
   const onClick: MenuProps['onClick'] = (menuItem) => {
+    resetDependenciesTabStore();
     void navigateTo(menuItem.key);
     navigate(menuItem.key);
   };

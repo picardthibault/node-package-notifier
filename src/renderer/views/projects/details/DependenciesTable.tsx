@@ -17,16 +17,23 @@ import { packageListStore } from '@renderer/stores/PackageListStore';
 import { createPackage, deletePackage } from '@renderer/effects/PackageEffect';
 import { GetPackagesResult } from '@type/PackageListenerArgs';
 import { navigateTo } from '@renderer/effects/MenuEffect';
+import {
+  TabPageConfiguration,
+  TabKey,
+  updateTabPageConfig,
+} from '@renderer/stores/DependenciesTabStore';
 
 interface DependenciesTableProps {
+  tabKey: TabKey;
   dependencies: ParsedDependency[];
   registryUrl: string;
+  pageConfig: TabPageConfiguration;
 }
 
 const DependenciesTable: React.FunctionComponent<DependenciesTableProps> = (
   props,
 ) => {
-  const { dependencies, registryUrl } = props;
+  const { tabKey, dependencies, registryUrl, pageConfig: tabConfig } = props;
 
   const { t } = useTranslation();
 
@@ -130,8 +137,13 @@ const DependenciesTable: React.FunctionComponent<DependenciesTableProps> = (
         key: dependency.name,
       }))}
       pagination={{
+        current: tabConfig.page,
+        defaultPageSize: tabConfig.pageSize,
         position: ['bottomCenter'],
         showSizeChanger: true,
+        onChange(page, pageSize) {
+          updateTabPageConfig({ tabKey, page, pageSize });
+        },
       }}
     />
   );

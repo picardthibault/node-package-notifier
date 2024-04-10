@@ -2,9 +2,8 @@ import React, { FunctionComponent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Title from '@renderer/components/Title/Title';
 import { useForm } from 'antd/es/form/Form';
-import { Form, Input, Space } from 'antd';
+import { Form, Input, Space, notification } from 'antd';
 import ActionButton from '@renderer/components/Button/ActionButton';
-import { openAlert } from '@renderer/components/Alert/Alert';
 import { ProjectCreationArgs } from '@type/ProjectListenerArgs';
 import { routePaths } from '../../routes';
 import RegistryField from '@renderer/components/Form/RegistryField';
@@ -14,6 +13,8 @@ import FilePathField from '@renderer/components/Form/FilePathField';
 
 const ProjectCreation: FunctionComponent = () => {
   const { t } = useTranslation();
+
+  const [openAlert, contextHolder] = notification.useNotification();
 
   const [formInstance] = useForm();
 
@@ -47,13 +48,14 @@ const ProjectCreation: FunctionComponent = () => {
       .then((projectCreationResult) => {
         setIsLoading(false);
         if (projectCreationResult.error) {
-          openAlert(
-            'error',
-            t('project.creation.alert.title.error'),
-            projectCreationResult.error,
-          );
+          openAlert.error({
+            message: t('project.creation.alert.title.error'),
+            description: projectCreationResult.error,
+          });
         } else {
-          openAlert('success', t('project.creation.alert.title.success'));
+          openAlert.success({
+            message: t('project.creation.alert.title.success'),
+          });
           void fetchProjectsSumUp();
           void navigateTo(
             routePaths.projectDetails.generate(
@@ -66,6 +68,7 @@ const ProjectCreation: FunctionComponent = () => {
 
   return (
     <>
+      {contextHolder}
       <Title content={t('project.creation.title')} />
       <Form
         name="projectCreation"

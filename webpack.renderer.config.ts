@@ -2,11 +2,20 @@ import type { Configuration } from 'webpack';
 import * as path from 'path';
 import { rules } from './webpack.rules';
 import { rendererPlugins } from './webpack.plugins';
+import { loader as miniCssLoader } from 'mini-css-extract-plugin';
 
 rules.push({
   test: /\.s[ac]ss$/i,
   use: [
-    { loader: 'style-loader' },
+    /* {
+      loader: 'style-loader',
+      options: {
+        attributes: {
+          nonce: "abcdefghijklmnopqrstuvwxyz"
+        }
+      }
+    }, */
+    { loader: miniCssLoader },
     { loader: 'css-loader' },
     { loader: 'sass-loader' },
   ],
@@ -30,4 +39,5 @@ export const rendererConfig: Configuration = {
       '@renderer/views': path.resolve(__dirname, 'src/renderer/views'),
     },
   },
+  devtool: 'source-map'
 };

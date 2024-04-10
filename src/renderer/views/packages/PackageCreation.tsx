@@ -1,10 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { AutoComplete, Form, Space } from 'antd';
+import { AutoComplete, Form, Space, notification } from 'antd';
 import { useTranslation } from 'react-i18next';
 import ActionButton from '@renderer/components/Button/ActionButton';
 import Title from '@renderer/components/Title/Title';
 import { routePaths } from '../../routes';
-import { openAlert } from '@renderer/components/Alert/Alert';
 import LinkButton from '@renderer/components/Button/LinkButton';
 import RegistryField from '@renderer/components/Form/RegistryField';
 import { createPackage } from '@renderer/effects/PackageEffect';
@@ -17,6 +16,8 @@ interface PackageFormField {
 
 export const PackageCreation = (): JSX.Element => {
   const { t } = useTranslation();
+
+  const [openAlert, contextHolder] = notification.useNotification();
 
   const [creationLoading, setCreationLoading] = useState<boolean>(false);
   const [suggestions, setSuggestions] = useState<
@@ -31,10 +32,15 @@ export const PackageCreation = (): JSX.Element => {
     return createPackage.done.watch(({ result }) => {
       setCreationLoading(false);
       if (!result) {
-        openAlert('success', t('package.creation.alert.title.success'));
+        openAlert.success({
+          message: t('package.creation.alert.title.success'),
+        });
         void navigateTo(routePaths.packageList.generate());
       } else {
-        openAlert('error', t('package.creation.alert.title.error'), result);
+        openAlert.error({
+          message: t('package.creation.alert.title.error'),
+          description: result,
+        });
       }
     });
   });
@@ -74,6 +80,7 @@ export const PackageCreation = (): JSX.Element => {
 
   return (
     <>
+      {contextHolder}
       <LinkButton
         to={routePaths.packageList.generate()}
         label={t('common.back')}

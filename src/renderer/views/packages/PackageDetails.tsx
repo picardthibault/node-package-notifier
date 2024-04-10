@@ -1,12 +1,11 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import Title from '@renderer/components/Title/Title';
-import { Form, Input, Table, Tooltip } from 'antd';
+import { Form, Input, Table, Tooltip, notification } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import Loading from '@renderer/components/Loading/Loading';
 import LinkButton from '@renderer/components/Button/LinkButton';
 import { useTranslation } from 'react-i18next';
 import { ColumnsType } from 'antd/es/table';
-import { openAlert } from '@renderer/components/Alert/Alert';
 import { useUnit } from 'effector-react';
 import {
   PackageDetailsStore,
@@ -23,6 +22,8 @@ interface TableItemType {
 
 const PackageDetails: FunctionComponent = () => {
   const { t } = useTranslation();
+
+  const [openAlert, contextHolder] = notification.useNotification();
 
   const { packageName, registryUrl } =
     useUnit<PackageDetailsStore>(packageDetailsStore);
@@ -53,13 +54,12 @@ const PackageDetails: FunctionComponent = () => {
             'registryUrl',
             getPackageResult.packageDetails.registryUrl,
           );
-          openAlert(
-            'error',
-            t('package.details.alert.title.error'),
-            t('package.details.alert.description.error', {
+          openAlert.error({
+            message: t('package.details.alert.title.error'),
+            description: t('package.details.alert.description.error', {
               cause: getPackageResult.error,
             }),
-          );
+          });
         } else {
           formInstance.setFieldsValue({
             registryUrl: getPackageResult.packageDetails.registryUrl,
@@ -116,6 +116,7 @@ const PackageDetails: FunctionComponent = () => {
 
   return (
     <>
+      {contextHolder}
       {isLoading ? (
         <Loading />
       ) : (

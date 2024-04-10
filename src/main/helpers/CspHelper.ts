@@ -9,7 +9,7 @@ import { isDevEnv } from './AppLifeCycleHelper';
 export let cspNonce: string;
 
 export const generateCspNonce = () => {
-  cspNonce = generateKey();
+  cspNonce = isDevEnv() ? 'devOnly' : generateKey();
   overrideDefaultSessionCspHeader();
 };
 

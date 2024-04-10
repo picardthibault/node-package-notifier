@@ -4,18 +4,24 @@ import { rules } from './webpack.rules';
 import { rendererPlugins } from './webpack.plugins';
 import { loader as miniCssLoader } from 'mini-css-extract-plugin';
 
-rules.push({
-  test: /\.s[ac]ss$/i,
-  use: [
-    /* {
+const getStyleLoaderPlugin = () => {
+  if (process.env.ENVIRONMENT !== undefined && process.env.ENVIRONMENT === 'DEV') {
+    return { 
       loader: 'style-loader',
       options: {
         attributes: {
-          nonce: "abcdefghijklmnopqrstuvwxyz"
+          nonce: "devOnly"
         }
       }
-    }, */
-    { loader: miniCssLoader },
+    };
+  }
+  return { loader: miniCssLoader };
+}
+
+rules.push({
+  test: /\.s[ac]ss$/i,
+  use: [
+    getStyleLoaderPlugin(),
     { loader: 'css-loader' },
     { loader: 'sass-loader' },
   ],

@@ -8,7 +8,6 @@ import App from './App';
 import { RouterProvider, createMemoryRouter } from 'react-router-dom';
 
 const cspNonce = window.cspManagement.generateNonce();
-console.log(`cspNonce : ${cspNonce}`);
 
 const routeProvider = createMemoryRouter([{ path: '*', element: <App /> }]);
 

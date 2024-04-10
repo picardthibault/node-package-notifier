@@ -53,8 +53,7 @@ const ProjectDetails: FunctionComponent = () => {
   const fetchProjectDetails = useCallback(() => {
     setIsLoading(true);
 
-    // Reset fields and tables
-    formInstance.resetFields();
+    // Reset tables
     setDependencies([]);
     setDevDependencies([]);
 
@@ -69,6 +68,7 @@ const ProjectDetails: FunctionComponent = () => {
           registryUrl: result.projectDetails.registryUrl,
         });
         if (result.error) {
+          formInstance.resetFields(['version', 'description']);
           openAlert.error({
             message: t('project.details.alert.title.loadProjectError'),
             description: t(

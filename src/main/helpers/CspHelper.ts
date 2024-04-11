@@ -74,7 +74,7 @@ const patchFileProtocol = () => {
 
       return responseData;
     } catch (err) {
-      log.info('Error during handling file:// protocole', err);
+      log.error('Error during handling file:// protocole', err);
       throw err;
     }
   });

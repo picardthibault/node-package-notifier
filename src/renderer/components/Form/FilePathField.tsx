@@ -1,7 +1,6 @@
-import { Form, Input, InputRef } from 'antd';
+import { Form, Input, InputRef, notification } from 'antd';
 import { FormInstance, Rule } from 'antd/es/form';
 import React, { DragEvent, FunctionComponent, useRef } from 'react';
-import { openAlert } from '../Alert/Alert';
 import { useTranslation } from 'react-i18next';
 import { FolderOpenOutlined } from '@ant-design/icons';
 
@@ -21,6 +20,8 @@ const FilePathField: FunctionComponent<Props> = (props) => {
 
   const { t } = useTranslation();
 
+  const [openAlert, contextHolder] = notification.useNotification();
+
   const inputRef = useRef<InputRef | null>(null);
 
   const onDrop = (event: DragEvent<HTMLInputElement>) => {
@@ -31,7 +32,9 @@ const FilePathField: FunctionComponent<Props> = (props) => {
       onChange();
       inputRef.current?.focus();
     } else {
-      openAlert('error', t('project.creation.alert.title.invalidSelection'));
+      openAlert.error({
+        message: t('project.creation.alert.title.invalidSelection'),
+      });
     }
     event.dataTransfer.clearData();
   };
@@ -56,16 +59,19 @@ const FilePathField: FunctionComponent<Props> = (props) => {
   );
 
   return (
-    <Form.Item label={label} name={name} tooltip={tooltip} rules={rules}>
-      <Input
-        name={name}
-        placeholder={placeholder}
-        onChange={onChange}
-        onDrop={onDrop}
-        ref={inputRef}
-        addonAfter={folderAddon}
-      />
-    </Form.Item>
+    <>
+      {contextHolder}
+      <Form.Item label={label} name={name} tooltip={tooltip} rules={rules}>
+        <Input
+          name={name}
+          placeholder={placeholder}
+          onChange={onChange}
+          onDrop={onDrop}
+          ref={inputRef}
+          addonAfter={folderAddon}
+        />
+      </Form.Item>
+    </>
   );
 };
 

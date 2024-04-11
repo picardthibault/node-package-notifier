@@ -8,6 +8,7 @@ import {
   PackageSuggestionArgs,
 } from '../types/PackageListenerArgs';
 import {
+  CspChannel,
   PackageListenerChannel,
   ProjectListenerChannel,
 } from '../types/IpcChannel';
@@ -75,4 +76,8 @@ contextBridge.exposeInMainWorld('projectManagement', {
       ProjectListenerChannel.FETCH_LATEST_VERSION,
       fetchLatestVersionArgs,
     ),
+});
+
+contextBridge.exposeInMainWorld('cspManagement', {
+  generateNonce: () => ipcRenderer.sendSync(CspChannel.GET_CSP_NONCE),
 });

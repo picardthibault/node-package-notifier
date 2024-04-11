@@ -52,5 +52,8 @@ declare global {
         fetchLatestVersionArgs: FetchLatestVersionArgs,
       ) => Promise<string | undefined>;
     };
+    cspManagement: {
+      generateNonce: () => string;
+    };
   }
 }

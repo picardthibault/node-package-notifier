@@ -2,12 +2,13 @@
     .sideMenu{
         background: none;
         border-inline-end: 0;
-        color: #FFFFFF;
+        color: $white-color;
 
         .ant-menu-item , .ant-menu-submenu-title, .ant-menu-submenu {
             border-radius: 0;
             margin-inline: 0;
             width: 100%;
+            color: $white-color;
         }
 
         .ant-menu-submenu, .ant-menu-submenu-title {
@@ -23,7 +24,7 @@
         }
 
         .ant-menu-item-selected, .ant-menu-item-active, .ant-menu-submenu-title {
-            color: #FFFFFF;
+            color: $white-color;
         }
         
         .ant-menu-item-selected, .ant-menu-item-active, .ant-menu-submenu-active {

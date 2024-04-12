@@ -5,18 +5,21 @@ import { rendererPlugins } from './webpack.plugins';
 import { loader as miniCssLoader } from 'mini-css-extract-plugin';
 
 const getStyleLoaderPlugin = () => {
-  if (process.env.ENVIRONMENT !== undefined && process.env.ENVIRONMENT === 'DEV') {
-    return { 
+  if (
+    process.env.ENVIRONMENT !== undefined &&
+    process.env.ENVIRONMENT === 'DEV'
+  ) {
+    return {
       loader: 'style-loader',
       options: {
         attributes: {
-          nonce: "devOnly"
-        }
-      }
+          nonce: 'devOnly',
+        },
+      },
     };
   }
   return { loader: miniCssLoader };
-}
+};
 
 rules.push({
   test: /\.s[ac]ss$/i,
@@ -45,5 +48,5 @@ export const rendererConfig: Configuration = {
       '@renderer/views': path.resolve(__dirname, 'src/renderer/views'),
     },
   },
-  devtool: 'source-map'
+  devtool: 'source-map',
 };

@@ -13,9 +13,9 @@ const tsCheckerWebpackPlugin = new ForkTsCheckerWebpackPlugin({
 export const rendererPlugins = [
   tsCheckerWebpackPlugin,
   new MiniCssExtractPlugin({
-    filename: "css/[name].css",
-    chunkFilename: "css/[name].css"
-  })
+    filename: 'css/[name].css',
+    chunkFilename: 'css/[name].css',
+  }),
 ];
 
 export const mainPlugins = [

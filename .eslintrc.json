@@ -18,6 +18,16 @@
     "plugin:import/typescript",
     "plugin:prettier/recommended"
   ],
+  "rules": {
+    "@typescript-eslint/restrict-template-expressions": ["error", { 
+      "allowAny": false,
+      "allowBoolean": false,
+      "allowNullish": true,
+      "allowNumber": true,
+      "allowRegExp": false,
+      "allowNever": false
+     }]
+  },
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "project": true

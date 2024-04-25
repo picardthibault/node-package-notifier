@@ -90,7 +90,7 @@ const patchHttpProtocol = () => {
       const response = await fetch(request);
       if (response.ok) {
         const contentType = response.headers.get('content-type');
-        if (!contentType || !contentType.includes('text/html')) {
+        if (!contentType?.includes('text/html')) {
           return response;
         }
         const htmlContent = await response.text();

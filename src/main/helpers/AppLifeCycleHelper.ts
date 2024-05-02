@@ -1,12 +1,20 @@
 import { app, BrowserWindow } from 'electron';
 import log from 'electron-log';
 import * as path from 'path';
+import { generateCspNonce } from './CspHelper';
+
+export const isDevEnv = (): boolean => {
+  return (
+    process.env.ENVIRONMENT !== undefined && process.env.ENVIRONMENT === 'DEV'
+  );
+};
 
 export function createMainWindow(
   preloadEntry: string,
   mainWindowEntry: string,
 ): BrowserWindow {
   log.info('Create main Window');
+  generateCspNonce();
   const mainWindow = new BrowserWindow({
     title: 'Node Package Notifier',
     height: 1050,

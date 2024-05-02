@@ -1,6 +1,18 @@
 # Changelog
 
-## V2.0.0
+## v2.0.1
+
+### Added
+- CSP security
+
+### Modified
+- Improve navigation between project details and package details view
+- Update dependencies
+
+### Fix
+- Fix a bug on follow/unfollow alert present on project details view
+
+## v2.0.0
 
 ### Added
 - Add the project section that can be used to consult project direct dependencies version

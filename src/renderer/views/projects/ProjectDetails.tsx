@@ -7,10 +7,9 @@ import React, {
 import { useParams } from 'react-router-dom';
 import Title from '@renderer/components/Title/Title';
 import Loading from '@renderer/components/Loading/Loading';
-import { Form, Input, Tabs, TabsProps } from 'antd';
+import { Form, Input, Tabs, TabsProps, notification } from 'antd';
 import { useTranslation } from 'react-i18next';
 import TextArea from 'antd/es/input/TextArea';
-import { openAlert } from '@renderer/components/Alert/Alert';
 import DependenciesTable from './details/DependenciesTable';
 import { ParsedDependency } from '@type/ProjectInfo';
 import ActionButton from '@renderer/components/Button/ActionButton';
@@ -18,14 +17,24 @@ import { DeleteOutlined } from '@ant-design/icons';
 import { navigateTo } from '@renderer/effects/MenuEffect';
 import { routePaths } from '../../routes';
 import { fetchProjectsSumUp } from '@renderer/effects/ProjectEffects';
-
-const dependenciesTabKey = 'dependencies';
-const devDepenciesTabKey = 'devDependencies';
+import { createPackage, deletePackage } from '@renderer/effects/PackageEffect';
+import {
+  TabKey,
+  dependenciesTabKey,
+  devDepenciesTabKey,
+  dependenciesTabStore,
+  updateActiveTab,
+} from '@renderer/stores/DependenciesTabStore';
+import { useUnit } from 'effector-react';
 
 const ProjectDetails: FunctionComponent = () => {
   const { id } = useParams<{ id: string }>();
 
   const { t } = useTranslation();
+
+  const [openAlert, contextHolder] = notification.useNotification();
+
+  const tabConfigStore = useUnit(dependenciesTabStore);
 
   const [formInstance] = Form.useForm();
 
@@ -44,8 +53,7 @@ const ProjectDetails: FunctionComponent = () => {
   const fetchProjectDetails = useCallback(() => {
     setIsLoading(true);
 
-    // Reset fields and tables
-    formInstance.resetFields();
+    // Reset tables
     setDependencies([]);
     setDevDependencies([]);
 
@@ -60,13 +68,17 @@ const ProjectDetails: FunctionComponent = () => {
           registryUrl: result.projectDetails.registryUrl,
         });
         if (result.error) {
-          openAlert(
-            'error',
-            t('project.details.alert.title.loadProjectError'),
-            t('project.details.alert.description.loadProjectError', {
-              cause: result.error,
-            }),
-          );
+          formInstance.resetFields(['version', 'description']);
+          openAlert.error({
+            message: t('project.details.alert.title.loadProjectError'),
+            description: t(
+              'project.details.alert.description.loadProjectError',
+              {
+                cause: result.error,
+              },
+            ),
+            placement: 'topRight',
+          });
         } else if (result.projectDetails.parsedProject) {
           formInstance.setFieldsValue({
             version: result.projectDetails.parsedProject.version,
@@ -77,11 +89,10 @@ const ProjectDetails: FunctionComponent = () => {
             result.projectDetails.parsedProject.devDependencies,
           );
         } else {
-          openAlert(
-            'error',
-            t('project.details.alert.title.loadProjectError'),
-            t('project.details.alert.description.noProjectData'),
-          );
+          openAlert.error({
+            message: t('project.details.alert.title.loadProjectError'),
+            description: t('project.details.alert.description.noProjectData'),
+          });
         }
       });
     }
@@ -91,14 +102,41 @@ const ProjectDetails: FunctionComponent = () => {
     fetchProjectDetails();
   }, [fetchProjectDetails]);
 
+  useEffect(() => {
+    return createPackage.done.watch(({ result }) => {
+      if (!result) {
+        openAlert.success({
+          message: t('project.details.alert.title.dependencyFollowed'),
+        });
+      } else {
+        openAlert.error({
+          message: t('project.details.alert.title.dependencyFollowError'),
+          description: t(
+            'project.details.alert.description.dependencyFollowError',
+          ),
+        });
+      }
+    });
+  });
+
+  useEffect(() => {
+    return deletePackage.done.watch(() => {
+      openAlert.success({
+        message: t('project.details.alert.title.dependencyUnfollowed'),
+      });
+    });
+  });
+
   const tabItems: TabsProps['items'] = [
     {
       key: dependenciesTabKey,
       label: t('project.details.tabs.label.dependencies'),
       children: (
         <DependenciesTable
+          tabKey={dependenciesTabKey}
           dependencies={dependencies}
           registryUrl={registryUrl}
+          pageConfig={tabConfigStore.dependencies}
         />
       ),
     },
@@ -107,8 +145,10 @@ const ProjectDetails: FunctionComponent = () => {
       label: t('project.details.tabs.label.devDependencies'),
       children: (
         <DependenciesTable
+          tabKey={devDepenciesTabKey}
           dependencies={devDependencies}
           registryUrl={registryUrl}
+          pageConfig={tabConfigStore.devDependencies}
         />
       ),
     },
@@ -117,12 +157,11 @@ const ProjectDetails: FunctionComponent = () => {
   const onDeleteClick = useCallback(() => {
     if (id) {
       void window.projectManagement.delete(id).then(() => {
-        openAlert(
-          'success',
-          t('project.details.alert.title.projectRemoved', {
+        openAlert.success({
+          message: t('project.details.alert.title.projectRemoved', {
             projectName: title,
           }),
-        );
+        });
         void fetchProjectsSumUp();
         void navigateTo(routePaths.packageList.generate());
       });
@@ -131,6 +170,7 @@ const ProjectDetails: FunctionComponent = () => {
 
   return (
     <>
+      {contextHolder}
       {isLoading ? (
         <Loading />
       ) : (
@@ -169,7 +209,11 @@ const ProjectDetails: FunctionComponent = () => {
               </Form.Item>
             </Form>
           </div>
-          <Tabs defaultActiveKey={dependenciesTabKey} items={tabItems} />
+          <Tabs
+            defaultActiveKey={tabConfigStore.activeTab}
+            items={tabItems}
+            onChange={(activeKey) => updateActiveTab(activeKey as TabKey)}
+          />
           <div className="actionFooter">
             <ActionButton
               danger

@@ -2,6 +2,8 @@
     "common": {
         "na": "N/A",
         "back": "Back",
+        "yes": "Yes",
+        "no": "No",
         "form": {
             "rules": {
                 "required": "This field is required"
@@ -185,6 +187,14 @@
                     "noProjectData": "Unable to extract project details",
                     "fetchLatestVerionError": "An error occurred while fetching latest version of \"{{package}}\".",
                     "dependencyFollowError": "An error occurred while fetching dependency details : \"{{cause}}\"."
+                }
+            },
+            "popUp": {
+                "title": {
+                    "delete": "Delete the project"
+                },
+                "description": {
+                    "delete": "Are you sure to delete this project ?"
                 }
             }
         }

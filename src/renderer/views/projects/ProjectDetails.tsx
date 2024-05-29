@@ -111,9 +111,7 @@ const ProjectDetails: FunctionComponent = () => {
       } else {
         openAlert.error({
           message: t('project.details.alert.title.dependencyFollowError'),
-          description: t(
-            'project.details.alert.description.dependencyFollowError',
-          ),
+          description: result,
         });
       }
     });

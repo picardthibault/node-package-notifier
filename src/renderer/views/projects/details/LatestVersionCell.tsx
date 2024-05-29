@@ -13,7 +13,7 @@ const LatestVersionCell: React.FunctionComponent<Props> = (props) => {
 
   const { t } = useTranslation();
 
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const [latestVersion, setLatestVersion] = useState<string | undefined>();
 

@@ -185,8 +185,7 @@
                 "description": {
                     "loadProjectError": "An error occurred while loading project details: {{cause}}.",
                     "noProjectData": "Unable to extract project details",
-                    "fetchLatestVerionError": "An error occurred while fetching latest version of \"{{package}}\".",
-                    "dependencyFollowError": "An error occurred while fetching dependency details : \"{{cause}}\"."
+                    "fetchLatestVerionError": "An error occurred while fetching latest version of \"{{package}}\"."
                 }
             },
             "popUp": {

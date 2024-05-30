@@ -14,6 +14,7 @@ import {
 import { MenuStore, menuStore } from '@renderer/stores/MenuStore';
 import { EyeOutlined } from '@ant-design/icons';
 import { navigateTo } from '@renderer/effects/MenuEffect';
+import PackageVersionTag from '@renderer/components/Tag/Tag';
 
 interface TableItemType {
   key: number;
@@ -116,6 +117,9 @@ const PackageDetails: FunctionComponent = () => {
       key: 'version',
       title: t('package.details.table.columns.version'),
       dataIndex: 'tagVersion',
+      render: (tagVersion: string) => (
+        <PackageVersionTag content={tagVersion} />
+      ),
     },
   ];
 

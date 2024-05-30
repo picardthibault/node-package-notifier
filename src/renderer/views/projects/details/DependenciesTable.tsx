@@ -22,6 +22,7 @@ import {
   TabKey,
   updateTabPageConfig,
 } from '@renderer/stores/DependenciesTabStore';
+import PackageVersionTag from '@renderer/components/Tag/Tag';
 
 interface DependenciesTableProps {
   tabKey: TabKey;
@@ -56,13 +57,17 @@ const DependenciesTable: React.FunctionComponent<DependenciesTableProps> = (
       title: t('project.details.table.columns.version'),
       dataIndex: 'version',
       key: 'version',
+      render: (version: string) => <PackageVersionTag content={version} />,
     },
     {
       title: t('project.details.table.columns.latestVersion'),
       key: 'latestVersion',
-      dataIndex: 'name',
-      render: (name: string) => (
-        <LatestVersionCell dependencyName={name} registryUrl={registryUrl} />
+      render: (record: ParsedDependency) => (
+        <LatestVersionCell
+          dependencyName={record.name}
+          dependencyCurrenVersion={record.version}
+          registryUrl={registryUrl}
+        />
       ),
     },
     {

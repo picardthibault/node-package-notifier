@@ -13,11 +13,19 @@ interface Props {
   color?: PackageVersionTagColor;
 }
 
+const computeClassName = (color?: PackageVersionTagColor) => {
+  if (!color) {
+    return '';
+  }
+
+  return `${color}-tag`;
+};
+
 const PackageVersionTag: FunctionComponent<Props> = (props) => {
   const { content, tooltip, color } = props;
   return (
     <Tooltip title={tooltip}>
-      <Tag color={color}>{content}</Tag>
+      <Tag className={computeClassName(color)}>{content}</Tag>
     </Tooltip>
   );
 };

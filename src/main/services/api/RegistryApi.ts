@@ -8,10 +8,11 @@ export interface PackageInfo {
     latest: string;
     [key: string]: string;
   };
-  license: 'string';
-  homepage: 'string';
+  time: Record<string, string>;
+  license: string;
+  homepage: string;
   repository: {
-    url: 'string';
+    url: string;
   };
 }
 

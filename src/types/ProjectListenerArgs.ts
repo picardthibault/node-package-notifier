@@ -20,3 +20,9 @@ export interface FetchLatestVersionArgs {
   dependencyName: string;
   registryUrl?: string;
 }
+
+export interface FetchPublicationDateArgs {
+  dependencyName: string;
+  dependencyVersion: string;
+  registryUrl?: string;
+}

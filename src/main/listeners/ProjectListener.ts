@@ -2,6 +2,7 @@ import { dialog, ipcMain } from 'electron';
 import { ProjectListenerChannel } from '@type/IpcChannel';
 import {
   FetchLatestVersionArgs,
+  FetchPublicationDateArgs,
   GetProjectDetailsResult,
   ProjectCreationArgs,
   ProjectCreationResult,
@@ -15,6 +16,7 @@ import {
   isProjectNameUsed,
   fetchLatestVersion,
   deleteProject,
+  fetchVersionTime,
 } from '@main/services/project/ProjectService';
 import { ProjectSumUp } from '@type/ProjectInfo';
 import { getErrorMessage } from '@main/services/error/ErrorService';
@@ -112,12 +114,30 @@ ipcMain.handle(
     fetchLatestVersionArgs: FetchLatestVersionArgs,
   ): Promise<string | undefined> => {
     log.debug(
-      `Received fetch latest version IPC with dependency "${fetchLatestVersionArgs.dependencyName}" et registry URL "${fetchLatestVersionArgs.registryUrl}`,
+      `Received fetch latest version IPC with dependency "${fetchLatestVersionArgs.dependencyName}" and registry URL "${fetchLatestVersionArgs.registryUrl}`,
     );
 
     return fetchLatestVersion(
       fetchLatestVersionArgs.dependencyName,
       fetchLatestVersionArgs.registryUrl,
+    );
+  },
+);
+
+ipcMain.handle(
+  ProjectListenerChannel.FETCH_PUBLICATION_DATE,
+  async (
+    event,
+    fetchPublicationDateArgs: FetchPublicationDateArgs,
+  ): Promise<string | undefined> => {
+    log.debug(
+      `Received fetch publication date IPC with dependency "${fetchPublicationDateArgs.dependencyName}, version "${fetchPublicationDateArgs.dependencyVersion} and registry URL "${fetchPublicationDateArgs.registryUrl}`,
+    );
+
+    return fetchVersionTime(
+      fetchPublicationDateArgs.dependencyName,
+      fetchPublicationDateArgs.dependencyVersion,
+      fetchPublicationDateArgs.registryUrl,
     );
   },
 );

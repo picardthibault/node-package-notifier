@@ -7,6 +7,8 @@ export interface PackageDetails {
   description?: string;
   latest?: string;
   tags?: Tags;
+  time?: Time;
 }
 
 export type Tags = Record<string, string>;
+export type Time = Record<string, string | undefined>;

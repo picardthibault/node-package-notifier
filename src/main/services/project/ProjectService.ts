@@ -19,6 +19,7 @@ import {
   ProjectSumUp,
 } from '@type/ProjectInfo';
 import { GetProjectDetailsResult } from '@type/ProjectListenerArgs';
+import { PackageDetails } from '@type/PackageInfo';
 
 type Dependencies = Record<string, string>;
 
@@ -231,16 +232,16 @@ const parseDependencies = (dependencies?: Dependencies): ParsedDependency[] => {
 };
 
 /**
- * Fetch the latest version number of a project dependency
+ * Fetch details of project dependency
  *
  * @param dependencyName the name of the dependency
- * @param registryUrl the registry url on which the dependency latest tag should be fetched
- * @returns the string representing the latest version if the request succeed and the tag is present, undefined otherwise
+ * @param registryUrl the registry url on which the dependency details should be fetched
+ * @returns the dependency details if the package has been found on the registry, undefined otherwise
  */
-export const fetchLatestVersion = async (
+const fetchDependencyDetails = async (
   dependencyName: string,
   registryUrl?: string,
-): Promise<string | undefined> => {
+): Promise<PackageDetails | undefined> => {
   const adaptedRegistryUrl = registryUrl ? registryUrl : npmRegistryUrl;
   const packageDetails = await fetchPackageDetails(
     adaptedRegistryUrl,
@@ -252,6 +253,48 @@ export const fetchLatestVersion = async (
     );
     return undefined;
   } else {
-    return packageDetails.latest;
+    return packageDetails;
   }
+};
+
+/**
+ * Fetch the publication date of a specific version of a dependency
+ *
+ * @param dependencyName the name of the dependency
+ * @param dependencyVersion the version of the dependency
+ * @param registryUrl the registry url on which the dependency is published
+ * @returns the publication date if the dependency version exist on the registry, undefined otherwise
+ */
+export const fetchVersionTime = async (
+  dependencyName: string,
+  dependencyVersion: string,
+  registryUrl?: string,
+): Promise<string | undefined> => {
+  const dependencyDetails = await fetchDependencyDetails(
+    dependencyName,
+    registryUrl,
+  );
+  if (!dependencyDetails?.time) {
+    return undefined;
+  }
+
+  return dependencyDetails.time[dependencyVersion];
+};
+
+/**
+ * Fetch the latest version number of a project dependency
+ *
+ * @param dependencyName the name of the dependency
+ * @param registryUrl the registry url on which the dependency latest tag should be fetched
+ * @returns the string representing the latest version if the request succeed and the tag is present, undefined otherwise
+ */
+export const fetchLatestVersion = async (
+  dependencyName: string,
+  registryUrl?: string,
+): Promise<string | undefined> => {
+  const dependencyDetails = await fetchDependencyDetails(
+    dependencyName,
+    registryUrl,
+  );
+  return dependencyDetails?.latest;
 };

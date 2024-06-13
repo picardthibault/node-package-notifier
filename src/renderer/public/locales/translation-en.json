@@ -164,7 +164,7 @@
                     "actions": "Actions"
                 },
                 "values": {
-                    "unableToFetch": "Unable to fetch"
+                    "unableToFetch": "Unable to fetch on registry"
                 }
             },
             "tooltip": {

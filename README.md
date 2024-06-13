@@ -39,11 +39,11 @@ In order to build a windows appX you shall:
 - Add the following node
 
 ```xml
-<Application Id="npn" Executable="app\npn.exe" EntryPoint="Windows.FullTrustApplication">
+<Application Id="npn" Executable="app\node-package-notifier.exe" EntryPoint="Windows.FullTrustApplication">
 	<Extensions>
 	<desktop:Extension
 		Category="windows.startupTask"
-		Executable="app\npn.exe"
+		Executable="app\node-package-notifier.exe"
 		EntryPoint="Windows.FullTrustApplication">
 		<desktop:StartupTask TaskId="npnStartup" Enabled="true" DisplayName="node-package-notifier" />
 	</desktop:Extension>

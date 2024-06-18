@@ -10,7 +10,6 @@ import { PackagesView } from '@renderer/views/packages/PackagesView';
 import { routePaths } from './routes';
 import PackageDetails from '@renderer/views/packages/PackageDetails';
 import PageLayout from '@renderer/components/Layout/PageLayout';
-import { MenuItemType, SubMenuType } from 'antd/es/menu/hooks/useItems';
 import { useTranslation } from 'react-i18next';
 import {
   PlusCircleOutlined,
@@ -21,6 +20,7 @@ import ProjectCreation from '@renderer/views/projects/ProjectCreation';
 import ProjectDetails from '@renderer/views/projects/ProjectDetails';
 import { ProjectSumUp } from '@type/ProjectInfo';
 import { fetchProjectsSumUp } from './effects/ProjectEffects';
+import { MenuItemType, SubMenuType } from 'antd/es/menu/interface';
 
 const projectListMenuKey = 'projectList';
 

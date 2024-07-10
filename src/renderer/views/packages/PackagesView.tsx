@@ -19,6 +19,7 @@ import { routePaths } from '../../routes';
 import { updatePackageDetails } from '@renderer/stores/PackageDetailsStore';
 import { deletePackage, fetchPackages } from '@renderer/effects/PackageEffect';
 import { navigateTo } from '@renderer/effects/MenuEffect';
+import PackageVersionTag from '@renderer/components/Tag/Tag';
 
 interface TableItemType {
   key: string;
@@ -90,6 +91,7 @@ export const PackagesView = (): JSX.Element => {
       key: 'version',
       title: t('package.list.table.columns.version'),
       dataIndex: 'version',
+      render: (version: string) => <PackageVersionTag content={version} />,
     },
     {
       key: 'action',

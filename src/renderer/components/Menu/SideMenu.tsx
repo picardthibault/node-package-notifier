@@ -1,6 +1,5 @@
 import { Menu, MenuProps } from 'antd';
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
-import { MenuItemType, SubMenuType } from 'antd/es/menu/hooks/useItems';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import Sider from 'antd/es/layout/Sider';
 import { useNavigate } from 'react-router-dom';
@@ -9,6 +8,7 @@ import { useUnit } from 'effector-react';
 import { MenuStore, menuStore } from '@renderer/stores/MenuStore';
 import { navigateTo } from '@renderer/effects/MenuEffect';
 import { resetDependenciesTabStore } from '@renderer/stores/DependenciesTabStore';
+import { MenuItemType, SubMenuType } from 'antd/es/menu/interface';
 
 export type SideMenuItem = MenuItemType | SubMenuType;
 

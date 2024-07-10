@@ -1,0 +1,17 @@
+$blue-color: #0958D9;
+$orange-color: #d46b08;
+
+.red-tag {
+    color: $error-color;
+    border-color: $error-color;
+}
+
+.blue-tag {
+    color: $blue-color;
+    border-color: $blue-color;
+}
+
+.orange-tag {
+    color: $orange-color;
+    border-color: #d46b08;
+}

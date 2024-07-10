@@ -13,12 +13,22 @@ import {
 } from '@renderer/stores/PackageDetailsStore';
 import { MenuStore, menuStore } from '@renderer/stores/MenuStore';
 import { EyeOutlined } from '@ant-design/icons';
+import { navigateTo } from '@renderer/effects/MenuEffect';
+import PackageVersionTag from '@renderer/components/Tag/Tag';
 
 interface TableItemType {
   key: number;
   tagName: string;
   tagVersion: string;
 }
+
+const backMouseButtonListener: (to: string) => (event: MouseEvent) => void =
+  (to: string) => (event: MouseEvent) => {
+    if (event.button === 3) {
+      void navigateTo(to);
+    }
+    event.preventDefault();
+  };
 
 const PackageDetails: FunctionComponent = () => {
   const { t } = useTranslation();
@@ -36,6 +46,15 @@ const PackageDetails: FunctionComponent = () => {
   const [tags, setTags] = useState<TableItemType[]>([]);
 
   const [formInstance] = Form.useForm();
+
+  useEffect(() => {
+    const listener = backMouseButtonListener(previousSelectedKey);
+    window.addEventListener('mouseup', listener);
+
+    return () => {
+      window.removeEventListener('mouseup', listener);
+    };
+  });
 
   useEffect(() => {
     setIsLoading(true);
@@ -98,6 +117,9 @@ const PackageDetails: FunctionComponent = () => {
       key: 'version',
       title: t('package.details.table.columns.version'),
       dataIndex: 'tagVersion',
+      render: (tagVersion: string) => (
+        <PackageVersionTag content={tagVersion} />
+      ),
     },
   ];
 

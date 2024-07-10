@@ -31,6 +31,7 @@ function mapPackageInfoToPackageDetails(
     description: packageInfo.description,
     latest: packageInfo['dist-tags'].latest,
     tags: packageInfo['dist-tags'],
+    time: packageInfo.time,
   };
 }
 

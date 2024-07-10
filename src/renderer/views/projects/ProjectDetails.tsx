@@ -7,13 +7,13 @@ import React, {
 import { useParams } from 'react-router-dom';
 import Title from '@renderer/components/Title/Title';
 import Loading from '@renderer/components/Loading/Loading';
-import { Form, Input, Tabs, TabsProps, notification } from 'antd';
+import { Form, Input, Popconfirm, Tabs, TabsProps, notification } from 'antd';
 import { useTranslation } from 'react-i18next';
 import TextArea from 'antd/es/input/TextArea';
 import DependenciesTable from './details/DependenciesTable';
 import { ParsedDependency } from '@type/ProjectInfo';
 import ActionButton from '@renderer/components/Button/ActionButton';
-import { DeleteOutlined } from '@ant-design/icons';
+import { DeleteOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { navigateTo } from '@renderer/effects/MenuEffect';
 import { routePaths } from '../../routes';
 import { fetchProjectsSumUp } from '@renderer/effects/ProjectEffects';
@@ -111,9 +111,7 @@ const ProjectDetails: FunctionComponent = () => {
       } else {
         openAlert.error({
           message: t('project.details.alert.title.dependencyFollowError'),
-          description: t(
-            'project.details.alert.description.dependencyFollowError',
-          ),
+          description: result,
         });
       }
     });
@@ -154,7 +152,7 @@ const ProjectDetails: FunctionComponent = () => {
     },
   ];
 
-  const onDeleteClick = useCallback(() => {
+  const onDelete = useCallback(() => {
     if (id) {
       void window.projectManagement.delete(id).then(() => {
         openAlert.success({
@@ -215,14 +213,22 @@ const ProjectDetails: FunctionComponent = () => {
             onChange={(activeKey) => updateActiveTab(activeKey as TabKey)}
           />
           <div className="actionFooter">
-            <ActionButton
-              danger
-              type="default"
-              toolTip={t('project.details.tooltip.deleteProject')}
-              onClick={onDeleteClick}
+            <Popconfirm
+              icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
+              title={t('project.details.popUp.title.delete')}
+              description={t('project.details.popUp.description.delete')}
+              onConfirm={onDelete}
+              okText={t('common.yes')}
+              cancelText={t('common.no')}
             >
-              <DeleteOutlined />
-            </ActionButton>
+              <ActionButton
+                danger
+                type="default"
+                toolTip={t('project.details.tooltip.deleteProject')}
+              >
+                <DeleteOutlined />
+              </ActionButton>
+            </Popconfirm>
           </div>
         </>
       )}

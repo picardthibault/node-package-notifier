@@ -16,6 +16,7 @@ export enum ProjectListenerChannel {
   GET_PROJECTS_SUM_UP = 'projectChannelGetProjectsSumUp',
   GET_PROJECT_DETAILS = 'projectChannelGetProjectDetails',
   FETCH_LATEST_VERSION = 'projectChannelFetchLatestVersion',
+  FETCH_PUBLICATION_DATE = 'projectChannelFetchPublicationDate',
 }
 
 export enum CspChannel {

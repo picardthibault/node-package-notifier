@@ -2,6 +2,8 @@
     "common": {
         "na": "N/A",
         "back": "Back",
+        "yes": "Yes",
+        "no": "No",
         "form": {
             "rules": {
                 "required": "This field is required"
@@ -162,14 +164,17 @@
                     "actions": "Actions"
                 },
                 "values": {
-                    "unableToFetch": "Unable to fetch"
+                    "unableToFetch": "Unable to fetch on registry"
                 }
             },
             "tooltip": {
                 "viewPackage": "Open package details.",
                 "followPackage": "Follow this package and receive notifications when new version are published.",
                 "unfollowPackage": "Unfollow this package and stop receiving notifications when new version are released.",
-                "deleteProject": "Remove the project from your project list."
+                "deleteProject": "Remove the project from your project list.",
+                "newMajor": "New major version",
+                "newMinor": "New minor version",
+                "newPatch": "New patch version"
             },
             "alert": {
                 "title": {
@@ -183,8 +188,15 @@
                 "description": {
                     "loadProjectError": "An error occurred while loading project details: {{cause}}.",
                     "noProjectData": "Unable to extract project details",
-                    "fetchLatestVerionError": "An error occurred while fetching latest version of \"{{package}}\".",
-                    "dependencyFollowError": "An error occurred while fetching dependency details : \"{{cause}}\"."
+                    "fetchLatestVerionError": "An error occurred while fetching latest version of \"{{package}}\"."
+                }
+            },
+            "popUp": {
+                "title": {
+                    "delete": "Delete the project"
+                },
+                "description": {
+                    "delete": "Are you sure to delete this project ?"
                 }
             }
         }

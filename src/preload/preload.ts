@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-
 import { contextBridge, ipcRenderer } from 'electron';
 import {
   GetPackagesResult,
@@ -17,6 +15,7 @@ import {
   ProjectCreationResult,
   GetProjectDetailsResult,
   FetchLatestVersionArgs,
+  FetchPublicationDateArgs,
 } from '../types/ProjectListenerArgs';
 import { ProjectSumUp } from '../types/ProjectInfo';
 
@@ -75,6 +74,13 @@ contextBridge.exposeInMainWorld('projectManagement', {
     ipcRenderer.invoke(
       ProjectListenerChannel.FETCH_LATEST_VERSION,
       fetchLatestVersionArgs,
+    ),
+  fetchPublicationDate: (
+    fetchPublicationDateArgs: FetchPublicationDateArgs,
+  ): Promise<string | undefined> =>
+    ipcRenderer.invoke(
+      ProjectListenerChannel.FETCH_PUBLICATION_DATE,
+      fetchPublicationDateArgs,
     ),
 });
 

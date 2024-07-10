@@ -1,5 +1,21 @@
 # Changelog
 
+## v2.0.2
+
+### Added 
+
+- In project details, ask confirmation before deleting project
+- In project details, add package publication date
+- In project details, add a color on latest version package
+
+### Modifed
+
+- Improve navigation
+- Update dependencies
+
+### Fix
+- Fix visual bugs
+
 ## v2.0.1
 
 ### Added

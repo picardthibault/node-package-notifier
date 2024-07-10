@@ -4,8 +4,9 @@
 
 ### Added 
 
-- Ask confirmation before deleting project
-- Package publication date
+- In project details, ask confirmation before deleting project
+- In project details, add package publication date
+- In project details, add a color on latest version package
 
 ### Modifed
 

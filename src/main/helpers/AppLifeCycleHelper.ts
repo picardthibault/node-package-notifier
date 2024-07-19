@@ -9,6 +9,12 @@ export const isDevEnv = (): boolean => {
   );
 };
 
+export const isTestEnv = (): boolean => {
+  return (
+    process.env.ENVIRONMENT !== undefined && process.env.ENVIRONMENT === 'TEST'
+  );
+};
+
 export function createMainWindow(
   preloadEntry: string,
   mainWindowEntry: string,

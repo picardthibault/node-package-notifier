@@ -2,7 +2,11 @@ import './listeners/index';
 import '@main/helpers/LogConfiguration';
 import { app, BrowserWindow, Menu, nativeImage, Tray } from 'electron';
 import * as path from 'path';
-import { createMainWindow, isDevEnv } from '@main/helpers/AppLifeCycleHelper';
+import {
+  createMainWindow,
+  isDevEnv,
+  isTestEnv,
+} from '@main/helpers/AppLifeCycleHelper';
 import { launchUpdatePackageJob } from './jobs/PackageJobs';
 import log from 'electron-log';
 import i18n from './i18n';
@@ -87,6 +91,11 @@ app.on('ready', () => {
 
   // Start Jobs
   launchUpdatePackageJob();
+
+  if (isTestEnv()) {
+    log.info('Open app for test');
+    reopenApp();
+  }
 });
 
 app.on('window-all-closed', () => {

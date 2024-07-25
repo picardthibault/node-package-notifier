@@ -33,11 +33,11 @@ const computeTagColor = (
   }
 
   if (splitCurrentVersion[1] < splitLatestVersion[1]) {
-    return PackageVersionTagColor.ORANGE;
+    return PackageVersionTagColor.BLUE;
   }
 
   if (splitCurrentVersion[2] < splitLatestVersion[2]) {
-    return PackageVersionTagColor.BLUE;
+    return PackageVersionTagColor.GREEN;
   }
 
   return undefined;
@@ -49,9 +49,9 @@ const computeTagTooltip = (
   switch (tagColor) {
     case PackageVersionTagColor.RED:
       return i18n.t('project.details.tooltip.newMajor');
-    case PackageVersionTagColor.ORANGE:
-      return i18n.t('project.details.tooltip.newMinor');
     case PackageVersionTagColor.BLUE:
+      return i18n.t('project.details.tooltip.newMinor');
+    case PackageVersionTagColor.GREEN:
       return i18n.t('project.details.tooltip.newPatch');
     default:
       return undefined;

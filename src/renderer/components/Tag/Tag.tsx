@@ -3,8 +3,8 @@ import React, { FunctionComponent } from 'react';
 
 export enum PackageVersionTagColor {
   RED = 'red',
-  ORANGE = 'orange',
   BLUE = 'blue',
+  GREEN = 'green',
 }
 
 interface Props {

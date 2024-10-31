@@ -30,7 +30,7 @@ interface TableItemType {
   version: string;
 }
 
-export const PackagesView = (): JSX.Element => {
+export const PackagesView = (): React.JSX.Element => {
   const { t } = useTranslation();
 
   const [packages, setPackages] = useState<TableItemType[]>([]);

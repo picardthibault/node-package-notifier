@@ -1,4 +1,4 @@
-import Store = require('electron-store');
+import Store from 'electron-store';
 import { generateKey } from '@main/helpers/KeyStoreHelper';
 import { PackageDetails } from '@type/PackageInfo';
 

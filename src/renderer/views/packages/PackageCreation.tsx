@@ -14,7 +14,7 @@ interface PackageFormField {
   registryUrl?: string;
 }
 
-export const PackageCreation = (): JSX.Element => {
+export const PackageCreation = (): React.JSX.Element => {
   const { t } = useTranslation();
 
   const [openAlert, contextHolder] = notification.useNotification();

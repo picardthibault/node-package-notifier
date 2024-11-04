@@ -85,5 +85,6 @@ contextBridge.exposeInMainWorld('projectManagement', {
 });
 
 contextBridge.exposeInMainWorld('cspManagement', {
-  generateNonce: () => ipcRenderer.sendSync(CspChannel.GET_CSP_NONCE),
+  generateNonce: (): string =>
+    ipcRenderer.sendSync(CspChannel.GET_CSP_NONCE) as string,
 });

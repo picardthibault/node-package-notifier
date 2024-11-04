@@ -55,7 +55,7 @@ const SideMenu: FunctionComponent<SideMenuProps> = (props) => {
     }
 
     navigate(currentLocation);
-  }, [menuKeys, currentLocation]);
+  }, [menuKeys, currentLocation, navigate]);
 
   const onClick: MenuProps['onClick'] = (menuItem) => {
     resetDependenciesTabStore();

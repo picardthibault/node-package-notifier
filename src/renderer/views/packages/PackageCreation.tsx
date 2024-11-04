@@ -14,7 +14,7 @@ interface PackageFormField {
   registryUrl?: string;
 }
 
-export const PackageCreation = (): JSX.Element => {
+export const PackageCreation = (): React.JSX.Element => {
   const { t } = useTranslation();
 
   const [openAlert, contextHolder] = notification.useNotification();
@@ -71,7 +71,7 @@ export const PackageCreation = (): JSX.Element => {
       clearTimeout(suggestionTimeout);
     }
     setSuggestionTimeout(setTimeout(fetchSuggestions, 200));
-  }, [suggestionTimeout, setSuggestionTimeout]);
+  }, [suggestionTimeout, fetchSuggestions]);
 
   const onFinish = () => {
     setCreationLoading(true);

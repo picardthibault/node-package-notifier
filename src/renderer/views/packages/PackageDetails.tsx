@@ -103,7 +103,7 @@ const PackageDetails: FunctionComponent = () => {
         }
         setIsLoading(false);
       });
-  }, [packageName, registryUrl]);
+  }, [formInstance, openAlert, packageName, registryUrl, t]);
 
   const tableColumns: ColumnsType<TableItemType> = [
     {

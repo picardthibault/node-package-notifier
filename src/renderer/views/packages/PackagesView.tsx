@@ -30,7 +30,7 @@ interface TableItemType {
   version: string;
 }
 
-export const PackagesView = (): JSX.Element => {
+export const PackagesView = (): React.JSX.Element => {
   const { t } = useTranslation();
 
   const [packages, setPackages] = useState<TableItemType[]>([]);
@@ -67,7 +67,7 @@ export const PackagesView = (): JSX.Element => {
     );
 
     setPackages(tableItems);
-  }, [fetchedPackages]);
+  }, [fetchedPackages, t]);
 
   const tableColumns: ColumnsType<TableItemType> = [
     {

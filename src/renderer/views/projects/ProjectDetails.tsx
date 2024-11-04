@@ -96,7 +96,7 @@ const ProjectDetails: FunctionComponent = () => {
         }
       });
     }
-  }, [id]);
+  }, [formInstance, id, openAlert, t]);
 
   useEffect(() => {
     fetchProjectDetails();
@@ -164,7 +164,7 @@ const ProjectDetails: FunctionComponent = () => {
         void navigateTo(routePaths.packageList.generate());
       });
     }
-  }, [id, title]);
+  }, [id, openAlert, t, title]);
 
   return (
     <>

@@ -12,7 +12,7 @@
     "format": "prettier --parser typescript --write *.ts src/**/*.ts src/**/*.tsx",
     "check:format": "prettier --parser typescript --list-different *.ts src/**/*.ts src/**/*.tsx",
     "check:types": "tsc --skipLibCheck --noEmit",
-    "check:lint": "eslint ."
+    "check:lint": "eslint --config=eslint.config.js"
   },
   "keywords": [],
   "author": "Thibault Picard",
@@ -38,10 +38,9 @@
     "cross-env": "7.0.3",
     "css-loader": "7.1.2",
     "electron": "31.1.0",
-    "eslint": "9.5.0",
-    "eslint-config-prettier": "9.1.0",
-    "eslint-import-resolver-typescript": "3.6.1",
-    "eslint-plugin-prettier": "5.1.3",
+    "eslint": "9.13.0",
+    "eslint-plugin-react": "7.37.2",
+    "eslint-plugin-react-hooks": "5.0.0",
     "fork-ts-checker-webpack-plugin": "9.0.2",
     "globals": "15.6.0",
     "mini-css-extract-plugin": "2.9.0",
@@ -53,25 +52,25 @@
     "ts-loader": "9.5.1",
     "ts-node": "10.9.2",
     "typescript": "5.5.2",
-    "typescript-eslint": "7.14.1",
+    "typescript-eslint": "8.12.2",
     "webpack": "5.92.1"
   },
   "dependencies": {
-    "antd": "5.18.3",
-    "cache-manager": "5.6.1",
+    "antd": "5.19.4",
+    "cache-manager": "5.7.4",
     "cron": "3.1.7",
     "effector": "23.2.2",
     "effector-react": "23.2.1",
-    "electron-log": "5.1.5",
+    "electron-log": "5.1.7",
     "electron-squirrel-startup": "1.0.1",
     "electron-store": "8.2.0",
-    "i18next": "23.11.5",
+    "i18next": "23.12.2",
     "i18next-fs-backend": "2.3.1",
-    "mime": "4.0.3",
+    "mime": "4.0.4",
     "opener": "1.5.2",
     "react": "18.3.1",
     "react-dom": "18.3.1",
-    "react-i18next": "14.1.2",
-    "react-router-dom": "6.24.0"
+    "react-i18next": "15.0.0",
+    "react-router-dom": "6.25.1"
   }
 }

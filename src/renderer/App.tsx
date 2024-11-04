@@ -73,7 +73,7 @@ const App: FunctionComponent = () => {
         ],
       },
     ];
-  }, [projectsSumUp]);
+  }, [projectsSumUp, t]);
 
   return (
     <Routes>

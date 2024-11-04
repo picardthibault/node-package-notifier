@@ -56,7 +56,7 @@ export const readFileContent = async (path: string): Promise<Buffer> => {
   }
 
   try {
-    return readFile(path);
+    return await readFile(path);
   } catch (err) {
     log.error(`Error while reading file with "${path}"`, err);
     throw new Error(

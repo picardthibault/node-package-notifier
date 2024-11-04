@@ -71,7 +71,7 @@ export const PackageCreation = (): React.JSX.Element => {
       clearTimeout(suggestionTimeout);
     }
     setSuggestionTimeout(setTimeout(fetchSuggestions, 200));
-  }, [suggestionTimeout, setSuggestionTimeout]);
+  }, [suggestionTimeout, fetchSuggestions]);
 
   const onFinish = () => {
     setCreationLoading(true);

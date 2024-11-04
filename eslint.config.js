@@ -1,6 +1,8 @@
 const tseslint = require('typescript-eslint');
 const eslint = require('@eslint/js');
 const globals = require('globals');
+const reactPlugin = require('eslint-plugin-react');
+const reactHooksPlugin = require('eslint-plugin-react-hooks');
 
 module.exports = tseslint.config(
   {
@@ -29,10 +31,25 @@ module.exports = tseslint.config(
       },
     },
   },
+  {
+    settings: {
+      react: {
+        version: 'detect',
+      },
+    },
+  },
   eslint.configs.recommended,
   ...tseslint.configs.strictTypeChecked,
   {
+    plugins: {
+      react: reactPlugin,
+      'react-hooks': reactHooksPlugin,
+    },
+  },
+  {
     rules: {
+      ...reactPlugin.configs.flat.recommended.rules,
+      ...reactHooksPlugin.configs.recommended.rules,
       '@typescript-eslint/no-unused-vars': ['error', { caughtErrors: 'none' }],
       '@typescript-eslint/restrict-template-expressions': [
         'error',

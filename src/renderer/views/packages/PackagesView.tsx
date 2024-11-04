@@ -67,7 +67,7 @@ export const PackagesView = (): React.JSX.Element => {
     );
 
     setPackages(tableItems);
-  }, [fetchedPackages]);
+  }, [fetchedPackages, t]);
 
   const tableColumns: ColumnsType<TableItemType> = [
     {

@@ -1,5 +1,14 @@
-import { MemoryCache, caching } from 'cache-manager';
+import { createCache } from 'cache-manager';
+import { Keyv } from 'keyv';
 import { PackageDetails } from '@type/PackageInfo';
+
+interface CacheStore {
+  get: (packageName: string) => Promise<PackageDetails | null>;
+  set: (
+    packageName: string,
+    PackageDetails: PackageDetails,
+  ) => Promise<PackageDetails>;
+}
 
 export class PackageCache {
   private static instance?: PackageCache;
@@ -13,12 +22,11 @@ export class PackageCache {
 
   // TTL = 1hour
   private readonly cacheTtl = 3600 * 1000;
-  private readonly registryCache = new Map<string, MemoryCache>();
+  private readonly registryCache = new Map<string, CacheStore>();
 
-  private async createCache(): Promise<MemoryCache> {
-    return caching('memory', {
-      ttl: this.cacheTtl,
-      max: 1000,
+  private createCache(): CacheStore {
+    return createCache({
+      stores: [new Keyv(undefined, { ttl: this.cacheTtl })],
     });
   }
 
@@ -27,7 +35,11 @@ export class PackageCache {
     packageName: string,
   ): Promise<PackageDetails | undefined> {
     const cache = this.registryCache.get(registryUrl);
-    return cache ? cache.get(packageName) : undefined;
+    if (!cache) {
+      return undefined;
+    }
+    const cachedValue = await cache.get(packageName);
+    return cachedValue ?? undefined;
   }
 
   public async set(
@@ -39,7 +51,7 @@ export class PackageCache {
     if (cache) {
       await cache.set(packageName, packageInfo);
     } else {
-      const cache = await this.createCache();
+      const cache = this.createCache();
       await cache.set(packageName, packageInfo);
       this.registryCache.set(registryUrl, cache);
     }

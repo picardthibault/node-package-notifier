@@ -1,9 +1,11 @@
+@use "../colors";
+
 $blue-color: #0958D9;
 $green-color: #298E33;
 
 .red-tag {
-    color: $error-color;
-    border-color: $error-color;
+    color: colors.$error-color;
+    border-color: colors.$error-color;
 }
 
 .blue-tag {

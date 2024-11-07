@@ -1,5 +1,7 @@
+@use "../colors";
+
 .filtersForm {
-    border: 1px $tertiary-color solid;
+    border: 1px colors.$tertiary-color solid;
     border-radius: 5px;
     margin: 0 0 5px 0;
 }

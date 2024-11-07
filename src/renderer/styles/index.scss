@@ -1,5 +1,5 @@
-@import 'colors';
-@import 'fonts';
-@import 'layout';
-@import 'components/index';
-@import 'views/index';
+@use 'colors';
+@use 'fonts';
+@use 'layout';
+@use 'components/index' as components;
+@use 'views/index' as views;

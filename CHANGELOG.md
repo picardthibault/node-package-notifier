@@ -1,5 +1,11 @@
 # Changelog
 
+## v2.0.3
+
+### Modified
+
+- Update dependencies
+
 ## v2.0.2
 
 ### Added 

@@ -1,14 +1,16 @@
+@use "../colors";
+
 #root {
     .sideMenu{
         background: none;
         border-inline-end: 0;
-        color: $white-color;
+        color: colors.$white-color;
 
         .ant-menu-item , .ant-menu-submenu-title, .ant-menu-submenu {
             border-radius: 0;
             margin-inline: 0;
             width: 100%;
-            color: $white-color;
+            color: colors.$white-color;
         }
 
         .ant-menu-submenu, .ant-menu-submenu-title {
@@ -24,13 +26,13 @@
         }
 
         .ant-menu-item-selected, .ant-menu-item-active, .ant-menu-submenu-title {
-            color: $white-color;
+            color: colors.$white-color;
         }
         
         .ant-menu-item-selected, .ant-menu-item-active, .ant-menu-submenu-active {
-            background: $secondary-color;
+            background: colors.$secondary-color;
             .ant-menu-submenu-title {
-                background: $secondary-color;
+                background: colors.$secondary-color;
             }
         }
 

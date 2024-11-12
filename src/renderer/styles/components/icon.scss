@@ -1,4 +1,6 @@
+@use "../colors";
+
 .error-icon {
-    color: $error-color;
+    color: colors.$error-color;
     font-size: 17px;
 }

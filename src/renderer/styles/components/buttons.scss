@@ -1,24 +1,26 @@
+@use "../colors";
+
 .linkButton {
     display: inline-block;
-    color: $primary-color;
+    color: colors.$primary-color;
     
     button {
-        color: $primary-color;
+        color: colors.$primary-color;
         padding-left: 3px;   
     }
 
     button:hover {
-        color: $secondary-color;
+        color: colors.$secondary-color;
         button {
-            color: $secondary-color;
+            color: colors.$secondary-color;
         }
     }
 }
 
 .linkButton:hover {
-    color: $secondary-color;
+    color: colors.$secondary-color;
 
     button:hover {
-        color: $secondary-color !important;
+        color: colors.$secondary-color !important;
     }
 }

@@ -1,6 +1,8 @@
+@use "../colors";
+
 .packageDetailsForm {
     input:disabled, textarea:disabled {
-        color: $primary-color;
+        color: colors.$primary-color;
     }
 }
 

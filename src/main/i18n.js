@@ -5,7 +5,7 @@ import * as path from 'path';
 void i18n
 .use(fsBackend)
 .init({
-    initImmediate: false,
+    initAsync: false,
     fallback: 'en',
     lng: 'en',
     interpolation: {

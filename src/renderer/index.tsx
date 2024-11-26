@@ -5,7 +5,7 @@ import { createRoot } from 'react-dom/client';
 import { I18nextProvider } from 'react-i18next';
 import { ConfigProvider } from 'antd';
 import App from './App';
-import { RouterProvider, createMemoryRouter } from 'react-router-dom';
+import { RouterProvider, createMemoryRouter } from 'react-router';
 
 const cspNonce = window.cspManagement.generateNonce();
 

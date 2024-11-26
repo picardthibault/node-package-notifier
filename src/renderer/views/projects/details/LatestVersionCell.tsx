@@ -5,58 +5,13 @@ import ErrorIcon from '@renderer/components/Icon/ErrorIcon';
 import PackageVersionTag, {
   PackageVersionTagColor,
 } from '@renderer/components/Tag/Tag';
-import i18n from '../../../i18n';
+import { computeTagColor, computeTagTooltip } from './LatestVersionCellUtils';
 
 interface Props {
   dependencyName: string;
   dependencyCurrenVersion: string;
   registryUrl?: string;
 }
-
-const computeTagColor = (
-  currentVersion: string,
-  latestVersion?: string,
-): PackageVersionTagColor | undefined => {
-  if (!latestVersion) {
-    return undefined;
-  }
-
-  const splitCurrentVersion = currentVersion.split('.');
-  const splitLatestVersion = latestVersion.split('.');
-
-  if (splitCurrentVersion.length !== 3 || splitLatestVersion.length !== 3) {
-    return undefined;
-  }
-
-  if (splitCurrentVersion[0] < splitLatestVersion[0]) {
-    return PackageVersionTagColor.RED;
-  }
-
-  if (splitCurrentVersion[1] < splitLatestVersion[1]) {
-    return PackageVersionTagColor.BLUE;
-  }
-
-  if (splitCurrentVersion[2] < splitLatestVersion[2]) {
-    return PackageVersionTagColor.GREEN;
-  }
-
-  return undefined;
-};
-
-const computeTagTooltip = (
-  tagColor?: PackageVersionTagColor,
-): string | undefined => {
-  switch (tagColor) {
-    case PackageVersionTagColor.RED:
-      return i18n.t('project.details.tooltip.newMajor');
-    case PackageVersionTagColor.BLUE:
-      return i18n.t('project.details.tooltip.newMinor');
-    case PackageVersionTagColor.GREEN:
-      return i18n.t('project.details.tooltip.newPatch');
-    default:
-      return undefined;
-  }
-};
 
 const LatestVersionCell: React.FunctionComponent<Props> = (props) => {
   const { dependencyName, dependencyCurrenVersion, registryUrl } = props;

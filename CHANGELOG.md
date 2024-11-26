@@ -2,9 +2,13 @@
 
 ## v2.0.3
 
-### Modified
+### Changed
 
 - Update dependencies
+
+### Fixed
+
+- New version display in projet dependencies view
 
 ## v2.0.2
 
@@ -14,7 +18,7 @@
 - In project details, add package publication date
 - In project details, add a color on latest version package
 
-### Modifed
+### Changed
 
 - Improve navigation
 - Update dependencies
@@ -27,7 +31,7 @@
 ### Added
 - CSP security
 
-### Modified
+### Changed
 - Improve navigation between project details and package details view
 - Update dependencies
 
@@ -41,7 +45,7 @@
 - Add the possibility to open a package home page directly in the default browser
 - Add a timeout to registry request
 
-### Modified
+### Changed
 - Improve navigation
 - Improve package list filter
 - Improve code quality
@@ -57,7 +61,7 @@
 - Filters on package list table
 - Package suggestions on creation view
 
- ### Modified
+ ### Changed
  - Update dependencies
 
 ## v1.1.0
@@ -68,7 +72,7 @@
 - New "Details" view
 - Handle private registry in addition to the public registry
 
-### Modified
+### Changed
 - Application won't open a window at start-up
 - Better error management
 - Update dependencies

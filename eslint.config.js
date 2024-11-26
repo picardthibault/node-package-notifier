@@ -13,6 +13,7 @@ module.exports = tseslint.config(
       'webpack.renderer.config.ts',
       'webpack.rules.ts',
       'eslint.config.js',
+      'jest.config.js',
     ],
   },
   {
@@ -64,6 +65,7 @@ module.exports = tseslint.config(
       ],
     },
   },
+  
   {
     // Disable typescript eslint rules on js files
     files: ['**/*.js'],

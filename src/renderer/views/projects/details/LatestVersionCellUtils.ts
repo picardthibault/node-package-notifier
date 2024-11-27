@@ -35,7 +35,7 @@ export const computeTagColor = (
   try {
     splitCurrentVersion = splitVersionNumber(currentVersion);
     splitLatestVersion = splitVersionNumber(latestVersion);
-  } catch(err) {
+  } catch (err) {
     return undefined;
   }
 
@@ -59,10 +59,11 @@ export const splitVersionNumber = (
 ): SplitVersionNumber => {
   const versionNumberFormatRegexp = /^([0-9]+)\.([0-9]+)\.([0-9]+)[^.]*$/;
 
-  const assertVersionNumberFormat = versionNumberFormatRegexp.exec(versionNumber);
+  const assertVersionNumberFormat =
+    versionNumberFormatRegexp.exec(versionNumber);
 
   if (!assertVersionNumberFormat) {
-    throw new Error("Invalid version number format");
+    throw new Error('Invalid version number format');
   }
 
   return {

@@ -4,7 +4,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router';
 import Title from '@renderer/components/Title/Title';
 import Loading from '@renderer/components/Loading/Loading';
 import { Form, Input, Popconfirm, Tabs, TabsProps, notification } from 'antd';

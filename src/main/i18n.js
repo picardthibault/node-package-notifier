@@ -2,10 +2,10 @@ import i18n from 'i18next';
 import fsBackend from 'i18next-fs-backend';
 import * as path from 'path';
 
-i18n
+void i18n
 .use(fsBackend)
 .init({
-    initImmediate: false,
+    initAsync: false,
     fallback: 'en',
     lng: 'en',
     interpolation: {

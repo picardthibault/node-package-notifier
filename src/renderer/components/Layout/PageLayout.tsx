@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from 'react';
 import { Content } from 'antd/es/layout/layout';
 import { Layout } from 'antd';
-import { Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router';
 import SideMenu, { SideMenuItem } from '../Menu/SideMenu';
 
 interface PageLayoutProps {

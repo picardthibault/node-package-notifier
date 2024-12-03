@@ -2,7 +2,7 @@ import { Button, Tooltip } from 'antd';
 import React from 'react';
 
 interface ActionButtonProps {
-  children: string | JSX.Element;
+  children: string | React.JSX.Element;
   type: 'default' | 'primary' | 'dashed' | 'link' | 'text';
   htmlType?: 'button' | 'submit' | 'reset';
   danger?: boolean;
@@ -11,7 +11,7 @@ interface ActionButtonProps {
   loading?: boolean;
 }
 
-const ActionButton = (props: ActionButtonProps): JSX.Element => {
+const ActionButton = (props: ActionButtonProps): React.JSX.Element => {
   const { children, type, htmlType, danger, toolTip, onClick, loading } = props;
 
   return (

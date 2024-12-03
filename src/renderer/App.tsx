@@ -4,7 +4,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router';
 import { PackageCreation } from '@renderer/views/packages/PackageCreation';
 import { PackagesView } from '@renderer/views/packages/PackagesView';
 import { routePaths } from './routes';
@@ -73,7 +73,7 @@ const App: FunctionComponent = () => {
         ],
       },
     ];
-  }, [projectsSumUp]);
+  }, [projectsSumUp, t]);
 
   return (
     <Routes>

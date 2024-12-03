@@ -2,7 +2,7 @@ import { Menu, MenuProps } from 'antd';
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import Sider from 'antd/es/layout/Sider';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { routePaths } from '../../routes';
 import { useUnit } from 'effector-react';
 import { MenuStore, menuStore } from '@renderer/stores/MenuStore';
@@ -54,13 +54,13 @@ const SideMenu: FunctionComponent<SideMenuProps> = (props) => {
       setSelectedKey(currentLocation);
     }
 
-    navigate(currentLocation);
-  }, [menuKeys, currentLocation]);
+    void navigate(currentLocation);
+  }, [menuKeys, currentLocation, navigate]);
 
   const onClick: MenuProps['onClick'] = (menuItem) => {
     resetDependenciesTabStore();
     void navigateTo(menuItem.key);
-    navigate(menuItem.key);
+    void navigate(menuItem.key);
   };
 
   return (

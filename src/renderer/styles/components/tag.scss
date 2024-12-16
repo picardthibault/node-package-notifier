@@ -2,6 +2,7 @@
 
 $blue-color: #0958D9;
 $green-color: #298E33;
+$orange-color: #f4661b;
 
 .red-tag {
     color: colors.$error-color;
@@ -16,4 +17,9 @@ $green-color: #298E33;
 .green-tag {
     color: $green-color;
     border-color: $green-color;
+}
+
+.orange-tag {
+    color: $orange-color;
+    border-color: $orange-color;
 }

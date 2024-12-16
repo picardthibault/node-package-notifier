@@ -174,7 +174,8 @@
                 "deleteProject": "Remove the project from your project list.",
                 "newMajor": "New major version",
                 "newMinor": "New minor version",
-                "newPatch": "New patch version"
+                "newPatch": "New patch version",
+                "outsideRange": "New version outside given range"
             },
             "alert": {
                 "title": {

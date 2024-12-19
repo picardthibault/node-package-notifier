@@ -1,5 +1,11 @@
 # Changelog
 
+## v2.0.4
+
+### Added
+
+- In project details, add comparison of the latest version versus dependencies ranges
+
 ## v2.0.3
 
 ### Changed

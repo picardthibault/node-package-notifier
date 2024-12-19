@@ -6,6 +6,10 @@
 
 - In project details, add comparison of the latest version versus dependencies ranges
 
+### Fixed
+
+- Fix tray icon tooltip and menu
+
 ## v2.0.3
 
 ### Changed

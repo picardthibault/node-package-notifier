@@ -5,7 +5,7 @@ import * as path from 'path';
 import { createMainWindow, isDevEnv } from '@main/helpers/AppLifeCycleHelper';
 import { launchUpdatePackageJob } from './jobs/PackageJobs';
 import log from 'electron-log';
-import i18n from './i18n';
+import './i18n';
 import { patchNonceForProtocols } from './helpers/CspHelper';
 
 if (isDevEnv()) {
@@ -68,18 +68,18 @@ app.on('ready', () => {
     path.join(ressourcePathFolder, 'logo.png'),
   );
   const trayIcon = new Tray(icon);
-  trayIcon.setToolTip(i18n.t('tray.tooltip'));
+  trayIcon.setToolTip('Node Package Notifier');
   trayIcon.addListener('click', reopenApp);
 
   // Create Tray menu
   const trayMenu = Menu.buildFromTemplate([
     {
-      label: i18n.t('tray.open'),
+      label: 'Open',
       type: 'normal',
       click: reopenApp,
     },
     {
-      label: i18n.t('tray.close'),
+      label: 'Close',
       type: 'normal',
       click: quitApp,
     },

@@ -7,6 +7,7 @@ import { launchUpdatePackageJob } from './jobs/PackageJobs';
 import log from 'electron-log';
 import i18n from './i18n';
 import { appIcon } from './helpers/AppIconHelper';
+import started from 'electron-squirrel-startup';
 
 if (isDevEnv()) {
   app.setPath('userData', app.getPath('userData') + '-dev');
@@ -15,8 +16,7 @@ if (isDevEnv()) {
 log.debug(`UserData path is "${app.getPath('userData')}"`);
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-if (require('electron-squirrel-startup')) {
+if (started) {
   app.quit();
 }
 

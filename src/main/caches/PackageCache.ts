@@ -1,5 +1,5 @@
 import { createCache } from 'cache-manager';
-import { Keyv } from 'keyv';
+import Keyv from 'keyv';
 import { PackageDetails } from '@type/PackageInfo';
 
 interface CacheStore {

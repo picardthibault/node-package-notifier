@@ -55,8 +55,5 @@ declare global {
         fetchPublicationDateArgs: FetchPublicationDateArgs,
       ) => Promise<string | undefined>;
     };
-    cspManagement: {
-      generateNonce: () => string;
-    };
   }
 }

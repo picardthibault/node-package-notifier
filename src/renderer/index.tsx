@@ -7,8 +7,6 @@ import { ConfigProvider } from 'antd';
 import App from './App';
 import { RouterProvider, createMemoryRouter } from 'react-router';
 
-const cspNonce = window.cspManagement.generateNonce();
-
 const routeProvider = createMemoryRouter([{ path: '*', element: <App /> }]);
 
 const root = document.getElementById('root');
@@ -17,7 +15,6 @@ if (root) {
     <I18nextProvider i18n={i18n}>
       <React.StrictMode>
         <ConfigProvider
-          csp={{ nonce: cspNonce }}
           theme={{
             token: {
               colorPrimary: '#032b43',

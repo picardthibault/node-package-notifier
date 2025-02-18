@@ -120,7 +120,7 @@ describe('computeTagColor', () => {
 
 describe('isVersion', () => {
   test('Given "1.2.0", should return true', () => {
-    const versionNumber = "1.2.0";
+    const versionNumber = '1.2.0';
 
     const result = isVersion(versionNumber);
 
@@ -128,7 +128,7 @@ describe('isVersion', () => {
   });
 
   test('Given "1.x", should return false', () => {
-    const versionNumber = "1.x";
+    const versionNumber = '1.x';
 
     const result = isVersion(versionNumber);
 
@@ -138,7 +138,7 @@ describe('isVersion', () => {
 
 describe('isRange', () => {
   test('Given "1.0.0 - 1.23.0", should return true', () => {
-    const versionNumber = "1.0.0 - 1.23.0";
+    const versionNumber = '1.0.0 - 1.23.0';
 
     const result = isRange(versionNumber);
 
@@ -146,7 +146,7 @@ describe('isRange', () => {
   });
 
   test('Given "1.x", should return true', () => {
-    const versionNumber = "1.x";
+    const versionNumber = '1.x';
 
     const result = isRange(versionNumber);
 
@@ -154,7 +154,7 @@ describe('isRange', () => {
   });
 
   test('Given "~1.2", should return true', () => {
-    const versionNumber = "~1.2";
+    const versionNumber = '~1.2';
 
     const result = isRange(versionNumber);
 
@@ -162,7 +162,7 @@ describe('isRange', () => {
   });
 
   test('Given "^1.2.0", should return true', () => {
-    const versionNumber = "^1.2.0";
+    const versionNumber = '^1.2.0';
 
     const result = isRange(versionNumber);
 
@@ -170,7 +170,7 @@ describe('isRange', () => {
   });
 
   test('Given "1.2.0", should return true', () => {
-    const versionNumber = "1.2.0";
+    const versionNumber = '1.2.0';
 
     const result = isRange(versionNumber);
 
@@ -180,8 +180,8 @@ describe('isRange', () => {
 
 describe('compareWithRange', () => {
   test('Given range "1.x" with version "1.2.0", should return undefined', () => {
-    const range = "1.x";
-    const versionNumber = "1.2.0";
+    const range = '1.x';
+    const versionNumber = '1.2.0';
 
     const result = compareWithRange(range, versionNumber);
 
@@ -189,8 +189,8 @@ describe('compareWithRange', () => {
   });
 
   test('Given range "1.0" with version "2.0.0", should return ORANGE', () => {
-    const range = "1.x";
-    const versionNumber = "2.0.0";
+    const range = '1.x';
+    const versionNumber = '2.0.0';
 
     const result = compareWithRange(range, versionNumber);
 
@@ -200,8 +200,8 @@ describe('compareWithRange', () => {
 
 describe('compareWithVersion', () => {
   test('Given version "1.0.0" and "1.0.0", should return undefined', () => {
-    const version1 = "1.0.0";
-    const version2 = "1.0.0";
+    const version1 = '1.0.0';
+    const version2 = '1.0.0';
 
     const result = compareWithVersion(version1, version2);
 
@@ -209,8 +209,8 @@ describe('compareWithVersion', () => {
   });
 
   test('Given version "2.0.0" and "1.0.0", should return undefined', () => {
-    const version1 = "2.0.0";
-    const version2 = "1.0.0";
+    const version1 = '2.0.0';
+    const version2 = '1.0.0';
 
     const result = compareWithVersion(version1, version2);
 
@@ -218,8 +218,8 @@ describe('compareWithVersion', () => {
   });
 
   test('Given version "1.0.0" and "1.0.0-RC1", should return undefined', () => {
-    const version1 = "1.0.0";
-    const version2 = "1.0.0";
+    const version1 = '1.0.0';
+    const version2 = '1.0.0';
 
     const result = compareWithVersion(version1, version2);
 
@@ -227,8 +227,8 @@ describe('compareWithVersion', () => {
   });
 
   test('Given version "1.0.0" and "1.0.1", should return GREEN', () => {
-    const version1 = "1.0.0";
-    const version2 = "1.0.1";
+    const version1 = '1.0.0';
+    const version2 = '1.0.1';
 
     const result = compareWithVersion(version1, version2);
 
@@ -236,8 +236,8 @@ describe('compareWithVersion', () => {
   });
 
   test('Given version "1.0.0" and "1.1.1", should return BLUE', () => {
-    const version1 = "1.0.0";
-    const version2 = "1.1.1";
+    const version1 = '1.0.0';
+    const version2 = '1.1.1';
 
     const result = compareWithVersion(version1, version2);
 
@@ -245,8 +245,8 @@ describe('compareWithVersion', () => {
   });
 
   test('Given version "1.0.0" and "2.1.1", should return RED', () => {
-    const version1 = "1.0.0";
-    const version2 = "2.1.1";
+    const version1 = '1.0.0';
+    const version2 = '2.1.1';
 
     const result = compareWithVersion(version1, version2);
 

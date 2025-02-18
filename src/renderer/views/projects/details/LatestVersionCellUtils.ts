@@ -34,7 +34,7 @@ export const computeTagColor = (
   } else {
     return undefined;
   }
-}
+};
 
 export const isVersion = (versionNumber: string): boolean => {
   return semver.valid(versionNumber) != null;
@@ -44,11 +44,19 @@ export const isRange = (versionNumber: string): boolean => {
   return semver.validRange(versionNumber) != null;
 };
 
-export const compareWithRange = (currentVersion: string, latestVersion: string): PackageVersionTagColor | undefined => {
-  return semver.satisfies(latestVersion, currentVersion) ? undefined : PackageVersionTagColor.ORANGE;
+export const compareWithRange = (
+  currentVersion: string,
+  latestVersion: string,
+): PackageVersionTagColor | undefined => {
+  return semver.satisfies(latestVersion, currentVersion)
+    ? undefined
+    : PackageVersionTagColor.ORANGE;
 };
 
-export const compareWithVersion = (currentVersion: string, latestVersion: string): PackageVersionTagColor | undefined => {
+export const compareWithVersion = (
+  currentVersion: string,
+  latestVersion: string,
+): PackageVersionTagColor | undefined => {
   if (semver.lt(latestVersion, currentVersion)) {
     return undefined;
   }
@@ -57,9 +65,9 @@ export const compareWithVersion = (currentVersion: string, latestVersion: string
   switch (diff) {
     case 'major':
       return PackageVersionTagColor.RED;
-    case "minor":
+    case 'minor':
       return PackageVersionTagColor.BLUE;
-    case "patch":
+    case 'patch':
       return PackageVersionTagColor.GREEN;
     default:
       return undefined;

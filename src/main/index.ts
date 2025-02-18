@@ -27,7 +27,7 @@ export const ressourcePathFolder = path.join(__dirname, 'ressources');
 const quitApp = (): void => {
   log.info('Exiting app');
   app.quit();
-}
+};
 
 const reopenApp = (): void => {
   log.info('Reopen app');
@@ -38,7 +38,7 @@ const reopenApp = (): void => {
     log.debug('Push main window to front');
     mainWindow.show();
   }
-}
+};
 
 const singleInstanceLock = app.requestSingleInstanceLock();
 if (!singleInstanceLock) {

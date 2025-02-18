@@ -9,17 +9,18 @@ import { appIcon } from './AppIconHelper';
 declare const MAIN_WINDOW_VITE_DEV_SERVER_URL: string | null;
 declare const MAIN_WINDOW_VITE_NAME: string;
 
-
 export const isDevEnv = (): boolean => {
   return (
     process.env.ENVIRONMENT !== undefined && process.env.ENVIRONMENT === 'DEV'
   );
 };
 
-const computeMainWindowEntry = (): string => {  
-  return MAIN_WINDOW_VITE_DEV_SERVER_URL ?? path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`);
-
-}
+const computeMainWindowEntry = (): string => {
+  return (
+    MAIN_WINDOW_VITE_DEV_SERVER_URL ??
+    path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`)
+  );
+};
 
 export const createMainWindow = (): BrowserWindow => {
   log.info('Create main Window');
@@ -47,4 +48,4 @@ export const createMainWindow = (): BrowserWindow => {
   void mainWindow.loadURL(mainWindowEntry);
 
   return mainWindow;
-}
+};

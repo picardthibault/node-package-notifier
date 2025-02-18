@@ -1,11 +1,10 @@
 import { CronJob } from 'cron';
-import { nativeImage, Notification } from 'electron';
+import { Notification } from 'electron';
 import { updateAllStoredPackages } from '@main/services/package/PackageService';
 import { PackageStore } from '@main/store/PackageStore';
-import * as path from 'path';
-import { ressourcePathFolder } from '..';
 import i18n from '../i18n';
 import log from 'electron-log';
+import { appIcon } from '@main/helpers/AppIconHelper';
 
 export function launchUpdatePackageJob() {
   new CronJob(
@@ -23,9 +22,7 @@ export function launchUpdatePackageJob() {
             version: packageData.latest,
             name: packageData.name,
           }),
-          icon: nativeImage.createFromPath(
-            path.join(ressourcePathFolder, 'logo.png'),
-          ),
+          icon: appIcon,
         }).show();
       });
       log.info('Update Package job - end');

@@ -26,9 +26,7 @@ export const createMainWindow = (): BrowserWindow => {
   log.info('Create main Window');
 
   const mainWindowEntry = computeMainWindowEntry();
-  log.debug(`Main window entry : ${mainWindowEntry}`);
   const preloadEntry = path.join(__dirname, 'preload.js');
-  log.debug(`Preload entry : ${preloadEntry}`);
 
   const mainWindow = new BrowserWindow({
     title: 'Node Package Notifier',

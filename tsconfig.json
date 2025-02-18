@@ -22,7 +22,7 @@
       "@main/helpers/*": ["src/main/helpers/*"],
       "@main/services/*": ["src/main/services/*"],
       "@main/store/*": ["src/main/store/*"],
-      "*": ["node_modules/*"]      
+      "*": ["node_modules/*"]
     },
     "jsx": "react",
     "typeRoots": ["./node_modules/@types", "./src/types"]

@@ -82,8 +82,9 @@ typings/
 # DynamoDB Local files
 .dynamodb/
 
-# Webpack
-.webpack/
+# Vite
+.vite/
+src/renderer/.vite
 
 # Electron-Forge
 out/

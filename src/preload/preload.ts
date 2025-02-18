@@ -6,7 +6,6 @@ import {
   PackageSuggestionArgs,
 } from '../types/PackageListenerArgs';
 import {
-  CspChannel,
   PackageListenerChannel,
   ProjectListenerChannel,
 } from '../types/IpcChannel';
@@ -82,9 +81,4 @@ contextBridge.exposeInMainWorld('projectManagement', {
       ProjectListenerChannel.FETCH_PUBLICATION_DATE,
       fetchPublicationDateArgs,
     ),
-});
-
-contextBridge.exposeInMainWorld('cspManagement', {
-  generateNonce: (): string =>
-    ipcRenderer.sendSync(CspChannel.GET_CSP_NONCE) as string,
 });

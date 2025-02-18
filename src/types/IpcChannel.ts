@@ -18,7 +18,3 @@ export enum ProjectListenerChannel {
   FETCH_LATEST_VERSION = 'projectChannelFetchLatestVersion',
   FETCH_PUBLICATION_DATE = 'projectChannelFetchPublicationDate',
 }
-
-export enum CspChannel {
-  GET_CSP_NONCE = 'cspChannelGetCspNonce',
-}

@@ -5,12 +5,12 @@
     color: colors.$primary-color;
     
     button {
-        color: colors.$primary-color;
+        color: colors.$primary-color !important;
         padding-left: 3px;   
     }
 
     button:hover {
-        color: colors.$secondary-color;
+        color: colors.$secondary-color !important;
         button {
             color: colors.$secondary-color;
         }

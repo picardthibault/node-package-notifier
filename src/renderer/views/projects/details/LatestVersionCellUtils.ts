@@ -1,11 +1,6 @@
 import { PackageVersionTagColor } from '@renderer/components/Tag/Tag';
 import i18n from '../../../i18n';
-
-interface SplitVersionNumber {
-  major: number;
-  minor: number;
-  patch: number;
-}
+import semver from 'semver';
 
 export const computeTagTooltip = (
   tagColor?: PackageVersionTagColor,
@@ -17,6 +12,8 @@ export const computeTagTooltip = (
       return i18n.t('project.details.tooltip.newMinor');
     case PackageVersionTagColor.GREEN:
       return i18n.t('project.details.tooltip.newPatch');
+    case PackageVersionTagColor.ORANGE:
+      return i18n.t('project.details.tooltip.outsideRange');
     default:
       return undefined;
   }
@@ -26,61 +23,53 @@ export const computeTagColor = (
   currentVersion: string,
   latestVersion?: string,
 ): PackageVersionTagColor | undefined => {
-  if (!latestVersion) {
+  if (!latestVersion || !isVersion(latestVersion)) {
     return undefined;
   }
 
-  let splitCurrentVersion: SplitVersionNumber;
-  let splitLatestVersion: SplitVersionNumber;
-  try {
-    splitCurrentVersion = splitVersionNumber(currentVersion);
-    splitLatestVersion = splitVersionNumber(latestVersion);
-  } catch (err) {
+  if (isVersion(currentVersion)) {
+    return compareWithVersion(currentVersion, latestVersion);
+  } else if (isRange(currentVersion)) {
+    return compareWithRange(currentVersion, latestVersion);
+  } else {
+    return undefined;
+  }
+};
+
+export const isVersion = (versionNumber: string): boolean => {
+  return semver.valid(versionNumber) != null;
+};
+
+export const isRange = (versionNumber: string): boolean => {
+  return semver.validRange(versionNumber) != null;
+};
+
+export const compareWithRange = (
+  currentVersion: string,
+  latestVersion: string,
+): PackageVersionTagColor | undefined => {
+  return semver.satisfies(latestVersion, currentVersion)
+    ? undefined
+    : PackageVersionTagColor.ORANGE;
+};
+
+export const compareWithVersion = (
+  currentVersion: string,
+  latestVersion: string,
+): PackageVersionTagColor | undefined => {
+  if (semver.lt(latestVersion, currentVersion)) {
     return undefined;
   }
 
-  if (splitCurrentVersion.major < splitLatestVersion.major) {
-    return PackageVersionTagColor.RED;
+  const diff = semver.diff(currentVersion, latestVersion);
+  switch (diff) {
+    case 'major':
+      return PackageVersionTagColor.RED;
+    case 'minor':
+      return PackageVersionTagColor.BLUE;
+    case 'patch':
+      return PackageVersionTagColor.GREEN;
+    default:
+      return undefined;
   }
-
-  if (splitCurrentVersion.minor < splitLatestVersion.minor) {
-    return PackageVersionTagColor.BLUE;
-  }
-
-  if (splitCurrentVersion.patch < splitLatestVersion.patch) {
-    return PackageVersionTagColor.GREEN;
-  }
-
-  return undefined;
-};
-
-export const splitVersionNumber = (
-  versionNumber: string,
-): SplitVersionNumber => {
-  const versionNumberFormatRegexp = /^([0-9]+)\.([0-9]+)\.([0-9]+)[^.]*$/;
-
-  const assertVersionNumberFormat =
-    versionNumberFormatRegexp.exec(versionNumber);
-
-  if (!assertVersionNumberFormat) {
-    throw new Error('Invalid version number format');
-  }
-
-  return {
-    major: parseInt(assertVersionNumberFormat[1]),
-    minor: parseInt(assertVersionNumberFormat[2]),
-    patch: parseInt(assertVersionNumberFormat[3]),
-  };
-};
-
-export const cleanPatchVersionNumber = (patchVersionNumber: string): string => {
-  let cleanedVersion = '';
-  for (const character of patchVersionNumber) {
-    if (/[0-9]/.test(character)) {
-      cleanedVersion += character;
-    } else {
-      break;
-    }
-  }
-  return cleanedVersion;
 };

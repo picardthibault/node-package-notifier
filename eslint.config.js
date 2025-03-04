@@ -7,11 +7,7 @@ const reactHooksPlugin = require('eslint-plugin-react-hooks');
 module.exports = tseslint.config(
   {
     ignores: [
-      '.webpack/**',
-      'webpack.main.config.ts',
-      'webpack.plugins.ts',
-      'webpack.renderer.config.ts',
-      'webpack.rules.ts',
+      '.vite/**',
       'eslint.config.js',
       'jest.config.js',
     ],

@@ -5,6 +5,7 @@ export enum PackageVersionTagColor {
   RED = 'red',
   BLUE = 'blue',
   GREEN = 'green',
+  ORANGE = 'orange',
 }
 
 interface Props {

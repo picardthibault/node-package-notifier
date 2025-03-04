@@ -1,9 +1,11 @@
 import { describe, test, expect } from '@jest/globals';
 import { PackageVersionTagColor } from '@renderer/components/Tag/Tag';
 import {
-  cleanPatchVersionNumber,
+  compareWithRange,
+  compareWithVersion,
   computeTagColor,
-  splitVersionNumber,
+  isRange,
+  isVersion,
 } from './LatestVersionCellUtils';
 
 describe('computeTagColor', () => {
@@ -13,7 +15,6 @@ describe('computeTagColor', () => {
 
     const result = computeTagColor(currentVersion, latestVersion);
 
-    expect(result).toBeDefined();
     expect(result).toBe(PackageVersionTagColor.GREEN);
   });
 
@@ -23,7 +24,6 @@ describe('computeTagColor', () => {
 
     const result = computeTagColor(currentVersion, latestVersion);
 
-    expect(result).toBeDefined();
     expect(result).toBe(PackageVersionTagColor.GREEN);
   });
 
@@ -33,7 +33,6 @@ describe('computeTagColor', () => {
 
     const result = computeTagColor(currentVersion, latestVersion);
 
-    expect(result).toBeDefined();
     expect(result).toBe(PackageVersionTagColor.GREEN);
   });
 
@@ -43,7 +42,6 @@ describe('computeTagColor', () => {
 
     const result = computeTagColor(currentVersion, latestVersion);
 
-    expect(result).toBeDefined();
     expect(result).toBe(PackageVersionTagColor.BLUE);
   });
 
@@ -53,7 +51,6 @@ describe('computeTagColor', () => {
 
     const result = computeTagColor(currentVersion, latestVersion);
 
-    expect(result).toBeDefined();
     expect(result).toBe(PackageVersionTagColor.BLUE);
   });
 
@@ -63,7 +60,6 @@ describe('computeTagColor', () => {
 
     const result = computeTagColor(currentVersion, latestVersion);
 
-    expect(result).toBeDefined();
     expect(result).toBe(PackageVersionTagColor.BLUE);
   });
 
@@ -73,7 +69,6 @@ describe('computeTagColor', () => {
 
     const result = computeTagColor(currentVersion, latestVersion);
 
-    expect(result).toBeDefined();
     expect(result).toBe(PackageVersionTagColor.RED);
   });
 
@@ -83,7 +78,6 @@ describe('computeTagColor', () => {
 
     const result = computeTagColor(currentVersion, latestVersion);
 
-    expect(result).toBeDefined();
     expect(result).toBe(PackageVersionTagColor.RED);
   });
 
@@ -93,7 +87,6 @@ describe('computeTagColor', () => {
 
     const result = computeTagColor(currentVersion, latestVersion);
 
-    expect(result).toBeDefined();
     expect(result).toBe(PackageVersionTagColor.RED);
   });
 
@@ -103,7 +96,6 @@ describe('computeTagColor', () => {
 
     const result = computeTagColor(currentVersion, latestVersion);
 
-    expect(result).toBeDefined();
     expect(result).toBe(PackageVersionTagColor.RED);
   });
 
@@ -113,7 +105,7 @@ describe('computeTagColor', () => {
 
     const result = computeTagColor(currentVersion, latestVersion);
 
-    expect(result).not.toBeDefined();
+    expect(result).toBeUndefined();
   });
 
   test('Given currentVersion "1.0.0" and latest version "2.0", should return undefined', () => {
@@ -122,80 +114,142 @@ describe('computeTagColor', () => {
 
     const result = computeTagColor(currentVersion, latestVersion);
 
-    expect(result).not.toBeDefined();
+    expect(result).toBeUndefined();
   });
 });
 
-describe('splitVersionNumber', () => {
-  test('Given version number "15.18.0", should return split version number object with major equal to 15, minor equal to 18 and patch equal to 0', () => {
-    const versionNumber = '15.18.0';
-    const expectedMajor = 15;
-    const expectedMinor = 18;
-    const expectedPatch = 0;
+describe('isVersion', () => {
+  test('Given "1.2.0", should return true', () => {
+    const versionNumber = '1.2.0';
 
-    const result = splitVersionNumber(versionNumber);
+    const result = isVersion(versionNumber);
 
-    expect(result).toBeDefined();
-    expect(result.major).toBe(expectedMajor);
-    expect(result.minor).toBe(expectedMinor);
-    expect(result.patch).toBe(expectedPatch);
+    expect(result).toBe(true);
   });
 
-  test('Given version number "15.18.0-RC12", should return split version number object with major equal to 15, minor equal to 18 and patch equal to 0', () => {
-    const versionNumber = '15.18.0-RC12';
-    const expectedMajor = 15;
-    const expectedMinor = 18;
-    const expectedPatch = 0;
+  test('Given "1.x", should return false', () => {
+    const versionNumber = '1.x';
 
-    const result = splitVersionNumber(versionNumber);
+    const result = isVersion(versionNumber);
 
-    expect(result).toBeDefined();
-    expect(result.major).toBe(expectedMajor);
-    expect(result.minor).toBe(expectedMinor);
-    expect(result.patch).toBe(expectedPatch);
-  });
-
-  test('Given version number "15.18", should return undefined', () => {
-    const versionNumber = '15.18';
-
-    expect(() => splitVersionNumber(versionNumber)).toThrow(
-      new Error('Invalid version number format'),
-    );
-  });
-
-  test('Given version number "15.18.", should throw an error', () => {
-    const versionNumber = '15.18.';
-
-    expect(() => splitVersionNumber(versionNumber)).toThrow(
-      new Error('Invalid version number format'),
-    );
-  });
-
-  test('Given version number "15.18.10.1", should throw an error', () => {
-    const versionNumber = '15.18.10.1';
-
-    expect(() => splitVersionNumber(versionNumber)).toThrow(
-      new Error('Invalid version number format'),
-    );
+    expect(result).toBe(false);
   });
 });
 
-describe('cleanPatchVersionNumber', () => {
-  test('Given patch version number "33", should return "33"', () => {
-    const patchVersionNumber = '33';
-    const expectedResult = '33';
+describe('isRange', () => {
+  test('Given "1.0.0 - 1.23.0", should return true', () => {
+    const versionNumber = '1.0.0 - 1.23.0';
 
-    const result = cleanPatchVersionNumber(patchVersionNumber);
+    const result = isRange(versionNumber);
 
-    expect(result).toBe(expectedResult);
+    expect(result).toBe(true);
   });
 
-  test('Given patch version number "33-RC12", should return "33"', () => {
-    const patchVersionNumber = '33-RC12';
-    const expectedResult = '33';
+  test('Given "1.x", should return true', () => {
+    const versionNumber = '1.x';
 
-    const result = cleanPatchVersionNumber(patchVersionNumber);
+    const result = isRange(versionNumber);
 
-    expect(result).toBe(expectedResult);
+    expect(result).toBe(true);
+  });
+
+  test('Given "~1.2", should return true', () => {
+    const versionNumber = '~1.2';
+
+    const result = isRange(versionNumber);
+
+    expect(result).toBe(true);
+  });
+
+  test('Given "^1.2.0", should return true', () => {
+    const versionNumber = '^1.2.0';
+
+    const result = isRange(versionNumber);
+
+    expect(result).toBe(true);
+  });
+
+  test('Given "1.2.0", should return true', () => {
+    const versionNumber = '1.2.0';
+
+    const result = isRange(versionNumber);
+
+    expect(result).toBe(true);
+  });
+});
+
+describe('compareWithRange', () => {
+  test('Given range "1.x" with version "1.2.0", should return undefined', () => {
+    const range = '1.x';
+    const versionNumber = '1.2.0';
+
+    const result = compareWithRange(range, versionNumber);
+
+    expect(result).toBeUndefined();
+  });
+
+  test('Given range "1.0" with version "2.0.0", should return ORANGE', () => {
+    const range = '1.x';
+    const versionNumber = '2.0.0';
+
+    const result = compareWithRange(range, versionNumber);
+
+    expect(result).toBe(PackageVersionTagColor.ORANGE);
+  });
+});
+
+describe('compareWithVersion', () => {
+  test('Given version "1.0.0" and "1.0.0", should return undefined', () => {
+    const version1 = '1.0.0';
+    const version2 = '1.0.0';
+
+    const result = compareWithVersion(version1, version2);
+
+    expect(result).toBeUndefined();
+  });
+
+  test('Given version "2.0.0" and "1.0.0", should return undefined', () => {
+    const version1 = '2.0.0';
+    const version2 = '1.0.0';
+
+    const result = compareWithVersion(version1, version2);
+
+    expect(result).toBeUndefined();
+  });
+
+  test('Given version "1.0.0" and "1.0.0-RC1", should return undefined', () => {
+    const version1 = '1.0.0';
+    const version2 = '1.0.0';
+
+    const result = compareWithVersion(version1, version2);
+
+    expect(result).toBeUndefined();
+  });
+
+  test('Given version "1.0.0" and "1.0.1", should return GREEN', () => {
+    const version1 = '1.0.0';
+    const version2 = '1.0.1';
+
+    const result = compareWithVersion(version1, version2);
+
+    expect(result).toBe(PackageVersionTagColor.GREEN);
+  });
+
+  test('Given version "1.0.0" and "1.1.1", should return BLUE', () => {
+    const version1 = '1.0.0';
+    const version2 = '1.1.1';
+
+    const result = compareWithVersion(version1, version2);
+
+    expect(result).toBe(PackageVersionTagColor.BLUE);
+  });
+
+  test('Given version "1.0.0" and "2.1.1", should return RED', () => {
+    const version1 = '1.0.0';
+    const version2 = '2.1.1';
+
+    const result = compareWithVersion(version1, version2);
+
+    expect(result).toBe(PackageVersionTagColor.RED);
   });
 });

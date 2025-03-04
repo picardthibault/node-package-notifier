@@ -1,5 +1,20 @@
 # Changelog
 
+## v2.0.4
+
+### Added
+
+- In project details, add comparison of the latest version versus dependencies ranges
+
+### Changed
+
+- Update dependencies
+- Change application build tools
+
+### Fixed
+
+- Fix translation in tray context menu
+
 ## v2.0.3
 
 ### Changed

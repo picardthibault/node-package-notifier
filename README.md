@@ -13,7 +13,7 @@ NPN is an electronJS app written in Typescript. It use electron-forge with webpa
 
 ## Dev instruction
 
-If you want to make some development on this projet you can run the command ``yarn start`` to launch the app in development mode. It will create a webpack dev server for the renderer process so if you are working only on the renderer process you does not have to close and reload the entire app after each modification.
+If you want to make some development on this projet you can run the command ``yarn start`` to launch the app in development mode. It will create a vite dev server for the renderer process so if you are working only on the renderer process you does not have to close and reload the entire app after each modification.
 
 ## Build instruction
 

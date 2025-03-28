@@ -1,5 +1,5 @@
 import { createEffect } from 'effector';
-import { PackageCreationArgs } from '@type/PackageListenerArgs';
+import { PackageCreationArgs } from '@type/PackageListenerArgs.js';
 
 export const fetchPackages = createEffect(() =>
   window.packageManagement.getPackages(),

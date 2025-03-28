@@ -5,22 +5,22 @@ import React, {
   useState,
 } from 'react';
 import { Route, Routes } from 'react-router';
-import { PackageCreation } from '@renderer/views/packages/PackageCreation';
-import { PackagesView } from '@renderer/views/packages/PackagesView';
-import { routePaths } from './routes';
-import PackageDetails from '@renderer/views/packages/PackageDetails';
-import PageLayout from '@renderer/components/Layout/PageLayout';
+import { PackageCreation } from '@renderer/views/packages/PackageCreation.js';
+import { PackagesView } from '@renderer/views/packages/PackagesView.js';
+import { routePaths } from './routes.js';
+import PackageDetails from '@renderer/views/packages/PackageDetails.js';
+import PageLayout from '@renderer/components/Layout/PageLayout.js';
 import { useTranslation } from 'react-i18next';
 import {
   PlusCircleOutlined,
   ProjectOutlined,
   UnorderedListOutlined,
 } from '@ant-design/icons';
-import ProjectCreation from '@renderer/views/projects/ProjectCreation';
-import ProjectDetails from '@renderer/views/projects/ProjectDetails';
-import { ProjectSumUp } from '@type/ProjectInfo';
-import { fetchProjectsSumUp } from './effects/ProjectEffects';
-import { MenuItemType, SubMenuType } from 'antd/es/menu/interface';
+import ProjectCreation from '@renderer/views/projects/ProjectCreation.js';
+import ProjectDetails from '@renderer/views/projects/ProjectDetails.js';
+import { ProjectSumUp } from '@type/ProjectInfo.js';
+import { fetchProjectsSumUp } from './effects/ProjectEffects.js';
+import { MenuItemType, SubMenuType } from 'antd/es/menu/interface.js';
 
 const projectListMenuKey = 'projectList';
 

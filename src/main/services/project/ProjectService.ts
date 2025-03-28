@@ -3,23 +3,23 @@ import {
   hasFiles,
   isDirectory,
   readFileContent,
-} from '../file/FileSystemService';
-import { ProjectConfig, ProjectStore } from '@main/store/ProjectStore';
-import i18n from '../../i18n';
+} from '../file/FileSystemService.js';
+import { ProjectConfig, ProjectStore } from '@main/store/ProjectStore.js';
+import i18n from '../../i18n.js';
 import path from 'path';
 import {
   adaptRegistryUrl,
   fetchPackageDetails,
   npmRegistryUrl,
-} from '../package/PackageService';
+} from '../package/PackageService.js';
 import {
   ParsedDependency,
   ParsedProject,
   ProjectDetails,
   ProjectSumUp,
-} from '@type/ProjectInfo';
-import { GetProjectDetailsResult } from '@type/ProjectListenerArgs';
-import { PackageDetails } from '@type/PackageInfo';
+} from '@type/ProjectInfo.js';
+import { GetProjectDetailsResult } from '@type/ProjectListenerArgs.js';
+import { PackageDetails } from '@type/PackageInfo.js';
 
 type Dependencies = Record<string, string>;
 

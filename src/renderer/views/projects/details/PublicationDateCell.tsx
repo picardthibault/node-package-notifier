@@ -1,5 +1,5 @@
-import ErrorIcon from '@renderer/components/Icon/ErrorIcon';
-import Loading from '@renderer/components/Loading/Loading';
+import ErrorIcon from '@renderer/components/Icon/ErrorIcon.js';
+import Loading from '@renderer/components/Loading/Loading.js';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 

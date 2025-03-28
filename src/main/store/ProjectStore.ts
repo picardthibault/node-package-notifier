@@ -1,5 +1,5 @@
 import Store from 'electron-store';
-import { generateKey } from '@main/helpers/KeyStoreHelper';
+import { generateKey } from '@main/helpers/KeyStoreHelper.js';
 
 export interface ProjectConfig {
   name: string;

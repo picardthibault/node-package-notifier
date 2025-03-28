@@ -1,11 +1,14 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import Loading from '@renderer/components/Loading/Loading';
-import ErrorIcon from '@renderer/components/Icon/ErrorIcon';
+import Loading from '@renderer/components/Loading/Loading.js';
+import ErrorIcon from '@renderer/components/Icon/ErrorIcon.js';
 import PackageVersionTag, {
   PackageVersionTagColor,
-} from '@renderer/components/Tag/Tag';
-import { computeTagColor, computeTagTooltip } from './LatestVersionCellUtils';
+} from '@renderer/components/Tag/Tag.js';
+import {
+  computeTagColor,
+  computeTagTooltip,
+} from './LatestVersionCellUtils.js';
 
 interface Props {
   dependencyName: string;

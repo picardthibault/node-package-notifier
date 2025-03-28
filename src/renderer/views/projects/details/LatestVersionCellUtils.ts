@@ -1,5 +1,5 @@
-import { PackageVersionTagColor } from '@renderer/components/Tag/Tag';
-import i18n from '../../../i18n';
+import { PackageVersionTagColor } from '@renderer/components/Tag/Tag.js';
+import i18n from '../../../i18n.js';
 import semver from 'semver';
 
 export const computeTagTooltip = (

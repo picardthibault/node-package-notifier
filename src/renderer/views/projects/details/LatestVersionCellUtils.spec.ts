@@ -1,12 +1,12 @@
-import { describe, test, expect } from '@jest/globals';
-import { PackageVersionTagColor } from '@renderer/components/Tag/Tag';
+import { describe, test, expect } from 'vitest';
+import { PackageVersionTagColor } from '@renderer/components/Tag/Tag.js';
 import {
   compareWithRange,
   compareWithVersion,
   computeTagColor,
   isRange,
   isVersion,
-} from './LatestVersionCellUtils';
+} from './LatestVersionCellUtils.js';
 
 describe('computeTagColor', () => {
   test('Given currentVersion "1.0.0" and latest version "1.0.5", should return GREEN', () => {

@@ -1,8 +1,8 @@
 import React, { FunctionComponent } from 'react';
-import { Content } from 'antd/es/layout/layout';
+import { Content } from 'antd/es/layout/layout.js';
 import { Layout } from 'antd';
 import { Outlet } from 'react-router';
-import SideMenu, { SideMenuItem } from '../Menu/SideMenu';
+import SideMenu, { SideMenuItem } from '../Menu/SideMenu.js';
 
 interface PageLayoutProps {
   subMenuItems: SideMenuItem[];

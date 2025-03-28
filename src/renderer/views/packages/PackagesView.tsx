@@ -1,25 +1,27 @@
 import React, { useEffect, useState } from 'react';
-import { Form, Input, Space, Table } from 'antd';
+import { Form, Input, Space, Table, TableColumnsType } from 'antd';
 import {
   MinusCircleOutlined,
   PlusOutlined,
   EyeOutlined,
 } from '@ant-design/icons';
-import { ColumnsType } from 'antd/es/table';
 import { useTranslation } from 'react-i18next';
-import ActionButton from '@renderer/components/Button/ActionButton';
+import ActionButton from '@renderer/components/Button/ActionButton.js';
 import {
   packageListStore,
   PackageListStore,
   updatePackageListPageConfig,
-} from '@renderer/stores/PackageListStore';
+} from '@renderer/stores/PackageListStore.js';
 import { useUnit } from 'effector-react';
-import Title from '@renderer/components/Title/Title';
-import { routePaths } from '../../routes';
-import { updatePackageDetails } from '@renderer/stores/PackageDetailsStore';
-import { deletePackage, fetchPackages } from '@renderer/effects/PackageEffect';
-import { navigateTo } from '@renderer/effects/MenuEffect';
-import PackageVersionTag from '@renderer/components/Tag/Tag';
+import Title from '@renderer/components/Title/Title.js';
+import { routePaths } from '../../routes.js';
+import { updatePackageDetails } from '@renderer/stores/PackageDetailsStore.js';
+import {
+  deletePackage,
+  fetchPackages,
+} from '@renderer/effects/PackageEffect.js';
+import { navigateTo } from '@renderer/effects/MenuEffect.js';
+import PackageVersionTag from '@renderer/components/Tag/Tag.js';
 
 interface TableItemType {
   key: string;
@@ -69,7 +71,7 @@ export const PackagesView = (): React.JSX.Element => {
     setPackages(tableItems);
   }, [fetchedPackages, t]);
 
-  const tableColumns: ColumnsType<TableItemType> = [
+  const tableColumns: TableColumnsType<TableItemType> = [
     {
       key: 'name',
       title: t('package.list.table.columns.name'),
@@ -200,7 +202,7 @@ export const PackagesView = (): React.JSX.Element => {
           defaultPageSize: pageSize,
           position: ['bottomCenter'],
           showSizeChanger: true,
-          onChange(page, pageSize) {
+          onChange(page: number, pageSize: number) {
             updatePackageListPageConfig({ page, pageSize });
           },
         }}

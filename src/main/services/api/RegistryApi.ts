@@ -1,6 +1,6 @@
 import log from 'electron-log';
-import i18n from '../../i18n';
-import { ApiResponse, requestGet } from './RestApi';
+import i18n from '../../i18n.js';
+import { ApiResponse, requestGet } from './RestApi.js';
 
 export interface PackageInfo {
   description: string;

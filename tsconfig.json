@@ -1,15 +1,15 @@
 {
   "compilerOptions": {
-    "target": "es2021",
+    "target": "ESNext",
     "allowJs": true,
-    "module": "commonjs",
+    "module": "NodeNext",
     "skipLibCheck": true,
     "esModuleInterop": true,
     "noImplicitAny": true,
     "sourceMap": true,
     "baseUrl": ".",
     "outDir": "dist",
-    "moduleResolution": "node",
+    "moduleResolution": "NodeNext",
     "resolveJsonModule": true,
     "strict": true,
     "paths": {

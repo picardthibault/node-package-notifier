@@ -1,29 +1,31 @@
 import React from 'react';
-import Table, { ColumnsType } from 'antd/es/table';
-import LatestVersionCell from './LatestVersionCell';
-import { ParsedDependency } from '@type/ProjectInfo';
-import ActionButton from '@renderer/components/Button/ActionButton';
+import LatestVersionCell from './LatestVersionCell.js';
+import { ParsedDependency } from '@type/ProjectInfo.js';
+import ActionButton from '@renderer/components/Button/ActionButton.js';
 import {
   EyeOutlined,
   MinusCircleOutlined,
   PlusCircleOutlined,
 } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
-import { routePaths } from '../../../routes';
-import { updatePackageDetails } from '@renderer/stores/PackageDetailsStore';
-import { Space } from 'antd';
+import { routePaths } from '../../../routes.js';
+import { updatePackageDetails } from '@renderer/stores/PackageDetailsStore.js';
+import { Space, Table, TableColumnsType } from 'antd';
 import { useUnit } from 'effector-react';
-import { packageListStore } from '@renderer/stores/PackageListStore';
-import { createPackage, deletePackage } from '@renderer/effects/PackageEffect';
-import { GetPackagesResult } from '@type/PackageListenerArgs';
-import { navigateTo } from '@renderer/effects/MenuEffect';
+import { packageListStore } from '@renderer/stores/PackageListStore.js';
+import {
+  createPackage,
+  deletePackage,
+} from '@renderer/effects/PackageEffect.js';
+import { GetPackagesResult } from '@type/PackageListenerArgs.js';
+import { navigateTo } from '@renderer/effects/MenuEffect.js';
 import {
   TabPageConfiguration,
   TabKey,
   updateTabPageConfig,
-} from '@renderer/stores/DependenciesTabStore';
-import PackageVersionTag from '@renderer/components/Tag/Tag';
-import PublicationDateCell from './PublicationDateCell';
+} from '@renderer/stores/DependenciesTabStore.js';
+import PackageVersionTag from '@renderer/components/Tag/Tag.js';
+import PublicationDateCell from './PublicationDateCell.js';
 
 interface DependenciesTableProps {
   tabKey: TabKey;
@@ -44,7 +46,7 @@ const DependenciesTable: React.FunctionComponent<DependenciesTableProps> = (
   const dependenciesTableColumns: (
     followedPackages: GetPackagesResult,
     registryUrl: string,
-  ) => ColumnsType<ParsedDependency> = (
+  ) => TableColumnsType<ParsedDependency> = (
     followedPackages: GetPackagesResult,
   ) => [
     {
@@ -158,7 +160,7 @@ const DependenciesTable: React.FunctionComponent<DependenciesTableProps> = (
         defaultPageSize: tabConfig.pageSize,
         position: ['bottomCenter'],
         showSizeChanger: true,
-        onChange(page, pageSize) {
+        onChange(page: number, pageSize: number) {
           updateTabPageConfig({ tabKey, page, pageSize });
         },
       }}

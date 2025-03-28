@@ -1,15 +1,15 @@
 import log from 'electron-log';
-import { PackageStore } from '@main/store/PackageStore';
+import { PackageStore } from '@main/store/PackageStore.js';
 import {
   PackageInfo,
   getPackageInfo,
   getSuggestions,
-} from '../api/RegistryApi';
-import { PackageSuggestionArgs } from '@type/PackageListenerArgs';
-import { PackageDetails } from '@type/PackageInfo';
-import { PackageCache } from '@main/caches/PackageCache';
-import { getErrorMessage } from '../error/ErrorService';
-import i18n from '../../i18n';
+} from '../api/RegistryApi.js';
+import { PackageSuggestionArgs } from '@type/PackageListenerArgs.js';
+import { PackageDetails } from '@type/PackageInfo.js';
+import { PackageCache } from '@main/caches/PackageCache.js';
+import { getErrorMessage } from '../error/ErrorService.js';
+import i18n from '../../i18n.js';
 
 export const npmRegistryUrl = 'https://registry.npmjs.org';
 

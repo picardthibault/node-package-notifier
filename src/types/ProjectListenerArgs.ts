@@ -1,4 +1,4 @@
-import { ProjectDetails } from './ProjectInfo';
+import { ProjectDetails } from './ProjectInfo.js';
 
 export interface ProjectCreationArgs {
   name: string;

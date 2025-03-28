@@ -1,10 +1,10 @@
 import { CronJob } from 'cron';
 import { Notification } from 'electron';
-import { updateAllStoredPackages } from '@main/services/package/PackageService';
-import { PackageStore } from '@main/store/PackageStore';
-import i18n from '../i18n';
+import { updateAllStoredPackages } from '@main/services/package/PackageService.js';
+import { PackageStore } from '@main/store/PackageStore.js';
+import i18n from '../i18n.js';
 import log from 'electron-log';
-import { appIcon } from '@main/helpers/AppIconHelper';
+import { appIcon } from '@main/helpers/AppIconHelper.js';
 
 export function launchUpdatePackageJob() {
   new CronJob(

@@ -1,2 +1,2 @@
-import './PackageListener';
-import './ProjectListener';
+import './PackageListener.js';
+import './ProjectListener.js';

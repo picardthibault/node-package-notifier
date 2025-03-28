@@ -6,6 +6,11 @@ export default defineConfig({
   build: {
     sourcemap: true,
     assetsInlineLimit: 0,
+    lib: {
+      entry: 'src/main/index.ts',
+      formats: ['es'],
+      fileName: (format, entryName) => `${entryName}.js`,
+    },
   },
   resolve: {
     alias: [

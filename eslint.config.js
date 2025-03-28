@@ -1,13 +1,14 @@
-const tseslint = require('typescript-eslint');
-const eslint = require('@eslint/js');
-const globals = require('globals');
-const reactPlugin = require('eslint-plugin-react');
-const reactHooksPlugin = require('eslint-plugin-react-hooks');
+import tseslint from 'typescript-eslint';
+import eslint from '@eslint/js';
+import globals from 'globals';
+import reactPlugin from 'eslint-plugin-react';
+import reactHooksPlugin from 'eslint-plugin-react-hooks';
 
-module.exports = tseslint.config(
+export default tseslint.config(
   {
     ignores: [
       '.vite/**',
+      'forge.config.cts',
       'eslint.config.js',
       'jest.config.js',
     ],
@@ -19,7 +20,7 @@ module.exports = tseslint.config(
           allowDefaultProject: ['*.ts'],
           defaultProject: 'tsconfig.json',
         },
-        tsconfigRootDir: __dirname,
+        tsconfigRootDir: import.meta.dirname,
       },
       globals: {
         ...globals.browser,

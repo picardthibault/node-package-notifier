@@ -1,13 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { AutoComplete, Form, Space, notification } from 'antd';
 import { useTranslation } from 'react-i18next';
-import ActionButton from '@renderer/components/Button/ActionButton';
-import Title from '@renderer/components/Title/Title';
-import { routePaths } from '../../routes';
-import LinkButton from '@renderer/components/Button/LinkButton';
-import RegistryField from '@renderer/components/Form/RegistryField';
-import { createPackage } from '@renderer/effects/PackageEffect';
-import { navigateTo } from '@renderer/effects/MenuEffect';
+import ActionButton from '@renderer/components/Button/ActionButton.js';
+import Title from '@renderer/components/Title/Title.js';
+import { routePaths } from '../../routes.js';
+import LinkButton from '@renderer/components/Button/LinkButton.js';
+import RegistryField from '@renderer/components/Form/RegistryField.js';
+import { createPackage } from '@renderer/effects/PackageEffect.js';
+import { navigateTo } from '@renderer/effects/MenuEffect.js';
 
 interface PackageFormField {
   packageName: string;
@@ -17,6 +17,7 @@ interface PackageFormField {
 export const PackageCreation = (): React.JSX.Element => {
   const { t } = useTranslation();
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const [openAlert, contextHolder] = notification.useNotification();
 
   const [creationLoading, setCreationLoading] = useState<boolean>(false);

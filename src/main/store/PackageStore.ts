@@ -1,6 +1,6 @@
 import Store from 'electron-store';
-import { generateKey } from '@main/helpers/KeyStoreHelper';
-import { PackageDetails } from '@type/PackageInfo';
+import { generateKey } from '@main/helpers/KeyStoreHelper.js';
+import { PackageDetails } from '@type/PackageInfo.js';
 
 export interface PackageConfig {
   name: string;

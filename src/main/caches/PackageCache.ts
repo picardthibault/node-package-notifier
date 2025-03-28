@@ -1,6 +1,5 @@
 import { createCache } from 'cache-manager';
-import Keyv from 'keyv';
-import { PackageDetails } from '@type/PackageInfo';
+import { PackageDetails } from '@type/PackageInfo.js';
 
 interface CacheStore {
   get: (packageName: string) => Promise<PackageDetails | null>;
@@ -26,7 +25,7 @@ export class PackageCache {
 
   private createCache(): CacheStore {
     return createCache({
-      stores: [new Keyv(undefined, { ttl: this.cacheTtl })],
+      ttl: this.cacheTtl,
     });
   }
 

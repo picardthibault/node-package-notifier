@@ -3,13 +3,13 @@ import {
   PackageCreationArgs,
   GetPackagesResult,
   GetPackageResult,
-} from './PackageListenerArgs';
+} from './PackageListenerArgs.js';
 import {
   ProjectCreationArgs,
   ProjectCreationResult,
   GetProjectDetailsResult,
-} from './ProjectListenerArgs';
-import { ProjectSumUp } from './ProjectInfo';
+} from './ProjectListenerArgs.js';
+import { ProjectSumUp } from './ProjectInfo.js';
 
 export {};
 

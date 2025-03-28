@@ -4,19 +4,19 @@ import {
   PackageCreationArgs,
   GetPackageResult,
   PackageSuggestionArgs,
-} from '../types/PackageListenerArgs';
+} from '../types/PackageListenerArgs.js';
 import {
   PackageListenerChannel,
   ProjectListenerChannel,
-} from '../types/IpcChannel';
+} from '../types/IpcChannel.js';
 import {
   ProjectCreationArgs,
   ProjectCreationResult,
   GetProjectDetailsResult,
   FetchLatestVersionArgs,
   FetchPublicationDateArgs,
-} from '../types/ProjectListenerArgs';
-import { ProjectSumUp } from '../types/ProjectInfo';
+} from '../types/ProjectListenerArgs.js';
+import { ProjectSumUp } from '../types/ProjectInfo.js';
 
 contextBridge.exposeInMainWorld('packageManagement', {
   create: (creationArgs: PackageCreationArgs): Promise<string | undefined> =>

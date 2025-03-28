@@ -1,12 +1,12 @@
 import { dialog, ipcMain } from 'electron';
-import { ProjectListenerChannel } from '@type/IpcChannel';
+import { ProjectListenerChannel } from '@type/IpcChannel.js';
 import {
   FetchLatestVersionArgs,
   FetchPublicationDateArgs,
   GetProjectDetailsResult,
   ProjectCreationArgs,
   ProjectCreationResult,
-} from '@type/ProjectListenerArgs';
+} from '@type/ProjectListenerArgs.js';
 import log from 'electron-log';
 import {
   validateProjectPath,
@@ -17,9 +17,9 @@ import {
   fetchLatestVersion,
   deleteProject,
   fetchVersionTime,
-} from '@main/services/project/ProjectService';
-import { ProjectSumUp } from '@type/ProjectInfo';
-import { getErrorMessage } from '@main/services/error/ErrorService';
+} from '@main/services/project/ProjectService.js';
+import { ProjectSumUp } from '@type/ProjectInfo.js';
+import { getErrorMessage } from '@main/services/error/ErrorService.js';
 
 ipcMain.handle(
   ProjectListenerChannel.PROJECT_PATH_SELECTOR,

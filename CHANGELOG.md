@@ -1,5 +1,11 @@
 # Changelog
 
+## v2.0.5
+
+### Changed
+- Switch to ESM
+- Update dependencies
+
 ## v2.0.4
 
 ### Added

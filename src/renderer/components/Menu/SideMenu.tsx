@@ -1,14 +1,13 @@
-import { Menu, MenuProps } from 'antd';
+import { Layout, Menu } from 'antd';
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import React, { FunctionComponent, useEffect, useState } from 'react';
-import Sider from 'antd/es/layout/Sider';
 import { useNavigate } from 'react-router';
-import { routePaths } from '../../routes';
+import { routePaths } from '../../routes.js';
 import { useUnit } from 'effector-react';
-import { MenuStore, menuStore } from '@renderer/stores/MenuStore';
-import { navigateTo } from '@renderer/effects/MenuEffect';
-import { resetDependenciesTabStore } from '@renderer/stores/DependenciesTabStore';
-import { MenuItemType, SubMenuType } from 'antd/es/menu/interface';
+import { MenuStore, menuStore } from '@renderer/stores/MenuStore.js';
+import { navigateTo } from '@renderer/effects/MenuEffect.js';
+import { resetDependenciesTabStore } from '@renderer/stores/DependenciesTabStore.js';
+import { MenuItemType, SubMenuType } from 'antd/es/menu/interface.js';
 
 export type SideMenuItem = MenuItemType | SubMenuType;
 
@@ -57,18 +56,18 @@ const SideMenu: FunctionComponent<SideMenuProps> = (props) => {
     void navigate(currentLocation);
   }, [menuKeys, currentLocation, navigate]);
 
-  const onClick: MenuProps['onClick'] = (menuItem) => {
+  const onClick = (menuItem: { key: string }) => {
     resetDependenciesTabStore();
     void navigateTo(menuItem.key);
     void navigate(menuItem.key);
   };
 
   return (
-    <Sider
+    <Layout.Sider
       collapsible
       collapsed={collapsed}
-      onCollapse={(value) => {
-        setCollapsed(value);
+      onCollapse={(collapsed: boolean) => {
+        setCollapsed(collapsed);
       }}
       width="300"
       trigger={
@@ -87,7 +86,7 @@ const SideMenu: FunctionComponent<SideMenuProps> = (props) => {
         items={items}
         className="sideMenu"
       />
-    </Sider>
+    </Layout.Sider>
   );
 };
 

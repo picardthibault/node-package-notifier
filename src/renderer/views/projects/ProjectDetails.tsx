@@ -1,37 +1,47 @@
 import React, {
   FunctionComponent,
+  JSX,
   useCallback,
   useEffect,
   useState,
 } from 'react';
 import { useParams } from 'react-router';
-import Title from '@renderer/components/Title/Title';
-import Loading from '@renderer/components/Loading/Loading';
-import { Form, Input, Popconfirm, Tabs, TabsProps, notification } from 'antd';
+import Title from '@renderer/components/Title/Title.js';
+import Loading from '@renderer/components/Loading/Loading.js';
+import { Form, Input, Popconfirm, Tabs, notification } from 'antd';
 import { useTranslation } from 'react-i18next';
-import TextArea from 'antd/es/input/TextArea';
-import DependenciesTable from './details/DependenciesTable';
-import { ParsedDependency } from '@type/ProjectInfo';
-import ActionButton from '@renderer/components/Button/ActionButton';
+import DependenciesTable from './details/DependenciesTable.js';
+import { ParsedDependency } from '@type/ProjectInfo.js';
+import ActionButton from '@renderer/components/Button/ActionButton.js';
 import { DeleteOutlined, QuestionCircleOutlined } from '@ant-design/icons';
-import { navigateTo } from '@renderer/effects/MenuEffect';
-import { routePaths } from '../../routes';
-import { fetchProjectsSumUp } from '@renderer/effects/ProjectEffects';
-import { createPackage, deletePackage } from '@renderer/effects/PackageEffect';
+import { navigateTo } from '@renderer/effects/MenuEffect.js';
+import { routePaths } from '../../routes.js';
+import { fetchProjectsSumUp } from '@renderer/effects/ProjectEffects.js';
+import {
+  createPackage,
+  deletePackage,
+} from '@renderer/effects/PackageEffect.js';
 import {
   TabKey,
   dependenciesTabKey,
   devDepenciesTabKey,
   dependenciesTabStore,
   updateActiveTab,
-} from '@renderer/stores/DependenciesTabStore';
+} from '@renderer/stores/DependenciesTabStore.js';
 import { useUnit } from 'effector-react';
+
+interface TabItems {
+  key: TabKey;
+  label: string;
+  children: JSX.Element;
+}
 
 const ProjectDetails: FunctionComponent = () => {
   const { id } = useParams<{ id: string }>();
 
   const { t } = useTranslation();
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const [openAlert, contextHolder] = notification.useNotification();
 
   const tabConfigStore = useUnit(dependenciesTabStore);
@@ -125,7 +135,7 @@ const ProjectDetails: FunctionComponent = () => {
     });
   });
 
-  const tabItems: TabsProps['items'] = [
+  const tabItems: TabItems[] = [
     {
       key: dependenciesTabKey,
       label: t('project.details.tabs.label.dependencies'),
@@ -203,14 +213,14 @@ const ProjectDetails: FunctionComponent = () => {
                 label={t('project.details.form.field.description')}
                 name="description"
               >
-                <TextArea readOnly />
+                <Input.TextArea readOnly />
               </Form.Item>
             </Form>
           </div>
           <Tabs
             defaultActiveKey={tabConfigStore.activeTab}
             items={tabItems}
-            onChange={(activeKey) => updateActiveTab(activeKey as TabKey)}
+            onChange={(activeKey: TabKey) => updateActiveTab(activeKey)}
           />
           <div className="actionFooter">
             <Popconfirm

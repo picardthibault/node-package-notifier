@@ -1,21 +1,21 @@
 import { ipcMain } from 'electron';
-import { PackageListenerChannel } from '@type/IpcChannel';
+import { PackageListenerChannel } from '@type/IpcChannel.js';
 import {
   GetPackageResult,
   GetPackagesResult,
   PackageCreationArgs,
   PackageDetailsArgs,
   PackageSuggestionArgs,
-} from '@type/PackageListenerArgs';
-import { PackageDetails } from '@type/PackageInfo';
-import { PackageStore } from '@main/store/PackageStore';
+} from '@type/PackageListenerArgs.js';
+import { PackageDetails } from '@type/PackageInfo.js';
+import { PackageStore } from '@main/store/PackageStore.js';
 import log from 'electron-log';
 import {
   createPackage,
   deletePackage,
   fetchPackageSuggestions,
   getPackage,
-} from '@main/services/package/PackageService';
+} from '@main/services/package/PackageService.js';
 import opener from 'opener';
 
 ipcMain.handle(

@@ -1,5 +1,5 @@
 import { createEvent, createStore } from 'effector';
-import { routePaths } from '../routes';
+import { routePaths } from '../routes.js';
 
 export interface MenuStore {
   currentLocation: string;

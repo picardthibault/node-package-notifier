@@ -1,5 +1,5 @@
 import i18n from 'i18next';
-import en from './ressources/locales/en.json';
+import en from './ressources/locales/en.json' with { type: 'json' };
 
 void i18n.init({
   fallbackLng: 'en',

@@ -3,8 +3,8 @@ import {
   createPackage,
   deletePackage,
   fetchPackages,
-} from '../effects/PackageEffect';
-import { GetPackagesResult } from '@type/PackageListenerArgs';
+} from '../effects/PackageEffect.js';
+import { GetPackagesResult } from '@type/PackageListenerArgs.js';
 
 export interface PackageListStore {
   page: number;

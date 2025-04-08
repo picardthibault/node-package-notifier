@@ -1,10 +1,10 @@
 import './styles/index.scss';
-import i18n from './i18n';
+import i18n from './i18n.js';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { I18nextProvider } from 'react-i18next';
 import { ConfigProvider } from 'antd';
-import App from './App';
+import App from './App.js';
 import { RouterProvider, createMemoryRouter } from 'react-router';
 
 const routeProvider = createMemoryRouter([{ path: '*', element: <App /> }]);

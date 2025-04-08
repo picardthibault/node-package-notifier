@@ -1,6 +1,6 @@
 import log from 'electron-log';
 import { stat, readdir, readFile } from 'fs/promises';
-import i18n from '../../i18n';
+import i18n from '../../i18n.js';
 
 export const isDirectory = async (path: string): Promise<boolean> => {
   try {

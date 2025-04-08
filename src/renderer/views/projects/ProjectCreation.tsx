@@ -1,22 +1,22 @@
 import React, { FunctionComponent, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import Title from '@renderer/components/Title/Title';
-import { useForm } from 'antd/es/form/Form';
+import Title from '@renderer/components/Title/Title.js';
 import { Form, Input, Space, notification } from 'antd';
-import ActionButton from '@renderer/components/Button/ActionButton';
-import { ProjectCreationArgs } from '@type/ProjectListenerArgs';
-import { routePaths } from '../../routes';
-import RegistryField from '@renderer/components/Form/RegistryField';
-import { fetchProjectsSumUp } from '@renderer/effects/ProjectEffects';
-import { navigateTo } from '@renderer/effects/MenuEffect';
-import FilePathField from '@renderer/components/Form/FilePathField';
+import ActionButton from '@renderer/components/Button/ActionButton.js';
+import { ProjectCreationArgs } from '@type/ProjectListenerArgs.js';
+import { routePaths } from '../../routes.js';
+import RegistryField from '@renderer/components/Form/RegistryField.js';
+import { fetchProjectsSumUp } from '@renderer/effects/ProjectEffects.js';
+import { navigateTo } from '@renderer/effects/MenuEffect.js';
+import FilePathField from '@renderer/components/Form/FilePathField.js';
 
 const ProjectCreation: FunctionComponent = () => {
   const { t } = useTranslation();
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const [openAlert, contextHolder] = notification.useNotification();
 
-  const [formInstance] = useForm();
+  const [formInstance] = Form.useForm();
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 

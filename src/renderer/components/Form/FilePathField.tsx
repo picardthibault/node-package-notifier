@@ -1,5 +1,11 @@
-import { Form, Input, InputRef, notification } from 'antd';
-import { FormInstance, Rule } from 'antd/es/form';
+import {
+  Form,
+  Input,
+  InputRef,
+  notification,
+  FormInstance,
+  FormRule,
+} from 'antd';
 import React, { DragEvent, FunctionComponent, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FolderOpenOutlined } from '@ant-design/icons';
@@ -11,7 +17,7 @@ interface Props {
   tooltip: string;
   placeholder: string;
   onChange: () => void;
-  rules: Rule[];
+  rules: FormRule[];
 }
 
 const FilePathField: FunctionComponent<Props> = (props) => {
@@ -20,6 +26,7 @@ const FilePathField: FunctionComponent<Props> = (props) => {
 
   const { t } = useTranslation();
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const [openAlert, contextHolder] = notification.useNotification();
 
   const inputRef = useRef<InputRef | null>(null);

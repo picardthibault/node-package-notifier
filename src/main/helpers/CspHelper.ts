@@ -1,10 +1,10 @@
 import log from 'electron-log';
 import { protocol, session } from 'electron';
-import { generateKey } from './KeyStoreHelper';
-import { readFileContent } from '@main/services/file/FileSystemService';
+import { generateKey } from './KeyStoreHelper.js';
+import { readFileContent } from '@main/services/file/FileSystemService.js';
 import mime from 'mime';
 import { extname } from 'path';
-import { isDevEnv } from './AppLifeCycleHelper';
+import { isDevEnv } from './AppLifeCycleHelper.js';
 
 export let cspNonce: string;
 

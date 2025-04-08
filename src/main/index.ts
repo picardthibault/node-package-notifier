@@ -2,11 +2,14 @@ import './listeners/index';
 import '@main/helpers/LogConfiguration';
 import { app, BrowserWindow, Menu, Tray } from 'electron';
 import * as path from 'path';
-import { createMainWindow, isDevEnv } from '@main/helpers/AppLifeCycleHelper';
-import { launchUpdatePackageJob } from './jobs/PackageJobs';
+import {
+  createMainWindow,
+  isDevEnv,
+} from '@main/helpers/AppLifeCycleHelper.js';
+import { launchUpdatePackageJob } from './jobs/PackageJobs.js';
 import log from 'electron-log';
-import i18n from './i18n';
-import { appIcon } from './helpers/AppIconHelper';
+import i18n from './i18n.js';
+import { appIcon } from './helpers/AppIconHelper.js';
 import started from 'electron-squirrel-startup';
 
 if (isDevEnv()) {
@@ -22,7 +25,7 @@ if (started) {
 
 export let mainWindow: BrowserWindow | undefined;
 
-export const ressourcePathFolder = path.join(__dirname, 'ressources');
+export const ressourcePathFolder = path.join(import.meta.dirname, 'ressources');
 
 const quitApp = (): void => {
   log.info('Exiting app');

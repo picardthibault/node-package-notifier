@@ -1,20 +1,25 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
-import Title from '@renderer/components/Title/Title';
-import { Form, Input, Table, Tooltip, notification } from 'antd';
-import TextArea from 'antd/es/input/TextArea';
-import Loading from '@renderer/components/Loading/Loading';
-import LinkButton from '@renderer/components/Button/LinkButton';
+import Title from '@renderer/components/Title/Title.js';
+import {
+  Form,
+  Input,
+  Table,
+  Tooltip,
+  notification,
+  TableColumnType,
+} from 'antd';
+import Loading from '@renderer/components/Loading/Loading.js';
+import LinkButton from '@renderer/components/Button/LinkButton.js';
 import { useTranslation } from 'react-i18next';
-import { ColumnsType } from 'antd/es/table';
 import { useUnit } from 'effector-react';
 import {
   PackageDetailsStore,
   packageDetailsStore,
-} from '@renderer/stores/PackageDetailsStore';
-import { MenuStore, menuStore } from '@renderer/stores/MenuStore';
+} from '@renderer/stores/PackageDetailsStore.js';
+import { MenuStore, menuStore } from '@renderer/stores/MenuStore.js';
 import { EyeOutlined } from '@ant-design/icons';
-import { navigateTo } from '@renderer/effects/MenuEffect';
-import PackageVersionTag from '@renderer/components/Tag/Tag';
+import { navigateTo } from '@renderer/effects/MenuEffect.js';
+import PackageVersionTag from '@renderer/components/Tag/Tag.js';
 
 interface TableItemType {
   key: number;
@@ -33,6 +38,7 @@ const backMouseButtonListener: (to: string) => (event: MouseEvent) => void =
 const PackageDetails: FunctionComponent = () => {
   const { t } = useTranslation();
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const [openAlert, contextHolder] = notification.useNotification();
 
   const { packageName, registryUrl } =
@@ -105,13 +111,14 @@ const PackageDetails: FunctionComponent = () => {
       });
   }, [formInstance, openAlert, packageName, registryUrl, t]);
 
-  const tableColumns: ColumnsType<TableItemType> = [
+  const tableColumns: TableColumnType<TableItemType>[] = [
     {
       key: 'name',
       title: t('package.details.table.columns.tags'),
       dataIndex: 'tagName',
       defaultSortOrder: 'descend',
-      sorter: (a, b) => a.tagName.localeCompare(b.tagName),
+      sorter: (a: TableItemType, b: TableItemType) =>
+        a.tagName.localeCompare(b.tagName),
     },
     {
       key: 'version',
@@ -184,7 +191,7 @@ const PackageDetails: FunctionComponent = () => {
                 label={t('package.details.form.field.description')}
                 name="description"
               >
-                <TextArea readOnly />
+                <Input.TextArea readOnly />
               </Form.Item>
             </Form>
           </div>

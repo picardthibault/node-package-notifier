@@ -16,7 +16,7 @@ import {
   ParsedDependency,
   ParsedProject,
   ProjectDetails,
-  ProjectSumUp,
+  ProjectListElement,
 } from '@type/ProjectInfo.js';
 import { GetProjectDetailsResult } from '@type/ProjectListenerArgs.js';
 import { PackageDetails } from '@type/PackageInfo.js';
@@ -112,17 +112,22 @@ export async function createProject(
   return projectKey;
 }
 
+/**
+ * Remove a project
+ * 
+ * @param projectKey the project to remove
+ */
 export function deleteProject(projectKey: string): void {
   log.info(`Deleting project with key ${projectKey}`);
   ProjectStore.get().removeProject(projectKey);
 }
 
 /**
- * Retrieve all project sum-up
+ * Retrieve the list of all projects
  *
- * @returns the table of project sum-up
+ * @returns the array of all projects
  */
-export const getProjectsSumUp = (): ProjectSumUp[] => {
+export const getProjectList = (): ProjectListElement[] => {
   log.info('Retrieve projects data for menu');
   const projects = ProjectStore.get().getProjects();
 

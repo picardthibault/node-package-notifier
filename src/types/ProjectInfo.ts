@@ -1,4 +1,4 @@
-export interface ProjectSumUp {
+export interface ProjectListElement {
   projectKey: string;
   name: string;
 }

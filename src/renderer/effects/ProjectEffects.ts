@@ -1,5 +1,5 @@
 import { createEffect } from 'effector';
 
-export const fetchProjectsSumUp = createEffect(() =>
-  window.projectManagement.getProjectsSumUp(),
+export const fetchProjectList = createEffect(() =>
+  window.projectManagement.getProjectList(),
 );

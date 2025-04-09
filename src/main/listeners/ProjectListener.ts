@@ -11,14 +11,14 @@ import log from 'electron-log';
 import {
   validateProjectPath,
   createProject,
-  getProjectsSumUp,
+  getProjectList,
   getProjectDetails,
   isProjectNameUsed,
   fetchLatestVersion,
   deleteProject,
   fetchVersionTime,
 } from '@main/services/project/ProjectService.js';
-import { ProjectSumUp } from '@type/ProjectInfo.js';
+import { ProjectListElement } from '@type/ProjectInfo.js';
 import { getErrorMessage } from '@main/services/error/ErrorService.js';
 
 ipcMain.handle(
@@ -89,11 +89,11 @@ ipcMain.handle(
 
 ipcMain.handle(
   ProjectListenerChannel.GET_PROJECTS_SUM_UP,
-  (): Promise<ProjectSumUp[]> => {
+  (): Promise<ProjectListElement[]> => {
     log.debug('Received get projects data for menu IPC');
 
-    const projectSumUp = getProjectsSumUp();
-    return Promise.resolve(projectSumUp);
+    const projectList = getProjectList();
+    return Promise.resolve(projectList);
   },
 );
 

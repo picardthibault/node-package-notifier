@@ -227,9 +227,13 @@ const ProjectDetails: FunctionComponent = () => {
               danger
               type="default"
               toolTip={t('project.details.tooltip.deleteProject')}
-              popConfirmIcon={<QuestionCircleOutlined style={{ color: 'red' }} />}
+              popConfirmIcon={
+                <QuestionCircleOutlined style={{ color: 'red' }} />
+              }
               popConfirmTitle={t('project.details.popUp.title.delete')}
-              popConfirmDescription={t('project.details.popUp.description.delete')}
+              popConfirmDescription={t(
+                'project.details.popUp.description.delete',
+              )}
               popConfirmOnConfirm={onDelete}
               popConfirmOkText={t('common.yes')}
               popConfirmCancelText={t('common.no')}

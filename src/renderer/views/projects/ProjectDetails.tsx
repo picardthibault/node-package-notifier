@@ -8,11 +8,11 @@ import React, {
 import { useParams } from 'react-router';
 import Title from '@renderer/components/Title/Title.js';
 import Loading from '@renderer/components/Loading/Loading.js';
-import { Form, Input, Popconfirm, Tabs, notification } from 'antd';
+import { Form, Input, Tabs, notification } from 'antd';
 import { useTranslation } from 'react-i18next';
 import DependenciesTable from './details/DependenciesTable.js';
 import { ParsedDependency } from '@type/ProjectInfo.js';
-import ActionButton from '@renderer/components/Button/ActionButton.js';
+import ActionButtonWithConfirm from '@renderer/components/Button/ActionButtonWithConfirm.js';
 import { DeleteOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { navigateTo } from '@renderer/effects/MenuEffect.js';
 import { routePaths } from '../../routes.js';
@@ -223,22 +223,23 @@ const ProjectDetails: FunctionComponent = () => {
             onChange={(activeKey: TabKey) => updateActiveTab(activeKey)}
           />
           <div className="actionFooter">
-            <Popconfirm
-              icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
-              title={t('project.details.popUp.title.delete')}
-              description={t('project.details.popUp.description.delete')}
-              onConfirm={onDelete}
-              okText={t('common.yes')}
-              cancelText={t('common.no')}
+            <ActionButtonWithConfirm
+              danger
+              type="default"
+              toolTip={t('project.details.tooltip.deleteProject')}
+              popConfirmIcon={
+                <QuestionCircleOutlined style={{ color: 'red' }} />
+              }
+              popConfirmTitle={t('project.details.popUp.title.delete')}
+              popConfirmDescription={t(
+                'project.details.popUp.description.delete',
+              )}
+              popConfirmOnConfirm={onDelete}
+              popConfirmOkText={t('common.yes')}
+              popConfirmCancelText={t('common.no')}
             >
-              <ActionButton
-                danger
-                type="default"
-                toolTip={t('project.details.tooltip.deleteProject')}
-              >
-                <DeleteOutlined />
-              </ActionButton>
-            </Popconfirm>
+              <DeleteOutlined />
+            </ActionButtonWithConfirm>
           </div>
         </>
       )}

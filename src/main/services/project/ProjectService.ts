@@ -114,7 +114,7 @@ export async function createProject(
 
 /**
  * Remove a project
- * 
+ *
  * @param projectKey the project to remove
  */
 export function deleteProject(projectKey: string): void {

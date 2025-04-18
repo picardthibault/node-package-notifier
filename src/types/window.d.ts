@@ -9,7 +9,7 @@ import {
   ProjectCreationResult,
   GetProjectDetailsResult,
 } from './ProjectListenerArgs.js';
-import { ProjectSumUp } from './ProjectInfo.js';
+import { ProjectListElement } from './ProjectInfo.js';
 
 export {};
 
@@ -44,7 +44,7 @@ declare global {
         projectCreationArgs: ProjectCreationArgs,
       ) => Promise<ProjectCreationResult>;
       delete: (projectKey: string) => Promise<void>;
-      getProjectsSumUp: () => Promise<ProjectSumUp[]>;
+      getProjectList: () => Promise<ProjectListElement[]>;
       getProjectDetails: (
         projectKey: string,
       ) => Promise<GetProjectDetailsResult>;

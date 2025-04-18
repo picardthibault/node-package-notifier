@@ -16,7 +16,7 @@ import {
   FetchLatestVersionArgs,
   FetchPublicationDateArgs,
 } from '../types/ProjectListenerArgs.js';
-import { ProjectSumUp } from '../types/ProjectInfo.js';
+import { ProjectListElement } from '../types/ProjectInfo.js';
 
 contextBridge.exposeInMainWorld('packageManagement', {
   create: (creationArgs: PackageCreationArgs): Promise<string | undefined> =>
@@ -63,7 +63,7 @@ contextBridge.exposeInMainWorld('projectManagement', {
     ipcRenderer.invoke(ProjectListenerChannel.CREATE, projectCreationArgs),
   delete: (projectKey: string) =>
     ipcRenderer.invoke(ProjectListenerChannel.DELETE, projectKey),
-  getProjectsSumUp: (): Promise<ProjectSumUp[]> =>
+  getProjectList: (): Promise<ProjectListElement[]> =>
     ipcRenderer.invoke(ProjectListenerChannel.GET_PROJECTS_SUM_UP),
   getProjectDetails: (projectKey: string): Promise<GetProjectDetailsResult> =>
     ipcRenderer.invoke(ProjectListenerChannel.GET_PROJECT_DETAILS, projectKey),

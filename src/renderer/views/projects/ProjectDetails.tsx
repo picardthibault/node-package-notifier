@@ -16,7 +16,7 @@ import ActionButton from '@renderer/components/Button/ActionButton.js';
 import { DeleteOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { navigateTo } from '@renderer/effects/MenuEffect.js';
 import { routePaths } from '../../routes.js';
-import { fetchProjectsSumUp } from '@renderer/effects/ProjectEffects.js';
+import { fetchProjectList } from '@renderer/effects/ProjectEffects.js';
 import {
   createPackage,
   deletePackage,
@@ -170,7 +170,7 @@ const ProjectDetails: FunctionComponent = () => {
             projectName: title,
           }),
         });
-        void fetchProjectsSumUp();
+        void fetchProjectList();
         void navigateTo(routePaths.packageList.generate());
       });
     }

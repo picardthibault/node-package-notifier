@@ -6,7 +6,7 @@ import ActionButton from '@renderer/components/Button/ActionButton.js';
 import { ProjectCreationArgs } from '@type/ProjectListenerArgs.js';
 import { routePaths } from '../../routes.js';
 import RegistryField from '@renderer/components/Form/RegistryField.js';
-import { fetchProjectsSumUp } from '@renderer/effects/ProjectEffects.js';
+import { fetchProjectList } from '@renderer/effects/ProjectEffects.js';
 import { navigateTo } from '@renderer/effects/MenuEffect.js';
 import FilePathField from '@renderer/components/Form/FilePathField.js';
 
@@ -56,7 +56,7 @@ const ProjectCreation: FunctionComponent = () => {
           openAlert.success({
             message: t('project.creation.alert.title.success'),
           });
-          void fetchProjectsSumUp();
+          void fetchProjectList();
           void navigateTo(
             routePaths.projectDetails.generate(
               projectCreationResult.projectKey,

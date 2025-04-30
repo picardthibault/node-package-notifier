@@ -26,3 +26,8 @@ export interface FetchPublicationDateArgs {
   dependencyVersion: string;
   registryUrl?: string;
 }
+
+export interface ExportNewDependenciesArgs {
+  projectKey: string;
+  outputPath: string;
+}

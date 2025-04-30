@@ -147,10 +147,10 @@ export const PackagesView = (): React.JSX.Element => {
     <>
       <Title content={t('package.list.title')} />
       <div
+        className='p-2'
         style={{
           display: 'flex',
           justifyContent: 'end',
-          padding: '6px',
         }}
       >
         <ActionButton
@@ -194,9 +194,7 @@ export const PackagesView = (): React.JSX.Element => {
         bordered={true}
         columns={tableColumns}
         dataSource={hasFilter ? filteredPackages : packages}
-        style={{
-          padding: '6px 0 6px 0',
-        }}
+        className="py-2"
         pagination={{
           current: page,
           defaultPageSize: pageSize,

@@ -51,10 +51,7 @@ const ActionButtonWithConfirm: React.FunctionComponent<Props> = (
           htmlType={htmlType}
           onClick={onClick}
           danger={danger}
-          style={{
-            paddingRight: '10px',
-            paddingLeft: '10px',
-          }}
+          className="px-3"
           loading={loading}
         >
           {children}

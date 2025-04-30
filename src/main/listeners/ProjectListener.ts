@@ -1,6 +1,7 @@
 import { dialog, ipcMain } from 'electron';
 import { ProjectListenerChannel } from '@type/IpcChannel.js';
 import {
+  ExportNewDependenciesArgs,
   FetchLatestVersionArgs,
   FetchPublicationDateArgs,
   GetProjectDetailsResult,
@@ -20,6 +21,7 @@ import {
 } from '@main/services/project/ProjectService.js';
 import { ProjectListElement } from '@type/ProjectInfo.js';
 import { getErrorMessage } from '@main/services/error/ErrorService.js';
+import { mainWindow } from '../index.js';
 
 ipcMain.handle(
   ProjectListenerChannel.PROJECT_PATH_SELECTOR,
@@ -141,3 +143,25 @@ ipcMain.handle(
     );
   },
 );
+
+ipcMain.handle(
+  ProjectListenerChannel.EXPORT_NEW_DEPENDENCIES_DIALOG,
+  async (): Promise<string | undefined> => {
+          return new Promise(resolve => {
+              if (mainWindow) {
+                  resolve(dialog.showSaveDialogSync(mainWindow, {filters: [{name: 'text file', extensions: ['txt']}]}));
+              } else {
+                  resolve(undefined);
+              }
+          });
+      },
+)
+
+ipcMain.handle(
+  ProjectListenerChannel.EXPORT_NEW_DEPENDENCIES,
+  async (event, exportNewDependenciesArgs: ExportNewDependenciesArgs ): Promise<string | undefined> => {
+    log.debug('Received export project IPC');
+    log.debug(exportNewDependenciesArgs);
+    return Promise.resolve(undefined);
+  }
+)

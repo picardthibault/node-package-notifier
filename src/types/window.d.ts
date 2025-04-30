@@ -54,6 +54,10 @@ declare global {
       fetchPublicationDate: (
         fetchPublicationDateArgs: FetchPublicationDateArgs,
       ) => Promise<string | undefined>;
+      exportNewDependenciesDialog: () => Promise<string | undefined>;
+      exportNewDependencies: (
+          exportNewDependenciesArgs: ExportNewDependenciesArgs,
+        ) => Promise<string | undefined>;
     };
   }
 }

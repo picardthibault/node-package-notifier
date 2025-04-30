@@ -1,7 +1,7 @@
 import { dialog, ipcMain } from 'electron';
 import { ProjectListenerChannel } from '@type/IpcChannel.js';
 import {
-  ExportNewDependenciesArgs,
+  ExportDependenciesWithNewVersionArgs,
   FetchLatestVersionArgs,
   FetchPublicationDateArgs,
   GetProjectDetailsResult,
@@ -145,7 +145,7 @@ ipcMain.handle(
 );
 
 ipcMain.handle(
-  ProjectListenerChannel.EXPORT_NEW_DEPENDENCIES_DIALOG,
+  ProjectListenerChannel.EXPORT_DEPENDENCIES_WITH_NEW_VERSION_SAVE_DIALOG,
   async (): Promise<string | undefined> => {
     return new Promise((resolve) => {
       if (mainWindow) {
@@ -162,13 +162,13 @@ ipcMain.handle(
 );
 
 ipcMain.handle(
-  ProjectListenerChannel.EXPORT_NEW_DEPENDENCIES,
+  ProjectListenerChannel.EXPORT_DEPENDENCIES_WITH_NEW_VERSION,
   async (
     event,
-    exportNewDependenciesArgs: ExportNewDependenciesArgs,
+    exportDependenciesWithNewVersionArgs: ExportDependenciesWithNewVersionArgs,
   ): Promise<string | undefined> => {
     log.debug('Received export project IPC');
-    log.debug(exportNewDependenciesArgs);
+    log.debug(exportDependenciesWithNewVersionArgs);
     return Promise.resolve(undefined);
   },
 );

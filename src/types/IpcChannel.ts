@@ -17,6 +17,6 @@ export enum ProjectListenerChannel {
   GET_PROJECT_DETAILS = 'projectChannelGetProjectDetails',
   FETCH_LATEST_VERSION = 'projectChannelFetchLatestVersion',
   FETCH_PUBLICATION_DATE = 'projectChannelFetchPublicationDate',
-  EXPORT_NEW_DEPENDENCIES_DIALOG = 'projectChannelExportNewDependenciesDialog',
-  EXPORT_NEW_DEPENDENCIES = 'projectChannelNewDependenciesExport',
+  EXPORT_DEPENDENCIES_WITH_NEW_VERSION_SAVE_DIALOG = 'projectChannelExportDependenciesWithNewVersionSaveDialog',
+  EXPORT_DEPENDENCIES_WITH_NEW_VERSION = 'projectChannelExportDependenciesWithNewVersion',
 }

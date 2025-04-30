@@ -20,7 +20,11 @@ import {
 } from '@ant-design/icons';
 import { navigateTo } from '@renderer/effects/MenuEffect.js';
 import { routePaths } from '../../routes.js';
-import { fetchProjectList } from '@renderer/effects/ProjectEffects.js';
+import {
+  fetchProjectList,
+  exportDependenciesWithNewVersionSaveDialog,
+  exportDependenciesWithNewVersion,
+} from '@renderer/effects/ProjectEffects.js';
 import {
   createPackage,
   deletePackage,
@@ -167,6 +171,42 @@ const ProjectDetails: FunctionComponent = () => {
     },
   ];
 
+  const onExportDependenciesWithNewVersion = () => {
+    void exportDependenciesWithNewVersionSaveDialog();
+  };
+
+  useEffect(() => {
+    return exportDependenciesWithNewVersionSaveDialog.done.watch(
+      ({ result }) => {
+        if (id && result) {
+          void exportDependenciesWithNewVersion({
+            projectKey: id,
+            outputFilePath: result,
+          });
+        }
+      },
+    );
+  });
+
+  useEffect(() => {
+    return exportDependenciesWithNewVersion.done.watch(({ result }) => {
+      if (!result) {
+        openAlert.success({
+          message: t(
+            'project.details.alert.title.dependenciesWithNewVersionExported',
+          ),
+        });
+      } else {
+        openAlert.error({
+          message: t(
+            'project.details.alert.title.exportDependenciesWithNewVersionExportError',
+          ),
+          description: result,
+        });
+      }
+    });
+  });
+
   const onDelete = useCallback(() => {
     if (id) {
       void window.projectManagement.delete(id).then(() => {
@@ -232,17 +272,10 @@ const ProjectDetails: FunctionComponent = () => {
               type="default"
               htmlType="button"
               className="mr-3"
-              toolTip={t('project.details.tooltip.exportNewDependencies')}
-              onClick={() => {
-                window.projectManagement
-                  .exportNewDependenciesDialog()
-                  .then((selectedPath) => {
-                    console.log(selectedPath);
-                  })
-                  .catch((err: unknown) => {
-                    console.log(err);
-                  });
-              }}
+              toolTip={t(
+                'project.details.tooltip.exportDependenciesWithNewVersion',
+              )}
+              onClick={onExportDependenciesWithNewVersion}
             >
               <ExportOutlined />
             </ActionButton>

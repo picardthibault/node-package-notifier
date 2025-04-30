@@ -8,6 +8,9 @@ import {
   ProjectCreationArgs,
   ProjectCreationResult,
   GetProjectDetailsResult,
+  FetchLatestVersionArgs,
+  FetchPublicationDateArgs,
+  ExportDependenciesWithNewVersionArgs,
 } from './ProjectListenerArgs.js';
 import { ProjectListElement } from './ProjectInfo.js';
 
@@ -54,9 +57,11 @@ declare global {
       fetchPublicationDate: (
         fetchPublicationDateArgs: FetchPublicationDateArgs,
       ) => Promise<string | undefined>;
-      exportNewDependenciesDialog: () => Promise<string | undefined>;
-      exportNewDependencies: (
-        exportNewDependenciesArgs: ExportNewDependenciesArgs,
+      exportDependenciesWithNewVersionSaveDialog: () => Promise<
+        string | undefined
+      >;
+      exportDependenciesWithNewVersion: (
+        exportDependenciesWithNewVersionArgs: ExportDependenciesWithNewVersionArgs,
       ) => Promise<string | undefined>;
     };
   }

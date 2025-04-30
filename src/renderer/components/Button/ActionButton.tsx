@@ -13,7 +13,16 @@ interface ActionButtonProps {
 }
 
 const ActionButton = (props: ActionButtonProps): React.JSX.Element => {
-  const { children, type, htmlType, danger, toolTip, onClick, loading, className } = props;
+  const {
+    children,
+    type,
+    htmlType,
+    danger,
+    toolTip,
+    onClick,
+    loading,
+    className,
+  } = props;
 
   return (
     <Tooltip title={toolTip} placement="topLeft">

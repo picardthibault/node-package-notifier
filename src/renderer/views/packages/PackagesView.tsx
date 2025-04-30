@@ -147,7 +147,7 @@ export const PackagesView = (): React.JSX.Element => {
     <>
       <Title content={t('package.list.title')} />
       <div
-        className='p-2'
+        className="p-2"
         style={{
           display: 'flex',
           justifyContent: 'end',

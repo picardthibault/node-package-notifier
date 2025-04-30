@@ -13,7 +13,11 @@ import { useTranslation } from 'react-i18next';
 import DependenciesTable from './details/DependenciesTable.js';
 import { ParsedDependency } from '@type/ProjectInfo.js';
 import ActionButtonWithConfirm from '@renderer/components/Button/ActionButtonWithConfirm.js';
-import { DeleteOutlined, ExportOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import {
+  DeleteOutlined,
+  ExportOutlined,
+  QuestionCircleOutlined,
+} from '@ant-design/icons';
 import { navigateTo } from '@renderer/effects/MenuEffect.js';
 import { routePaths } from '../../routes.js';
 import { fetchProjectList } from '@renderer/effects/ProjectEffects.js';
@@ -225,12 +229,19 @@ const ProjectDetails: FunctionComponent = () => {
           />
           <div className="actionFooter">
             <ActionButton
-              type='default'
-              htmlType='button'
-              className='mr-3'
+              type="default"
+              htmlType="button"
+              className="mr-3"
               toolTip={t('project.details.tooltip.exportNewDependencies')}
               onClick={() => {
-                window.projectManagement.exportNewDependenciesDialog().then(selectedPath => {console.log(selectedPath)}).catch((err: unknown) => {console.log(err)});
+                window.projectManagement
+                  .exportNewDependenciesDialog()
+                  .then((selectedPath) => {
+                    console.log(selectedPath);
+                  })
+                  .catch((err: unknown) => {
+                    console.log(err);
+                  });
               }}
             >
               <ExportOutlined />

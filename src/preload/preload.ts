@@ -82,8 +82,13 @@ contextBridge.exposeInMainWorld('projectManagement', {
       ProjectListenerChannel.FETCH_PUBLICATION_DATE,
       fetchPublicationDateArgs,
     ),
-  exportNewDependenciesDialog: (): Promise<string | undefined> => ipcRenderer.invoke(ProjectListenerChannel.EXPORT_NEW_DEPENDENCIES_DIALOG),
+  exportNewDependenciesDialog: (): Promise<string | undefined> =>
+    ipcRenderer.invoke(ProjectListenerChannel.EXPORT_NEW_DEPENDENCIES_DIALOG),
   exportNewDependencies: (
     exportNewDependenciesArgs: ExportNewDependenciesArgs,
-  ): Promise<string | undefined> => ipcRenderer.invoke(ProjectListenerChannel.EXPORT_NEW_DEPENDENCIES, exportNewDependenciesArgs),
+  ): Promise<string | undefined> =>
+    ipcRenderer.invoke(
+      ProjectListenerChannel.EXPORT_NEW_DEPENDENCIES,
+      exportNewDependenciesArgs,
+    ),
 });

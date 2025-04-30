@@ -56,8 +56,8 @@ declare global {
       ) => Promise<string | undefined>;
       exportNewDependenciesDialog: () => Promise<string | undefined>;
       exportNewDependencies: (
-          exportNewDependenciesArgs: ExportNewDependenciesArgs,
-        ) => Promise<string | undefined>;
+        exportNewDependenciesArgs: ExportNewDependenciesArgs,
+      ) => Promise<string | undefined>;
     };
   }
 }

@@ -2,6 +2,9 @@
 
 ## v2.1.0
 
+### Added
+- Add an export of project dependencies with newer version
+
 ### Fixed
 - Fix Project delete pop confirm display
 

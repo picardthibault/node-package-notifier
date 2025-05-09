@@ -13,7 +13,7 @@ export enum ProjectListenerChannel {
   IS_PROJECT_PATH_VALID = 'projectChannelIsProjectPathValid',
   CREATE = 'projectChannelCreate',
   DELETE = 'projectChannelDelete',
-  GET_PROJECTS_SUM_UP = 'projectChannelGetProjectsSumUp',
+  GET_PROJECT_LIST = 'projectChannelGetProjectList',
   GET_PROJECT_DETAILS = 'projectChannelGetProjectDetails',
   FETCH_LATEST_VERSION = 'projectChannelFetchLatestVersion',
   FETCH_PUBLICATION_DATE = 'projectChannelFetchPublicationDate',

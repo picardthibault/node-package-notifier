@@ -91,9 +91,9 @@ ipcMain.handle(
 );
 
 ipcMain.handle(
-  ProjectListenerChannel.GET_PROJECTS_SUM_UP,
+  ProjectListenerChannel.GET_PROJECT_LIST,
   (): Promise<ProjectListElement[]> => {
-    log.debug('Received get projects data for menu IPC');
+    log.debug('Received get project list for menu IPC');
 
     const projectList = getProjectList();
     return Promise.resolve(projectList);

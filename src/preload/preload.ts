@@ -65,7 +65,7 @@ contextBridge.exposeInMainWorld('projectManagement', {
   delete: (projectKey: string) =>
     ipcRenderer.invoke(ProjectListenerChannel.DELETE, projectKey),
   getProjectList: (): Promise<ProjectListElement[]> =>
-    ipcRenderer.invoke(ProjectListenerChannel.GET_PROJECTS_SUM_UP),
+    ipcRenderer.invoke(ProjectListenerChannel.GET_PROJECT_LIST),
   getProjectDetails: (projectKey: string): Promise<GetProjectDetailsResult> =>
     ipcRenderer.invoke(ProjectListenerChannel.GET_PROJECT_DETAILS, projectKey),
   fetchLatestVersion: (

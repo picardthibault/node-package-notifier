@@ -59,6 +59,8 @@ const ProjectDetails: FunctionComponent = () => {
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
+  const [isExportRunning, setIsExportRunning] = useState<boolean>(false);
+
   const [title, setTitle] = useState<string>('');
 
   const [registryUrl, setRegistryUrl] = useState<string>('');
@@ -179,6 +181,7 @@ const ProjectDetails: FunctionComponent = () => {
     return exportDependenciesWithNewVersionSaveDialog.done.watch(
       ({ result }) => {
         if (id && result) {
+          setIsExportRunning(true);
           void exportDependenciesWithNewVersion({
             projectKey: id,
             outputFilePath: result,
@@ -190,6 +193,7 @@ const ProjectDetails: FunctionComponent = () => {
 
   useEffect(() => {
     return exportDependenciesWithNewVersion.done.watch(({ result }) => {
+      setIsExportRunning(false);
       if (!result) {
         openAlert.success({
           message: t(
@@ -272,6 +276,7 @@ const ProjectDetails: FunctionComponent = () => {
               type="default"
               htmlType="button"
               className="mr-3"
+              loading={isExportRunning}
               toolTip={t(
                 'project.details.tooltip.exportDependenciesWithNewVersion',
               )}

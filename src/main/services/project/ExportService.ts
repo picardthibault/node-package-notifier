@@ -16,7 +16,7 @@ import { writeFileContent } from '../file/FileSystemService.js';
 export const exportDependenciesWithNewVersion = async (
   projectKey: string,
   outputFilePath: string,
-) => {
+): Promise<string | undefined> => {
   log.info(`Export dependencies with new version from project "${projectKey}"`);
 
   const projectDetails = await getProjectDetails(projectKey);
@@ -41,6 +41,8 @@ export const exportDependenciesWithNewVersion = async (
   );
 
   await saveDependenciesWithNewVersionExport(outputFilePath, exportContent);
+
+  return undefined;
 };
 
 /**
@@ -151,6 +153,7 @@ const saveDependenciesWithNewVersionExport = async (
   exportContent: string,
 ): Promise<void> => {
   const output = computeOutputFilePath(outputFilePath);
+  log.info(`Save export dependency with new version file at "${output}"`);
   await writeFileContent(output, exportContent);
 };
 

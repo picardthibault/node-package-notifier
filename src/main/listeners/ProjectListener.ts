@@ -173,7 +173,6 @@ ipcMain.handle(
     log.debug(
       `Received export dependencies with new version IPC with projectKey "${projectKey} and outputFilePath "${outputFilePath}`,
     );
-    await exportDependenciesWithNewVersion(projectKey, outputFilePath);
-    return Promise.resolve(undefined);
+    return exportDependenciesWithNewVersion(projectKey, outputFilePath);
   },
 );

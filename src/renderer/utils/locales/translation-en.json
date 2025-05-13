@@ -186,8 +186,8 @@
                     "dependencyFollowError": "Unable to follow the selected dependency.",
                     "dependencyUnfollowed": "Dependency is now unfollowed.",
                     "projectRemoved": "Project \"{{projectName}}\" has been removed.",
-                    "dependenciesWithNewVersionExported": "Dependencies with new version have been exported.",
-                    "exportDependenciesWithNewVersionExportError": "Unable to export dependencies with new version."
+                    "dependenciesWithNewVersionExported": "Dependencies with newer version have been exported.",
+                    "exportDependenciesWithNewVersionExportError": "Unable to export dependencies with newer version."
                 },
                 "description": {
                     "loadProjectError": "An error occurred while loading project details: {{cause}}.",

@@ -1,5 +1,5 @@
 import log from 'electron-log';
-import { stat, readdir, readFile } from 'fs/promises';
+import { stat, readdir, readFile, writeFile } from 'fs/promises';
 import i18n from '../../i18n.js';
 
 export const isDirectory = async (path: string): Promise<boolean> => {
@@ -63,4 +63,8 @@ export const readFileContent = async (path: string): Promise<Buffer> => {
       i18n.t('fileSystem.errors.errorWhileReadingFile', { path }),
     );
   }
+};
+
+export const writeFileContent = async (path: string, content: string) => {
+  return writeFile(path, content);
 };

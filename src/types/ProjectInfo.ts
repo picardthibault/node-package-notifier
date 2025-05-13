@@ -21,3 +21,7 @@ export interface ParsedDependency {
   name: string;
   version: string;
 }
+
+export interface ParsedDependencyWithNewVersion extends ParsedDependency {
+  newVersion: string;
+}

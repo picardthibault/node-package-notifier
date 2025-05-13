@@ -15,6 +15,7 @@ import {
   GetProjectDetailsResult,
   FetchLatestVersionArgs,
   FetchPublicationDateArgs,
+  ExportDependenciesWithNewVersionArgs,
 } from '../types/ProjectListenerArgs.js';
 import { ProjectListElement } from '../types/ProjectInfo.js';
 
@@ -64,7 +65,7 @@ contextBridge.exposeInMainWorld('projectManagement', {
   delete: (projectKey: string) =>
     ipcRenderer.invoke(ProjectListenerChannel.DELETE, projectKey),
   getProjectList: (): Promise<ProjectListElement[]> =>
-    ipcRenderer.invoke(ProjectListenerChannel.GET_PROJECTS_SUM_UP),
+    ipcRenderer.invoke(ProjectListenerChannel.GET_PROJECT_LIST),
   getProjectDetails: (projectKey: string): Promise<GetProjectDetailsResult> =>
     ipcRenderer.invoke(ProjectListenerChannel.GET_PROJECT_DETAILS, projectKey),
   fetchLatestVersion: (
@@ -80,5 +81,16 @@ contextBridge.exposeInMainWorld('projectManagement', {
     ipcRenderer.invoke(
       ProjectListenerChannel.FETCH_PUBLICATION_DATE,
       fetchPublicationDateArgs,
+    ),
+  exportDependenciesWithNewVersionSaveDialog: (): Promise<string | undefined> =>
+    ipcRenderer.invoke(
+      ProjectListenerChannel.EXPORT_DEPENDENCIES_WITH_NEW_VERSION_SAVE_DIALOG,
+    ),
+  exportDependenciesWithNewVersion: (
+    exportDependenciesWithNewVersionArgs: ExportDependenciesWithNewVersionArgs,
+  ): Promise<string | undefined> =>
+    ipcRenderer.invoke(
+      ProjectListenerChannel.EXPORT_DEPENDENCIES_WITH_NEW_VERSION,
+      exportDependenciesWithNewVersionArgs,
     ),
 });

@@ -32,7 +32,12 @@
             }
         },
         "parse": {
-            "error": "Unable to parse project \"package.json\" file"
+            "error": "Unable to parse project \"package.json\" file."
+        },
+        "export": {
+            "error": {
+                "unableToRetrieveProjectDependencies": "Unable to retrieve project dependencies."
+            }
         }
     },
     "fileSystem": {

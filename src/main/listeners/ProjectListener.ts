@@ -1,6 +1,7 @@
 import { dialog, ipcMain } from 'electron';
 import { ProjectListenerChannel } from '@type/IpcChannel.js';
 import {
+  ExportDependenciesWithNewVersionArgs,
   FetchLatestVersionArgs,
   FetchPublicationDateArgs,
   GetProjectDetailsResult,
@@ -20,6 +21,8 @@ import {
 } from '@main/services/project/ProjectService.js';
 import { ProjectListElement } from '@type/ProjectInfo.js';
 import { getErrorMessage } from '@main/services/error/ErrorService.js';
+import { mainWindow } from '../index.js';
+import { exportDependenciesWithNewVersion } from '@main/services/project/ExportService.js';
 
 ipcMain.handle(
   ProjectListenerChannel.PROJECT_PATH_SELECTOR,
@@ -88,9 +91,9 @@ ipcMain.handle(
 );
 
 ipcMain.handle(
-  ProjectListenerChannel.GET_PROJECTS_SUM_UP,
+  ProjectListenerChannel.GET_PROJECT_LIST,
   (): Promise<ProjectListElement[]> => {
-    log.debug('Received get projects data for menu IPC');
+    log.debug('Received get project list for menu IPC');
 
     const projectList = getProjectList();
     return Promise.resolve(projectList);
@@ -139,5 +142,37 @@ ipcMain.handle(
       fetchPublicationDateArgs.dependencyVersion,
       fetchPublicationDateArgs.registryUrl,
     );
+  },
+);
+
+ipcMain.handle(
+  ProjectListenerChannel.EXPORT_DEPENDENCIES_WITH_NEW_VERSION_SAVE_DIALOG,
+  async (): Promise<string | undefined> => {
+    log.debug('Received export dependencies with new version save dialog IPC');
+    return new Promise((resolve) => {
+      if (mainWindow) {
+        resolve(
+          dialog.showSaveDialogSync(mainWindow, {
+            filters: [{ name: 'text file', extensions: ['txt'] }],
+          }),
+        );
+      } else {
+        resolve(undefined);
+      }
+    });
+  },
+);
+
+ipcMain.handle(
+  ProjectListenerChannel.EXPORT_DEPENDENCIES_WITH_NEW_VERSION,
+  async (
+    event,
+    exportDependenciesWithNewVersionArgs: ExportDependenciesWithNewVersionArgs,
+  ): Promise<string | undefined> => {
+    const { projectKey, outputFilePath } = exportDependenciesWithNewVersionArgs;
+    log.debug(
+      `Received export dependencies with new version IPC with projectKey "${projectKey} and outputFilePath "${outputFilePath}`,
+    );
+    return exportDependenciesWithNewVersion(projectKey, outputFilePath);
   },
 );

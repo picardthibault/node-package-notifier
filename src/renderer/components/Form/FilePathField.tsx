@@ -35,7 +35,8 @@ const FilePathField: FunctionComponent<Props> = (props) => {
     event.preventDefault();
     const files = event.dataTransfer.files;
     if (files.length === 1) {
-      formInstance.setFieldValue(name, files[0].path);
+      const filePath = window.fileManagement.getPathFromFile(files[0]);
+      formInstance.setFieldValue(name, filePath);
       onChange();
       inputRef.current?.focus();
     } else {

@@ -8,6 +8,9 @@
 ### Fixed
 - Fix Project delete pop confirm display
 
+### Changed
+- Update dependencies
+
 ## v2.0.5
 
 ### Changed

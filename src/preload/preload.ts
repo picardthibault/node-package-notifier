@@ -1,4 +1,4 @@
-import { contextBridge, ipcRenderer } from 'electron';
+import { contextBridge, ipcRenderer, webUtils } from 'electron';
 import {
   GetPackagesResult,
   PackageCreationArgs,
@@ -18,6 +18,10 @@ import {
   ExportDependenciesWithNewVersionArgs,
 } from '../types/ProjectListenerArgs.js';
 import { ProjectListElement } from '../types/ProjectInfo.js';
+
+contextBridge.exposeInMainWorld('fileManagement', {
+  getPathFromFile: (file: File): string => webUtils.getPathForFile(file),
+});
 
 contextBridge.exposeInMainWorld('packageManagement', {
   create: (creationArgs: PackageCreationArgs): Promise<string | undefined> =>

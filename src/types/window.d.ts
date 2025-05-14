@@ -18,6 +18,9 @@ export {};
 
 declare global {
   interface Window {
+    fileManagement: {
+      getPathFromFile: (file: File) => string;
+    };
     packageManagement: {
       create: (
         creationArgs: PackageCreationArgs,

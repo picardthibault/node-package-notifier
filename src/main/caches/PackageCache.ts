@@ -2,7 +2,7 @@ import { createCache } from 'cache-manager';
 import { PackageDetails } from '@type/PackageInfo.js';
 
 interface CacheStore {
-  get: (packageName: string) => Promise<PackageDetails | null>;
+  get: (packageName: string) => Promise<PackageDetails | null | undefined>;
   set: (
     packageName: string,
     PackageDetails: PackageDetails,

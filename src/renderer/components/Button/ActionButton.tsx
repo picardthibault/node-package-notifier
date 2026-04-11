@@ -9,10 +9,20 @@ interface ActionButtonProps {
   toolTip?: string;
   onClick?: () => void;
   loading?: boolean;
+  className?: string;
 }
 
 const ActionButton = (props: ActionButtonProps): React.JSX.Element => {
-  const { children, type, htmlType, danger, toolTip, onClick, loading } = props;
+  const {
+    children,
+    type,
+    htmlType,
+    danger,
+    toolTip,
+    onClick,
+    loading,
+    className,
+  } = props;
 
   return (
     <Tooltip title={toolTip} placement="topLeft">
@@ -21,11 +31,8 @@ const ActionButton = (props: ActionButtonProps): React.JSX.Element => {
         htmlType={htmlType}
         onClick={onClick}
         danger={danger}
-        style={{
-          paddingRight: '10px',
-          paddingLeft: '10px',
-        }}
         loading={loading}
+        className={`px-3 ${className}`}
       >
         {children}
       </Button>

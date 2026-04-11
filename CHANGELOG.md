@@ -1,5 +1,16 @@
 # Changelog
 
+## v2.1.0
+
+### Added
+- Add an export of project dependencies with newer version
+
+### Fixed
+- Fix Project delete pop confirm display
+
+### Changed
+- Update dependencies
+
 ## v2.0.5
 
 ### Changed

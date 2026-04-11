@@ -8,15 +8,23 @@ import React, {
 import { useParams } from 'react-router';
 import Title from '@renderer/components/Title/Title.js';
 import Loading from '@renderer/components/Loading/Loading.js';
-import { Form, Input, Popconfirm, Tabs, notification } from 'antd';
+import { Form, Input, Tabs, notification } from 'antd';
 import { useTranslation } from 'react-i18next';
 import DependenciesTable from './details/DependenciesTable.js';
 import { ParsedDependency } from '@type/ProjectInfo.js';
-import ActionButton from '@renderer/components/Button/ActionButton.js';
-import { DeleteOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import ActionButtonWithConfirm from '@renderer/components/Button/ActionButtonWithConfirm.js';
+import {
+  DeleteOutlined,
+  ExportOutlined,
+  QuestionCircleOutlined,
+} from '@ant-design/icons';
 import { navigateTo } from '@renderer/effects/MenuEffect.js';
 import { routePaths } from '../../routes.js';
-import { fetchProjectsSumUp } from '@renderer/effects/ProjectEffects.js';
+import {
+  fetchProjectList,
+  exportDependenciesWithNewVersionSaveDialog,
+  exportDependenciesWithNewVersion,
+} from '@renderer/effects/ProjectEffects.js';
 import {
   createPackage,
   deletePackage,
@@ -29,6 +37,7 @@ import {
   updateActiveTab,
 } from '@renderer/stores/DependenciesTabStore.js';
 import { useUnit } from 'effector-react';
+import ActionButton from '@renderer/components/Button/ActionButton.js';
 
 interface TabItems {
   key: TabKey;
@@ -49,6 +58,8 @@ const ProjectDetails: FunctionComponent = () => {
   const [formInstance] = Form.useForm();
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  const [isExportRunning, setIsExportRunning] = useState<boolean>(false);
 
   const [title, setTitle] = useState<string>('');
 
@@ -162,6 +173,44 @@ const ProjectDetails: FunctionComponent = () => {
     },
   ];
 
+  const onExportDependenciesWithNewVersion = () => {
+    void exportDependenciesWithNewVersionSaveDialog();
+  };
+
+  useEffect(() => {
+    return exportDependenciesWithNewVersionSaveDialog.done.watch(
+      ({ result }) => {
+        if (id && result) {
+          setIsExportRunning(true);
+          void exportDependenciesWithNewVersion({
+            projectKey: id,
+            outputFilePath: result,
+          });
+        }
+      },
+    );
+  });
+
+  useEffect(() => {
+    return exportDependenciesWithNewVersion.done.watch(({ result }) => {
+      setIsExportRunning(false);
+      if (!result) {
+        openAlert.success({
+          message: t(
+            'project.details.alert.title.dependenciesWithNewVersionExported',
+          ),
+        });
+      } else {
+        openAlert.error({
+          message: t(
+            'project.details.alert.title.exportDependenciesWithNewVersionExportError',
+          ),
+          description: result,
+        });
+      }
+    });
+  });
+
   const onDelete = useCallback(() => {
     if (id) {
       void window.projectManagement.delete(id).then(() => {
@@ -170,7 +219,7 @@ const ProjectDetails: FunctionComponent = () => {
             projectName: title,
           }),
         });
-        void fetchProjectsSumUp();
+        void fetchProjectList();
         void navigateTo(routePaths.packageList.generate());
       });
     }
@@ -223,22 +272,35 @@ const ProjectDetails: FunctionComponent = () => {
             onChange={(activeKey: TabKey) => updateActiveTab(activeKey)}
           />
           <div className="actionFooter">
-            <Popconfirm
-              icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
-              title={t('project.details.popUp.title.delete')}
-              description={t('project.details.popUp.description.delete')}
-              onConfirm={onDelete}
-              okText={t('common.yes')}
-              cancelText={t('common.no')}
+            <ActionButton
+              type="default"
+              htmlType="button"
+              className="mr-3"
+              loading={isExportRunning}
+              toolTip={t(
+                'project.details.tooltip.exportDependenciesWithNewVersion',
+              )}
+              onClick={onExportDependenciesWithNewVersion}
             >
-              <ActionButton
-                danger
-                type="default"
-                toolTip={t('project.details.tooltip.deleteProject')}
-              >
-                <DeleteOutlined />
-              </ActionButton>
-            </Popconfirm>
+              <ExportOutlined />
+            </ActionButton>
+            <ActionButtonWithConfirm
+              danger
+              type="default"
+              toolTip={t('project.details.tooltip.deleteProject')}
+              popConfirmIcon={
+                <QuestionCircleOutlined style={{ color: 'red' }} />
+              }
+              popConfirmTitle={t('project.details.popUp.title.delete')}
+              popConfirmDescription={t(
+                'project.details.popUp.description.delete',
+              )}
+              popConfirmOnConfirm={onDelete}
+              popConfirmOkText={t('common.yes')}
+              popConfirmCancelText={t('common.no')}
+            >
+              <DeleteOutlined />
+            </ActionButtonWithConfirm>
           </div>
         </>
       )}

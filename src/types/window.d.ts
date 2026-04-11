@@ -8,13 +8,19 @@ import {
   ProjectCreationArgs,
   ProjectCreationResult,
   GetProjectDetailsResult,
+  FetchLatestVersionArgs,
+  FetchPublicationDateArgs,
+  ExportDependenciesWithNewVersionArgs,
 } from './ProjectListenerArgs.js';
-import { ProjectSumUp } from './ProjectInfo.js';
+import { ProjectListElement } from './ProjectInfo.js';
 
 export {};
 
 declare global {
   interface Window {
+    fileManagement: {
+      getPathFromFile: (file: File) => string;
+    };
     packageManagement: {
       create: (
         creationArgs: PackageCreationArgs,
@@ -44,7 +50,7 @@ declare global {
         projectCreationArgs: ProjectCreationArgs,
       ) => Promise<ProjectCreationResult>;
       delete: (projectKey: string) => Promise<void>;
-      getProjectsSumUp: () => Promise<ProjectSumUp[]>;
+      getProjectList: () => Promise<ProjectListElement[]>;
       getProjectDetails: (
         projectKey: string,
       ) => Promise<GetProjectDetailsResult>;
@@ -53,6 +59,12 @@ declare global {
       ) => Promise<string | undefined>;
       fetchPublicationDate: (
         fetchPublicationDateArgs: FetchPublicationDateArgs,
+      ) => Promise<string | undefined>;
+      exportDependenciesWithNewVersionSaveDialog: () => Promise<
+        string | undefined
+      >;
+      exportDependenciesWithNewVersion: (
+        exportDependenciesWithNewVersionArgs: ExportDependenciesWithNewVersionArgs,
       ) => Promise<string | undefined>;
     };
   }

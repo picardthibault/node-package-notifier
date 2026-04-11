@@ -19,8 +19,8 @@ import {
 } from '@ant-design/icons';
 import ProjectCreation from '@renderer/views/projects/ProjectCreation.js';
 import ProjectDetails from '@renderer/views/projects/ProjectDetails.js';
-import { ProjectSumUp } from '@type/ProjectInfo.js';
-import { fetchProjectsSumUp } from './effects/ProjectEffects.js';
+import { ProjectListElement } from '@type/ProjectInfo.js';
+import { fetchProjectList } from './effects/ProjectEffects.js';
 import { MenuItemType, SubMenuType } from 'antd/es/menu/interface.js';
 
 const projectListMenuKey = 'projectList';
@@ -28,15 +28,15 @@ const projectListMenuKey = 'projectList';
 const App: FunctionComponent = () => {
   const { t } = useTranslation();
 
-  const [projectsSumUp, setProjectsSumUp] = useState<ProjectSumUp[]>([]);
+  const [projectList, setProjectList] = useState<ProjectListElement[]>([]);
 
   useEffect(() => {
-    void fetchProjectsSumUp();
+    void fetchProjectList();
   }, []);
 
   useEffect(() => {
-    fetchProjectsSumUp.done.watch((projects) => {
-      setProjectsSumUp(projects.result);
+    fetchProjectList.done.watch(({ result }) => {
+      setProjectList(result);
     });
   });
 
@@ -52,7 +52,7 @@ const App: FunctionComponent = () => {
         label: t('sideMenu.items.projectList'),
         icon: <ProjectOutlined />,
         children: [
-          ...projectsSumUp
+          ...projectList
             .sort((projectA, projectB) => {
               if (projectA.name < projectB.name) {
                 return -1;
@@ -74,7 +74,7 @@ const App: FunctionComponent = () => {
         ],
       },
     ];
-  }, [projectsSumUp, t]);
+  }, [projectList, t]);
 
   return (
     <Routes>

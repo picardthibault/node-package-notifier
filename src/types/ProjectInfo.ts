@@ -1,4 +1,4 @@
-export interface ProjectSumUp {
+export interface ProjectListElement {
   projectKey: string;
   name: string;
 }
@@ -20,4 +20,8 @@ export interface ParsedProject {
 export interface ParsedDependency {
   name: string;
   version: string;
+}
+
+export interface ParsedDependencyWithNewVersion extends ParsedDependency {
+  newVersion: string;
 }

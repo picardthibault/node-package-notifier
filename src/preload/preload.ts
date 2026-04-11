@@ -1,4 +1,4 @@
-import { contextBridge, ipcRenderer } from 'electron';
+import { contextBridge, ipcRenderer, webUtils } from 'electron';
 import {
   GetPackagesResult,
   PackageCreationArgs,
@@ -15,8 +15,13 @@ import {
   GetProjectDetailsResult,
   FetchLatestVersionArgs,
   FetchPublicationDateArgs,
+  ExportDependenciesWithNewVersionArgs,
 } from '../types/ProjectListenerArgs.js';
-import { ProjectSumUp } from '../types/ProjectInfo.js';
+import { ProjectListElement } from '../types/ProjectInfo.js';
+
+contextBridge.exposeInMainWorld('fileManagement', {
+  getPathFromFile: (file: File): string => webUtils.getPathForFile(file),
+});
 
 contextBridge.exposeInMainWorld('packageManagement', {
   create: (creationArgs: PackageCreationArgs): Promise<string | undefined> =>
@@ -63,8 +68,8 @@ contextBridge.exposeInMainWorld('projectManagement', {
     ipcRenderer.invoke(ProjectListenerChannel.CREATE, projectCreationArgs),
   delete: (projectKey: string) =>
     ipcRenderer.invoke(ProjectListenerChannel.DELETE, projectKey),
-  getProjectsSumUp: (): Promise<ProjectSumUp[]> =>
-    ipcRenderer.invoke(ProjectListenerChannel.GET_PROJECTS_SUM_UP),
+  getProjectList: (): Promise<ProjectListElement[]> =>
+    ipcRenderer.invoke(ProjectListenerChannel.GET_PROJECT_LIST),
   getProjectDetails: (projectKey: string): Promise<GetProjectDetailsResult> =>
     ipcRenderer.invoke(ProjectListenerChannel.GET_PROJECT_DETAILS, projectKey),
   fetchLatestVersion: (
@@ -80,5 +85,16 @@ contextBridge.exposeInMainWorld('projectManagement', {
     ipcRenderer.invoke(
       ProjectListenerChannel.FETCH_PUBLICATION_DATE,
       fetchPublicationDateArgs,
+    ),
+  exportDependenciesWithNewVersionSaveDialog: (): Promise<string | undefined> =>
+    ipcRenderer.invoke(
+      ProjectListenerChannel.EXPORT_DEPENDENCIES_WITH_NEW_VERSION_SAVE_DIALOG,
+    ),
+  exportDependenciesWithNewVersion: (
+    exportDependenciesWithNewVersionArgs: ExportDependenciesWithNewVersionArgs,
+  ): Promise<string | undefined> =>
+    ipcRenderer.invoke(
+      ProjectListenerChannel.EXPORT_DEPENDENCIES_WITH_NEW_VERSION,
+      exportDependenciesWithNewVersionArgs,
     ),
 });

@@ -53,20 +53,20 @@
   "dependencies": {
     "@ant-design/v5-patch-for-react-19": "1.0.3",
     "antd": "5.25.2",
-    "cache-manager": "6.4.3",
-    "cron": "4.3.0",
-    "effector": "23.3.0",
+    "cache-manager": "7.2.8",
+    "cron": "4.4.0",
+    "effector": "23.4.4",
     "effector-react": "23.3.0",
-    "electron-log": "5.4.0",
+    "electron-log": "5.4.3",
     "electron-squirrel-startup": "1.0.1",
-    "electron-store": "10.0.1",
-    "i18next": "25.2.0",
-    "mime": "4.0.7",
+    "electron-store": "11.0.2",
+    "i18next": "26.0.4",
+    "mime": "4.1.0",
     "opener": "1.5.2",
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
-    "react-i18next": "15.5.1",
-    "react-router": "7.6.0",
-    "semver": "7.7.2"
+    "react": "19.2.5",
+    "react-dom": "19.2.5",
+    "react-i18next": "17.0.2",
+    "react-router": "7.14.0",
+    "semver": "7.7.4"
   }
 }

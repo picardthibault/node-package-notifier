@@ -10,6 +10,49 @@ import {
   computeTagTooltip,
 } from './LatestVersionCellUtils.js';
 
+const useLatestVersion = (
+  dependencyName: string,
+  dependencyCurrenVersion: string,
+  registryUrl?: string,
+) => {
+  const [state, setState] = useState<{
+    isLoading: boolean;
+    latestVersion: string | undefined;
+    versionTagColor: PackageVersionTagColor | undefined;
+  }>({
+    isLoading: true,
+    latestVersion: undefined,
+    versionTagColor: undefined,
+  });
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const fetchLatestVersion = async () => {
+      const result = await window.projectManagement.fetchLatestVersion({
+        dependencyName: dependencyName,
+        registryUrl: registryUrl,
+      });
+
+      if (!cancelled) {
+        setState({
+          isLoading: false,
+          latestVersion: result,
+          versionTagColor: computeTagColor(dependencyCurrenVersion, result),
+        });
+      }
+    };
+
+    void fetchLatestVersion();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [dependencyName, dependencyCurrenVersion, registryUrl]);
+
+  return state;
+};
+
 interface Props {
   dependencyName: string;
   dependencyCurrenVersion: string;
@@ -21,34 +64,11 @@ const LatestVersionCell: React.FunctionComponent<Props> = (props) => {
 
   const { t } = useTranslation();
 
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-
-  const [latestVersion, setLatestVersion] = useState<string | undefined>();
-
-  const [versionTagColor, setVersionTagColor] = useState<
-    PackageVersionTagColor | undefined
-  >(undefined);
-
-  const fetchLatestVersion = useCallback(() => {
-    setIsLoading(true);
-    window.projectManagement
-      .fetchLatestVersion({
-        dependencyName: dependencyName,
-        registryUrl: registryUrl,
-      })
-      .then((result) => {
-        setIsLoading(false);
-        setLatestVersion(result);
-        setVersionTagColor(computeTagColor(dependencyCurrenVersion, result));
-      })
-      .catch(() => {
-        setIsLoading(false);
-      });
-  }, [dependencyName, registryUrl, dependencyCurrenVersion]);
-
-  useEffect(() => {
-    fetchLatestVersion();
-  }, [fetchLatestVersion]);
+  const { isLoading, latestVersion, versionTagColor } = useLatestVersion(
+    dependencyName,
+    dependencyCurrenVersion,
+    registryUrl,
+  );
 
   return (
     <div className="last-version-cell">

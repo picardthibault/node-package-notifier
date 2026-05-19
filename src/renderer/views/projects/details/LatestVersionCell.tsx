@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Loading from '@renderer/components/Loading/Loading.js';
 import ErrorIcon from '@renderer/components/Icon/ErrorIcon.js';

@@ -2,7 +2,6 @@ import { Layout, Menu } from 'antd';
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { routePaths } from '../../routes.js';
 import { useUnit } from 'effector-react';
 import { MenuStore, menuStore } from '@renderer/stores/MenuStore.js';
 import { navigateTo } from '@renderer/effects/MenuEffect.js';
@@ -13,6 +12,21 @@ export type SideMenuItem = MenuItemType | SubMenuType;
 
 function isSubMenuType(item: SideMenuItem): item is SubMenuType {
   return (item as { children?: unknown }).children !== undefined;
+}
+
+function getMenuItemKeys(menuItems: SideMenuItem[]): string[] {
+  const menuItemsKey: string[] = [];
+  menuItems.forEach((item) => {
+    menuItemsKey.push(item.key as string);
+    if (isSubMenuType(item)) {
+      item.children.forEach((subItem) => {
+        if (subItem?.key) {
+          menuItemsKey.push(subItem.key as string);
+        }
+      });
+    }
+  });
+  return menuItemsKey;
 }
 
 interface SideMenuProps {
@@ -28,38 +42,21 @@ const SideMenu: FunctionComponent<SideMenuProps> = (props) => {
   const { currentLocation } = useUnit<MenuStore>(menuStore);
 
   const [collapsed, setCollapsed] = useState<boolean>(false);
-  const [menuKeys, setMenuKeys] = useState<string[]>([]);
-  const [selectedKey, setSelectedKey] = useState<string>(
-    routePaths.packageList.generate(),
-  );
+
+  const menuKeys = getMenuItemKeys(items);
+  const selectedMenuKeys = menuKeys.includes(currentLocation)
+    ? [currentLocation]
+    : [];
 
   useEffect(() => {
-    const menuItemsKey: string[] = [];
-    items.forEach((item) => {
-      menuItemsKey.push(item.key as string);
-      if (isSubMenuType(item)) {
-        item.children.forEach((subItem) => {
-          if (subItem?.key) {
-            menuItemsKey.push(subItem.key as string);
-          }
-        });
-      }
+    return navigateTo.done.watch(({ params }) => {
+      void navigate(params);
     });
-    setMenuKeys(menuItemsKey);
-  }, [items]);
-
-  useEffect(() => {
-    if (menuKeys.find((key) => key === currentLocation)) {
-      setSelectedKey(currentLocation);
-    }
-
-    void navigate(currentLocation);
-  }, [menuKeys, currentLocation, navigate]);
+  });
 
   const onClick = (menuItem: { key: string }) => {
     resetDependenciesTabStore();
     void navigateTo(menuItem.key);
-    void navigate(menuItem.key);
   };
 
   return (
@@ -80,7 +77,7 @@ const SideMenu: FunctionComponent<SideMenuProps> = (props) => {
     >
       <Menu
         onClick={onClick}
-        selectedKeys={[selectedKey]}
+        selectedKeys={selectedMenuKeys}
         defaultOpenKeys={defaultOpenMenuKeys}
         mode="inline"
         items={items}

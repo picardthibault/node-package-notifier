@@ -22,6 +22,8 @@ import {
 } from '@renderer/effects/PackageEffect.js';
 import { navigateTo } from '@renderer/effects/MenuEffect.js';
 import PackageVersionTag from '@renderer/components/Tag/Tag.js';
+import { GetPackagesResult } from '@type/PackageListenerArgs.js';
+import i18n from '../../i18n.js';
 
 interface TableItemType {
   key: string;
@@ -32,10 +34,29 @@ interface TableItemType {
   version: string;
 }
 
+const mapFetchedPackageToTableItem = (
+  fetchedPackages: GetPackagesResult,
+): TableItemType[] => {
+  return Object.keys(fetchedPackages).map((packageId) => {
+    const fetchedPackage = fetchedPackages[packageId];
+    return {
+      key: packageId,
+      packageId,
+      name: fetchedPackage.name,
+      registryUrl: fetchedPackage.registryUrl,
+      license: fetchedPackage.license
+        ? fetchedPackage.license
+        : i18n.t('common.na'),
+      version: fetchedPackage.latest
+        ? fetchedPackage.latest
+        : i18n.t('common.na'),
+    };
+  });
+};
+
 export const PackagesView = (): React.JSX.Element => {
   const { t } = useTranslation();
 
-  const [packages, setPackages] = useState<TableItemType[]>([]);
   const [hasFilter, setHasFilter] = useState<boolean>(false);
   const [filteredPackages, setFilteredPackages] = useState<TableItemType[]>([]);
 
@@ -44,32 +65,12 @@ export const PackagesView = (): React.JSX.Element => {
 
   const [formInstance] = Form.useForm();
 
+  const packages = mapFetchedPackageToTableItem(fetchedPackages);
+
   useEffect(() => {
     // Load packages
     void fetchPackages();
   }, []);
-
-  useEffect(() => {
-    const tableItems: TableItemType[] = Object.keys(fetchedPackages).map(
-      (packageId) => {
-        const fetchedPackage = fetchedPackages[packageId];
-        return {
-          key: packageId,
-          packageId,
-          name: fetchedPackage.name,
-          registryUrl: fetchedPackage.registryUrl,
-          license: fetchedPackage.license
-            ? fetchedPackage.license
-            : t('common.na'),
-          version: fetchedPackage.latest
-            ? fetchedPackage.latest
-            : t('common.na'),
-        };
-      },
-    );
-
-    setPackages(tableItems);
-  }, [fetchedPackages, t]);
 
   const tableColumns: TableColumnsType<TableItemType> = [
     {

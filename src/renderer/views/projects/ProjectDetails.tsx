@@ -18,7 +18,7 @@ import {
   ExportOutlined,
   QuestionCircleOutlined,
 } from '@ant-design/icons';
-import { navigateTo } from '@renderer/effects/MenuEffect.js';
+import { navigateTo } from '@renderer/stores/MenuStore.js';
 import { routePaths } from '../../routes.js';
 import {
   fetchProjectList,
@@ -220,7 +220,7 @@ const ProjectDetails: FunctionComponent = () => {
           }),
         });
         void fetchProjectList();
-        void navigateTo(routePaths.packageList.generate());
+        navigateTo(routePaths.packageList.generate());
       });
     }
   }, [id, openAlert, t, title]);

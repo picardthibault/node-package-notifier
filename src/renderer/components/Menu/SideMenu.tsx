@@ -3,8 +3,8 @@ import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useUnit } from 'effector-react';
-import { MenuStore, menuStore } from '@renderer/stores/MenuStore.js';
-import { navigateTo } from '@renderer/effects/MenuEffect.js';
+import { MenuStore, $menu } from '@renderer/stores/MenuStore.js';
+import { navigateTo } from '@renderer/stores/MenuStore.js';
 import { resetDependenciesTabStore } from '@renderer/stores/DependenciesTabStore.js';
 import { MenuItemType, SubMenuType } from 'antd/es/menu/interface.js';
 
@@ -39,7 +39,7 @@ const SideMenu: FunctionComponent<SideMenuProps> = (props) => {
 
   const navigate = useNavigate();
 
-  const { currentLocation } = useUnit<MenuStore>(menuStore);
+  const { currentLocation } = useUnit<MenuStore>($menu);
 
   const [collapsed, setCollapsed] = useState<boolean>(false);
 
@@ -49,14 +49,12 @@ const SideMenu: FunctionComponent<SideMenuProps> = (props) => {
     : [];
 
   useEffect(() => {
-    return navigateTo.done.watch(({ params }) => {
-      void navigate(params);
-    });
-  });
+    void navigate(currentLocation);
+  }, [navigate, currentLocation]);
 
   const onClick = (menuItem: { key: string }) => {
     resetDependenciesTabStore();
-    void navigateTo(menuItem.key);
+    navigateTo(menuItem.key);
   };
 
   return (

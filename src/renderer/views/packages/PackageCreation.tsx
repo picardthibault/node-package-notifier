@@ -7,7 +7,7 @@ import { routePaths } from '../../routes.js';
 import LinkButton from '@renderer/components/Button/LinkButton.js';
 import RegistryField from '@renderer/components/Form/RegistryField.js';
 import { createPackage } from '@renderer/effects/PackageEffect.js';
-import { navigateTo } from '@renderer/effects/MenuEffect.js';
+import { navigateTo } from '@renderer/stores/MenuStore.js';
 
 interface PackageFormField {
   packageName: string;
@@ -36,7 +36,7 @@ export const PackageCreation = (): React.JSX.Element => {
         openAlert.success({
           message: t('package.creation.alert.title.success'),
         });
-        void navigateTo(routePaths.packageList.generate());
+        navigateTo(routePaths.packageList.generate());
       } else {
         openAlert.error({
           message: t('package.creation.alert.title.error'),

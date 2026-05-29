@@ -15,15 +15,15 @@ import {
 import { useUnit } from 'effector-react';
 import Title from '@renderer/components/Title/Title.js';
 import { routePaths } from '../../routes.js';
-import { updatePackageDetails } from '@renderer/stores/PackageDetailsStore.js';
 import {
   deletePackage,
   fetchPackages,
 } from '@renderer/effects/PackageEffect.js';
-import { navigateTo } from '@renderer/effects/MenuEffect.js';
+import { navigateTo } from '@renderer/stores/MenuStore.js';
 import PackageVersionTag from '@renderer/components/Tag/Tag.js';
 import { GetPackagesResult } from '@type/PackageListenerArgs.js';
 import i18n from '../../i18n.js';
+import { selectPackageDetails } from '@renderer/stores/PackageDetailsStore.js';
 
 interface TableItemType {
   key: string;
@@ -106,11 +106,11 @@ export const PackagesView = (): React.JSX.Element => {
             type="primary"
             toolTip={t('package.list.tooltips.detailsPackage')}
             onClick={() => {
-              updatePackageDetails({
+              selectPackageDetails({
                 packageName: tableItem.name,
                 registryUrl: tableItem.registryUrl,
               });
-              void navigateTo(routePaths.packageDetails.generate());
+              navigateTo(routePaths.packageDetails.generate());
             }}
           >
             <EyeOutlined />

@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useEffect, useState } from 'react';
+import React, { FunctionComponent, useEffect } from 'react';
 import Title from '@renderer/components/Title/Title.js';
 import {
   Form,
@@ -14,11 +14,10 @@ import { useTranslation } from 'react-i18next';
 import { useUnit } from 'effector-react';
 import {
   PackageDetailsStore,
-  packageDetailsStore,
+  $packageDetails,
 } from '@renderer/stores/PackageDetailsStore.js';
-import { MenuStore, menuStore } from '@renderer/stores/MenuStore.js';
+import { MenuStore, $menu, navigateTo } from '@renderer/stores/MenuStore.js';
 import { EyeOutlined } from '@ant-design/icons';
-import { navigateTo } from '@renderer/effects/MenuEffect.js';
 import PackageVersionTag from '@renderer/components/Tag/Tag.js';
 
 interface TableItemType {
@@ -30,7 +29,7 @@ interface TableItemType {
 const backMouseButtonListener: (to: string) => (event: MouseEvent) => void =
   (to: string) => (event: MouseEvent) => {
     if (event.button === 3) {
-      void navigateTo(to);
+      navigateTo(to);
     }
     event.preventDefault();
   };
@@ -41,20 +40,15 @@ const PackageDetails: FunctionComponent = () => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const [openAlert, contextHolder] = notification.useNotification();
 
-  const { packageName, registryUrl } =
-    useUnit<PackageDetailsStore>(packageDetailsStore);
+  const { fetchedPackageDetails: fetchDetails } =
+    useUnit<PackageDetailsStore>($packageDetails);
 
-  const { previousLocation: previousSelectedKey } =
-    useUnit<MenuStore>(menuStore);
-
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [title, setTitle] = useState<string>('');
-  const [tags, setTags] = useState<TableItemType[]>([]);
+  const { previousLocation } = useUnit<MenuStore>($menu);
 
   const [formInstance] = Form.useForm();
 
   useEffect(() => {
-    const listener = backMouseButtonListener(previousSelectedKey);
+    const listener = backMouseButtonListener(previousLocation);
     window.addEventListener('mouseup', listener);
 
     return () => {
@@ -62,54 +56,48 @@ const PackageDetails: FunctionComponent = () => {
     };
   });
 
-  useEffect(() => {
-    setIsLoading(true);
-    void window.packageManagement
-      .getPackage(packageName, registryUrl)
-      .then((getPackageResult) => {
-        setTitle(
-          getPackageResult.packageDetails.name.charAt(0).toUpperCase() +
-            getPackageResult.packageDetails.name.slice(1),
-        );
-
-        if (getPackageResult.error) {
-          formInstance.resetFields();
-          setTags([]);
-          formInstance.setFieldValue(
-            'registryUrl',
-            getPackageResult.packageDetails.registryUrl,
-          );
-          openAlert.error({
-            message: t('package.details.alert.title.error'),
-            description: t('package.details.alert.description.error', {
-              cause: getPackageResult.error,
-            }),
-          });
-        } else {
-          formInstance.setFieldsValue({
-            registryUrl: getPackageResult.packageDetails.registryUrl,
-            licence: getPackageResult.packageDetails.license,
-            homePage: getPackageResult.packageDetails.homePage,
-            repository: getPackageResult.packageDetails.repository,
-            description: getPackageResult.packageDetails.description,
-          });
-
-          const tags: TableItemType[] = [];
-          const fetchedTags = getPackageResult.packageDetails.tags;
-          if (fetchedTags) {
-            Object.keys(fetchedTags).forEach((key, index) =>
-              tags.push({
-                key: index,
-                tagName: key,
-                tagVersion: fetchedTags[key],
-              }),
-            );
-          }
-          setTags(tags);
-        }
-        setIsLoading(false);
+  let title = '';
+  let tags: TableItemType[] = [];
+  let isLoading = true;
+  if (fetchDetails) {
+    title =
+      fetchDetails.packageDetails.name.charAt(0).toUpperCase() +
+      fetchDetails.packageDetails.name.slice(1);
+    isLoading = false;
+    if (fetchDetails.error) {
+      formInstance.resetFields();
+      tags = [];
+      formInstance.setFieldValue(
+        'registryUrl',
+        fetchDetails.packageDetails.registryUrl,
+      );
+      openAlert.error({
+        message: t('package.details.alert.title.error'),
+        description: t('package.details.alert.description.error', {
+          cause: fetchDetails.error,
+        }),
       });
-  }, [formInstance, openAlert, packageName, registryUrl, t]);
+    } else {
+      formInstance.setFieldsValue({
+        registryUrl: fetchDetails.packageDetails.registryUrl,
+        licence: fetchDetails.packageDetails.license,
+        homePage: fetchDetails.packageDetails.homePage,
+        repository: fetchDetails.packageDetails.repository,
+        description: fetchDetails.packageDetails.description,
+      });
+
+      const fetchedTags = fetchDetails.packageDetails.tags;
+      if (fetchedTags) {
+        Object.keys(fetchedTags).forEach((key, index) =>
+          tags.push({
+            key: index,
+            tagName: key,
+            tagVersion: fetchedTags[key],
+          }),
+        );
+      }
+    }
+  }
 
   const tableColumns: TableColumnType<TableItemType>[] = [
     {
@@ -150,11 +138,7 @@ const PackageDetails: FunctionComponent = () => {
         <Loading />
       ) : (
         <>
-          <LinkButton
-            to={previousSelectedKey}
-            label={t('common.back')}
-            isBack
-          />
+          <LinkButton to={previousLocation} label={t('common.back')} isBack />
           <Title content={title} />
           <div className="detailsForm">
             <Form

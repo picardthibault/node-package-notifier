@@ -9,7 +9,6 @@ import {
 } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import { routePaths } from '../../../routes.js';
-import { updatePackageDetails } from '@renderer/stores/PackageDetailsStore.js';
 import { Space, Table, TableColumnsType } from 'antd';
 import { useUnit } from 'effector-react';
 import { packageListStore } from '@renderer/stores/PackageListStore.js';
@@ -18,7 +17,7 @@ import {
   deletePackage,
 } from '@renderer/effects/PackageEffect.js';
 import { GetPackagesResult } from '@type/PackageListenerArgs.js';
-import { navigateTo } from '@renderer/effects/MenuEffect.js';
+import { navigateTo } from '@renderer/stores/MenuStore.js';
 import {
   TabPageConfiguration,
   TabKey,
@@ -26,6 +25,7 @@ import {
 } from '@renderer/stores/DependenciesTabStore.js';
 import PackageVersionTag from '@renderer/components/Tag/Tag.js';
 import PublicationDateCell from './PublicationDateCell.js';
+import { selectPackageDetails } from '@renderer/stores/PackageDetailsStore.js';
 
 interface DependenciesTableProps {
   tabKey: TabKey;
@@ -106,11 +106,11 @@ const DependenciesTable: React.FunctionComponent<DependenciesTableProps> = (
               type="primary"
               toolTip={t('project.details.tooltip.viewPackage')}
               onClick={() => {
-                updatePackageDetails({
+                selectPackageDetails({
                   packageName: record.name,
                   registryUrl: registryUrl,
                 });
-                void navigateTo(routePaths.packageDetails.generate());
+                navigateTo(routePaths.packageDetails.generate());
               }}
             >
               <EyeOutlined />

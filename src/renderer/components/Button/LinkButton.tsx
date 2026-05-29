@@ -1,7 +1,7 @@
 import { LeftOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
 import React, { FunctionComponent } from 'react';
-import { navigateTo } from '@renderer/effects/MenuEffect.js';
+import { navigateTo } from '@renderer/stores/MenuStore.js';
 
 interface LinkButtonProps {
   to: string;
@@ -15,7 +15,7 @@ const LinkButton: FunctionComponent<LinkButtonProps> = (props) => {
   return (
     <div className="linkButton">
       {isBack && <LeftOutlined />}
-      <Button type="link" onClick={() => void navigateTo(to)}>
+      <Button type="link" onClick={() => navigateTo(to)}>
         {label}
       </Button>
     </div>

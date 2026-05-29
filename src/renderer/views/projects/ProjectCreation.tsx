@@ -7,7 +7,7 @@ import { ProjectCreationArgs } from '@type/ProjectListenerArgs.js';
 import { routePaths } from '../../routes.js';
 import RegistryField from '@renderer/components/Form/RegistryField.js';
 import { fetchProjectList } from '@renderer/effects/ProjectEffects.js';
-import { navigateTo } from '@renderer/effects/MenuEffect.js';
+import { navigateTo } from '@renderer/stores/MenuStore.js';
 import FilePathField from '@renderer/components/Form/FilePathField.js';
 
 const ProjectCreation: FunctionComponent = () => {
@@ -57,7 +57,7 @@ const ProjectCreation: FunctionComponent = () => {
             message: t('project.creation.alert.title.success'),
           });
           void fetchProjectList();
-          void navigateTo(
+          navigateTo(
             routePaths.projectDetails.generate(
               projectCreationResult.projectKey,
             ),

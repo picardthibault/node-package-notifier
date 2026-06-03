@@ -8,17 +8,15 @@ import {
 import { useTranslation } from 'react-i18next';
 import ActionButton from '@renderer/components/Button/ActionButton.js';
 import {
-  packageListStore,
+  $packageList,
+  deletePackageFx,
+  fetchPackageListFx,
   PackageListStore,
   updatePackageListPageConfig,
 } from '@renderer/stores/PackageListStore.js';
 import { useUnit } from 'effector-react';
 import Title from '@renderer/components/Title/Title.js';
 import { routePaths } from '../../routes.js';
-import {
-  deletePackage,
-  fetchPackages,
-} from '@renderer/effects/PackageEffect.js';
 import { navigateTo } from '@renderer/stores/MenuStore.js';
 import PackageVersionTag from '@renderer/components/Tag/Tag.js';
 import { GetPackagesResult } from '@type/PackageListenerArgs.js';
@@ -61,7 +59,7 @@ export const PackagesView = (): React.JSX.Element => {
   const [filteredPackages, setFilteredPackages] = useState<TableItemType[]>([]);
 
   const { fetchedPackages, page, pageSize } =
-    useUnit<PackageListStore>(packageListStore);
+    useUnit<PackageListStore>($packageList);
 
   const [formInstance] = Form.useForm();
 
@@ -69,7 +67,7 @@ export const PackagesView = (): React.JSX.Element => {
 
   useEffect(() => {
     // Load packages
-    void fetchPackages();
+    void fetchPackageListFx();
   }, []);
 
   const tableColumns: TableColumnsType<TableItemType> = [
@@ -119,7 +117,7 @@ export const PackagesView = (): React.JSX.Element => {
             type="default"
             danger={true}
             toolTip={t('package.list.tooltips.unfollowPackage')}
-            onClick={() => void deletePackage(tableItem.packageId)}
+            onClick={() => void deletePackageFx(tableItem.packageId)}
           >
             <MinusCircleOutlined />
           </ActionButton>

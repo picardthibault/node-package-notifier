@@ -1,45 +1,63 @@
-import { createEvent, createStore } from 'effector';
-import {
-  createPackage,
-  deletePackage,
-  fetchPackages,
-} from '../effects/PackageEffect.js';
-import { GetPackagesResult } from '@type/PackageListenerArgs.js';
+import { createEffect, createEvent, createStore, sample } from 'effector';
+import { GetPackagesResult, PackageCreationArgs } from '@type/PackageListenerArgs.js';
 
-export interface PackageListStore {
-  page: number;
-  pageSize: number;
-  fetchedPackages: GetPackagesResult;
-}
-
-export const packageListStore = createStore<PackageListStore>({
-  page: 1,
-  pageSize: 10,
-  fetchedPackages: {},
-});
-
-const updatePackages = createEvent<GetPackagesResult>();
+/* Events */
+const updatePackageList = createEvent<GetPackagesResult>();
 
 export const updatePackageListPageConfig = createEvent<{
   page: number;
   pageSize: number;
 }>();
 
-packageListStore.on(updatePackages, (state, payload) => ({
+/* Effects */
+export const fetchPackageListFx = createEffect(() =>
+  window.packageManagement.getPackages(),
+);
+
+export const createPackageFx = createEffect((creationArgs: PackageCreationArgs) =>
+  window.packageManagement.create(creationArgs),
+);
+
+export const deletePackageFx = createEffect((packageKey: string) =>
+  window.packageManagement.delete(packageKey),
+);
+
+/* Store */
+export interface PackageListStore {
+  page: number;
+  pageSize: number;
+  fetchedPackages: GetPackagesResult;
+}
+
+export const $packageList = createStore<PackageListStore>({
+  page: 1,
+  pageSize: 10,
+  fetchedPackages: {},
+});
+
+$packageList.on(updatePackageList, (state, payload) => ({
   ...state,
   fetchedPackages: payload,
 }));
 
-packageListStore.on(updatePackageListPageConfig, (state, payload) => ({
+$packageList.on(updatePackageListPageConfig, (state, payload) => ({
   ...state,
   page: payload.page,
   pageSize: payload.pageSize,
 }));
 
-fetchPackages.done.watch((packages) => {
-  updatePackages(packages.result);
+/* Sample */
+sample({
+  source: fetchPackageListFx.doneData,
+  target: updatePackageList,
 });
 
-createPackage.done.watch(() => fetchPackages());
+sample({
+  source: createPackageFx.done,
+  target: fetchPackageListFx,
+});
 
-deletePackage.done.watch(() => fetchPackages());
+sample({
+  source: deletePackageFx.done,
+  target: fetchPackageListFx,
+});

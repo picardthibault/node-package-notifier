@@ -26,10 +26,6 @@ import {
   exportDependenciesWithNewVersion,
 } from '@renderer/effects/ProjectEffects.js';
 import {
-  createPackage,
-  deletePackage,
-} from '@renderer/effects/PackageEffect.js';
-import {
   TabKey,
   dependenciesTabKey,
   devDepenciesTabKey,
@@ -38,6 +34,7 @@ import {
 } from '@renderer/stores/DependenciesTabStore.js';
 import { useUnit } from 'effector-react';
 import ActionButton from '@renderer/components/Button/ActionButton.js';
+import { createPackageFx, deletePackageFx } from '@renderer/stores/PackageListStore.js';
 
 interface TabItems {
   key: TabKey;
@@ -124,7 +121,7 @@ const ProjectDetails: FunctionComponent = () => {
   }, [fetchProjectDetails]);
 
   useEffect(() => {
-    return createPackage.done.watch(({ result }) => {
+    return createPackageFx.done.watch(({ result }) => {
       if (!result) {
         openAlert.success({
           message: t('project.details.alert.title.dependencyFollowed'),
@@ -139,7 +136,7 @@ const ProjectDetails: FunctionComponent = () => {
   });
 
   useEffect(() => {
-    return deletePackage.done.watch(() => {
+    return deletePackageFx.done.watch(() => {
       openAlert.success({
         message: t('project.details.alert.title.dependencyUnfollowed'),
       });

@@ -11,11 +11,7 @@ import { useTranslation } from 'react-i18next';
 import { routePaths } from '../../../routes.js';
 import { Space, Table, TableColumnsType } from 'antd';
 import { useUnit } from 'effector-react';
-import { packageListStore } from '@renderer/stores/PackageListStore.js';
-import {
-  createPackage,
-  deletePackage,
-} from '@renderer/effects/PackageEffect.js';
+import { $packageList, createPackageFx, deletePackageFx } from '@renderer/stores/PackageListStore.js';
 import { GetPackagesResult } from '@type/PackageListenerArgs.js';
 import { navigateTo } from '@renderer/stores/MenuStore.js';
 import {
@@ -41,7 +37,7 @@ const DependenciesTable: React.FunctionComponent<DependenciesTableProps> = (
 
   const { t } = useTranslation();
 
-  const { fetchedPackages } = useUnit(packageListStore);
+  const { fetchedPackages } = useUnit($packageList);
 
   const dependenciesTableColumns: (
     followedPackages: GetPackagesResult,
@@ -121,7 +117,7 @@ const DependenciesTable: React.FunctionComponent<DependenciesTableProps> = (
                 danger={true}
                 toolTip={t('project.details.tooltip.unfollowPackage')}
                 onClick={() => {
-                  void deletePackage(
+                  void deletePackageFx(
                     followedPackageId ? followedPackageId : '',
                   );
                 }}
@@ -133,7 +129,7 @@ const DependenciesTable: React.FunctionComponent<DependenciesTableProps> = (
                 type="default"
                 toolTip={t('project.details.tooltip.followPackage')}
                 onClick={() => {
-                  void createPackage({
+                  void createPackageFx({
                     packageName: record.name,
                     registryUrl: registryUrl,
                   });

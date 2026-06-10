@@ -34,7 +34,15 @@ import {
 } from '@renderer/stores/DependenciesTabStore.js';
 import { useUnit } from 'effector-react';
 import ActionButton from '@renderer/components/Button/ActionButton.js';
-import { createPackageFx, deletePackageFx } from '@renderer/stores/PackageListStore.js';
+import {
+  createPackageFx,
+  deletePackageFx,
+} from '@renderer/stores/PackageListStore.js';
+import {
+  $projectDetails,
+  ProjectDetailsStore,
+  selectProjectDetails,
+} from '@renderer/stores/ProjectDetailsStore.js';
 
 interface TabItems {
   key: TabKey;
@@ -54,71 +62,57 @@ const ProjectDetails: FunctionComponent = () => {
 
   const [formInstance] = Form.useForm();
 
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-
   const [isExportRunning, setIsExportRunning] = useState<boolean>(false);
 
-  const [title, setTitle] = useState<string>('');
-
-  const [registryUrl, setRegistryUrl] = useState<string>('');
-
-  const [dependencies, setDependencies] = useState<ParsedDependency[]>([]);
-
-  const [devDependencies, setDevDependencies] = useState<ParsedDependency[]>(
-    [],
-  );
-
-  const fetchProjectDetails = useCallback(() => {
-    setIsLoading(true);
-
-    // Reset tables
-    setDependencies([]);
-    setDevDependencies([]);
-
-    // Fetch project details
-    if (id) {
-      void window.projectManagement.getProjectDetails(id).then((result) => {
-        setIsLoading(false);
-        setTitle(result.projectDetails.name);
-        setRegistryUrl(result.projectDetails.registryUrl);
-        formInstance.setFieldsValue({
-          projectPath: result.projectDetails.path,
-          registryUrl: result.projectDetails.registryUrl,
-        });
-        if (result.error) {
-          formInstance.resetFields(['version', 'description']);
-          openAlert.error({
-            message: t('project.details.alert.title.loadProjectError'),
-            description: t(
-              'project.details.alert.description.loadProjectError',
-              {
-                cause: result.error,
-              },
-            ),
-            placement: 'topRight',
-          });
-        } else if (result.projectDetails.parsedProject) {
-          formInstance.setFieldsValue({
-            version: result.projectDetails.parsedProject.version,
-            description: result.projectDetails.parsedProject.description,
-          });
-          setDependencies(result.projectDetails.parsedProject.dependencies);
-          setDevDependencies(
-            result.projectDetails.parsedProject.devDependencies,
-          );
-        } else {
-          openAlert.error({
-            message: t('project.details.alert.title.loadProjectError'),
-            description: t('project.details.alert.description.noProjectData'),
-          });
-        }
-      });
-    }
-  }, [formInstance, id, openAlert, t]);
+  const { projectId, fetchedProjectDetails } =
+    useUnit<ProjectDetailsStore>($projectDetails);
 
   useEffect(() => {
-    fetchProjectDetails();
-  }, [fetchProjectDetails]);
+    if (id) {
+      selectProjectDetails(id);
+    }
+  }, [id]);
+
+  let title = '';
+  let registryUrl = '';
+  let isLoading = true;
+  let dependencies: ParsedDependency[] = [];
+  let devDependencies: ParsedDependency[] = [];
+  if (fetchedProjectDetails) {
+    title = fetchedProjectDetails.projectDetails.name;
+    registryUrl = fetchedProjectDetails.projectDetails.registryUrl;
+    isLoading = false;
+    formInstance.setFieldsValue({
+      projectPath: fetchedProjectDetails.projectDetails.path,
+      registryUrl: fetchedProjectDetails.projectDetails.registryUrl,
+    });
+
+    if (fetchedProjectDetails.error) {
+      formInstance.resetFields(['version', 'description']);
+      openAlert.error({
+        message: t('project.details.alert.title.loadProjectError'),
+        description: t('project.details.alert.description.loadProjectError', {
+          cause: fetchedProjectDetails.error,
+        }),
+        placement: 'topRight',
+      });
+    } else if (fetchedProjectDetails.projectDetails.parsedProject) {
+      formInstance.setFieldsValue({
+        version: fetchedProjectDetails.projectDetails.parsedProject.version,
+        description:
+          fetchedProjectDetails.projectDetails.parsedProject.description,
+      });
+      dependencies =
+        fetchedProjectDetails.projectDetails.parsedProject.dependencies;
+      devDependencies =
+        fetchedProjectDetails.projectDetails.parsedProject.devDependencies;
+    } else {
+      openAlert.error({
+        message: t('project.details.alert.title.loadProjectError'),
+        description: t('project.details.alert.description.noProjectData'),
+      });
+    }
+  }
 
   useEffect(() => {
     return createPackageFx.done.watch(({ result }) => {
@@ -177,10 +171,10 @@ const ProjectDetails: FunctionComponent = () => {
   useEffect(() => {
     return exportDependenciesWithNewVersionSaveDialog.done.watch(
       ({ result }) => {
-        if (id && result) {
+        if (projectId && result) {
           setIsExportRunning(true);
           void exportDependenciesWithNewVersion({
-            projectKey: id,
+            projectKey: projectId,
             outputFilePath: result,
           });
         }
@@ -209,8 +203,8 @@ const ProjectDetails: FunctionComponent = () => {
   });
 
   const onDelete = useCallback(() => {
-    if (id) {
-      void window.projectManagement.delete(id).then(() => {
+    if (projectId) {
+      void window.projectManagement.delete(projectId).then(() => {
         openAlert.success({
           message: t('project.details.alert.title.projectRemoved', {
             projectName: title,
@@ -220,7 +214,7 @@ const ProjectDetails: FunctionComponent = () => {
         navigateTo(routePaths.packageList.generate());
       });
     }
-  }, [id, openAlert, t, title]);
+  }, [projectId, openAlert, t, title]);
 
   return (
     <>

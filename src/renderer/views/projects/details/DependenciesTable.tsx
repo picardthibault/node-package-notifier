@@ -11,7 +11,11 @@ import { useTranslation } from 'react-i18next';
 import { routePaths } from '../../../routes.js';
 import { Space, Table, TableColumnsType } from 'antd';
 import { useUnit } from 'effector-react';
-import { $packageList, createPackageFx, deletePackageFx } from '@renderer/stores/PackageListStore.js';
+import {
+  $packageList,
+  createPackageFx,
+  deletePackageFx,
+} from '@renderer/stores/PackageListStore.js';
 import { GetPackagesResult } from '@type/PackageListenerArgs.js';
 import { navigateTo } from '@renderer/stores/MenuStore.js';
 import {

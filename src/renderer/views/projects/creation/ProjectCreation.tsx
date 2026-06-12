@@ -4,10 +4,10 @@ import Title from '@renderer/components/Title/Title.js';
 import { Form, Input, Space, notification } from 'antd';
 import ActionButton from '@renderer/components/Button/ActionButton.js';
 import { ProjectCreationArgs } from '@type/ProjectListenerArgs.js';
-import { routePaths } from '../../routes.js';
+import { routePaths } from '../../../routes.js';
 import RegistryField from '@renderer/components/Form/RegistryField.js';
-import { fetchProjectList } from '@renderer/effects/ProjectEffects.js';
-import { navigateTo } from '@renderer/stores/MenuStore.js';
+import { fetchProjectListFx } from '@renderer/stores/projects/effects/ProjectEffects.js';
+import { navigateTo } from '@renderer/stores/menu/MenuStore.js';
 import FilePathField from '@renderer/components/Form/FilePathField.js';
 
 const ProjectCreation: FunctionComponent = () => {
@@ -56,7 +56,7 @@ const ProjectCreation: FunctionComponent = () => {
           openAlert.success({
             message: t('project.creation.alert.title.success'),
           });
-          void fetchProjectList();
+          void fetchProjectListFx();
           navigateTo(
             routePaths.projectDetails.generate(
               projectCreationResult.projectKey,

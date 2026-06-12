@@ -1,5 +1,5 @@
 import { createEvent, createStore } from 'effector';
-import { routePaths } from '../routes.js';
+import { routePaths } from '../../routes.js';
 
 /* Events */
 export const navigateTo = createEvent<string>();

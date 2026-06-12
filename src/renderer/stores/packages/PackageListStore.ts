@@ -1,30 +1,14 @@
-import { createEffect, createEvent, createStore, sample } from 'effector';
+import { createStore, sample } from 'effector';
+import { GetPackagesResult } from '@type/PackageListenerArgs.js';
 import {
-  GetPackagesResult,
-  PackageCreationArgs,
-} from '@type/PackageListenerArgs.js';
-
-/* Events */
-const updatePackageList = createEvent<GetPackagesResult>();
-
-export const updatePackageListPageConfig = createEvent<{
-  page: number;
-  pageSize: number;
-}>();
-
-/* Effects */
-export const fetchPackageListFx = createEffect(() =>
-  window.packageManagement.getPackages(),
-);
-
-export const createPackageFx = createEffect(
-  (creationArgs: PackageCreationArgs) =>
-    window.packageManagement.create(creationArgs),
-);
-
-export const deletePackageFx = createEffect((packageKey: string) =>
-  window.packageManagement.delete(packageKey),
-);
+  updatePackageList,
+  updatePackageListPageConfig,
+} from './events/PackagesEvents.js';
+import {
+  createPackageFx,
+  deletePackageFx,
+  fetchPackageListFx,
+} from './effects/PackagesEffects.js';
 
 /* Store */
 export interface PackageListStore {

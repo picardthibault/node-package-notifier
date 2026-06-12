@@ -3,9 +3,12 @@ import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useUnit } from 'effector-react';
-import { MenuStore, $menu } from '@renderer/stores/MenuStore.js';
-import { navigateTo } from '@renderer/stores/MenuStore.js';
-import { resetDependenciesTabStore } from '@renderer/stores/DependenciesTabStore.js';
+import {
+  MenuStore,
+  $menu,
+  navigateTo,
+} from '@renderer/stores/menu/MenuStore.js';
+import { resetDependenciesTabStore } from '@renderer/stores/projects/DependenciesTabStore.js';
 import { MenuItemType, SubMenuType } from 'antd/es/menu/interface.js';
 
 export type SideMenuItem = MenuItemType | SubMenuType;

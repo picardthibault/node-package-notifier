@@ -3,11 +3,11 @@ import { AutoComplete, Form, Space, notification } from 'antd';
 import { useTranslation } from 'react-i18next';
 import ActionButton from '@renderer/components/Button/ActionButton.js';
 import Title from '@renderer/components/Title/Title.js';
-import { routePaths } from '../../routes.js';
+import { routePaths } from '../../../routes.js';
 import LinkButton from '@renderer/components/Button/LinkButton.js';
 import RegistryField from '@renderer/components/Form/RegistryField.js';
-import { navigateTo } from '@renderer/stores/MenuStore.js';
-import { createPackageFx } from '@renderer/stores/PackageListStore.js';
+import { navigateTo } from '@renderer/stores/menu/MenuStore.js';
+import { createPackageFx } from '@renderer/stores/packages/effects/PackagesEffects.js';
 
 interface PackageFormField {
   packageName: string;

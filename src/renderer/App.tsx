@@ -6,10 +6,10 @@ import React, {
   useState,
 } from 'react';
 import { Route, Routes } from 'react-router';
-import { PackageCreation } from '@renderer/views/packages/PackageCreation.js';
-import { PackagesView } from '@renderer/views/packages/PackagesView.js';
+import { PackageCreation } from '@renderer/views/packages/creation/PackageCreation.js';
+import { PackagesView } from '@renderer/views/packages/list/PackagesView.js';
 import { routePaths } from './routes.js';
-import PackageDetails from '@renderer/views/packages/PackageDetails.js';
+import PackageDetails from '@renderer/views/packages/details/PackageDetails.js';
 import PageLayout from '@renderer/components/Layout/PageLayout.js';
 import { useTranslation } from 'react-i18next';
 import {
@@ -17,10 +17,10 @@ import {
   ProjectOutlined,
   UnorderedListOutlined,
 } from '@ant-design/icons';
-import ProjectCreation from '@renderer/views/projects/ProjectCreation.js';
-import ProjectDetails from '@renderer/views/projects/ProjectDetails.js';
+import ProjectCreation from '@renderer/views/projects/creation/ProjectCreation.js';
+import ProjectDetails from '@renderer/views/projects/details/ProjectDetails.js';
 import { ProjectListElement } from '@type/ProjectInfo.js';
-import { fetchProjectList } from './effects/ProjectEffects.js';
+import { fetchProjectListFx } from './stores/projects/effects/ProjectEffects.js';
 import { MenuItemType, SubMenuType } from 'antd/es/menu/interface.js';
 
 const projectListMenuKey = 'projectList';
@@ -31,11 +31,11 @@ const App: FunctionComponent = () => {
   const [projectList, setProjectList] = useState<ProjectListElement[]>([]);
 
   useEffect(() => {
-    void fetchProjectList();
+    void fetchProjectListFx();
   }, []);
 
   useEffect(() => {
-    fetchProjectList.done.watch(({ result }) => {
+    fetchProjectListFx.done.watch(({ result }) => {
       setProjectList(result);
     });
   });

@@ -10,7 +10,7 @@ import Title from '@renderer/components/Title/Title.js';
 import Loading from '@renderer/components/Loading/Loading.js';
 import { Form, Input, Tabs, notification } from 'antd';
 import { useTranslation } from 'react-i18next';
-import DependenciesTable from './details/DependenciesTable.js';
+import DependenciesTable from './dependencies/DependenciesTable.js';
 import { ParsedDependency } from '@type/ProjectInfo.js';
 import ActionButtonWithConfirm from '@renderer/components/Button/ActionButtonWithConfirm.js';
 import {
@@ -18,37 +18,59 @@ import {
   ExportOutlined,
   QuestionCircleOutlined,
 } from '@ant-design/icons';
-import { navigateTo } from '@renderer/stores/MenuStore.js';
-import { routePaths } from '../../routes.js';
+import { navigateTo } from '@renderer/stores/menu/MenuStore.js';
+import { routePaths } from '../../../routes.js';
 import {
-  fetchProjectList,
-  exportDependenciesWithNewVersionSaveDialog,
-  exportDependenciesWithNewVersion,
-} from '@renderer/effects/ProjectEffects.js';
+  fetchProjectListFx,
+  exportDependenciesWithNewVersionSaveDialogFx,
+  exportDependenciesWithNewVersionFx,
+} from '@renderer/stores/projects/effects/ProjectEffects.js';
 import {
   TabKey,
   dependenciesTabKey,
   devDepenciesTabKey,
   dependenciesTabStore,
   updateActiveTab,
-} from '@renderer/stores/DependenciesTabStore.js';
+} from '@renderer/stores/projects/DependenciesTabStore.js';
 import { useUnit } from 'effector-react';
 import ActionButton from '@renderer/components/Button/ActionButton.js';
 import {
   createPackageFx,
   deletePackageFx,
-} from '@renderer/stores/PackageListStore.js';
-import {
-  $projectDetails,
-  ProjectDetailsStore,
-  selectProjectDetails,
-} from '@renderer/stores/ProjectDetailsStore.js';
+} from '@renderer/stores/packages/effects/PackagesEffects.js';
+import { GetProjectDetailsResult } from '@type/ProjectListenerArgs.js';
+import { fetchProjectDetailsFx } from '@renderer/stores/projects/effects/ProjectEffects.js';
 
 interface TabItems {
   key: TabKey;
   label: string;
   children: JSX.Element;
 }
+
+const useProjectDetails = () => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [projectDetails, setProjectDetails] = useState<
+    GetProjectDetailsResult | undefined
+  >(undefined);
+
+  const selectProject = useCallback(
+    (projectId: string) => {
+      setIsLoading(true);
+
+      void fetchProjectDetailsFx(projectId);
+    },
+    [setIsLoading],
+  );
+
+  useEffect(() => {
+    return fetchProjectDetailsFx.done.watch(({ result }) => {
+      setIsLoading(false);
+      setProjectDetails(result);
+    });
+  });
+
+  return { isLoading, projectDetails, selectProject };
+};
 
 const ProjectDetails: FunctionComponent = () => {
   const { id } = useParams<{ id: string }>();
@@ -64,48 +86,43 @@ const ProjectDetails: FunctionComponent = () => {
 
   const [isExportRunning, setIsExportRunning] = useState<boolean>(false);
 
-  const { projectId, fetchedProjectDetails } =
-    useUnit<ProjectDetailsStore>($projectDetails);
+  const { isLoading, projectDetails, selectProject } = useProjectDetails();
 
   useEffect(() => {
     if (id) {
-      selectProjectDetails(id);
+      selectProject(id);
     }
-  }, [id]);
+  }, [id, selectProject]);
 
   let title = '';
   let registryUrl = '';
-  let isLoading = true;
   let dependencies: ParsedDependency[] = [];
   let devDependencies: ParsedDependency[] = [];
-  if (fetchedProjectDetails) {
-    title = fetchedProjectDetails.projectDetails.name;
-    registryUrl = fetchedProjectDetails.projectDetails.registryUrl;
-    isLoading = false;
+  if (projectDetails) {
+    title = projectDetails.projectDetails.name;
+    registryUrl = projectDetails.projectDetails.registryUrl;
     formInstance.setFieldsValue({
-      projectPath: fetchedProjectDetails.projectDetails.path,
-      registryUrl: fetchedProjectDetails.projectDetails.registryUrl,
+      projectPath: projectDetails.projectDetails.path,
+      registryUrl: projectDetails.projectDetails.registryUrl,
     });
 
-    if (fetchedProjectDetails.error) {
+    if (projectDetails.error) {
       formInstance.resetFields(['version', 'description']);
       openAlert.error({
         message: t('project.details.alert.title.loadProjectError'),
         description: t('project.details.alert.description.loadProjectError', {
-          cause: fetchedProjectDetails.error,
+          cause: projectDetails.error,
         }),
         placement: 'topRight',
       });
-    } else if (fetchedProjectDetails.projectDetails.parsedProject) {
+    } else if (projectDetails.projectDetails.parsedProject) {
       formInstance.setFieldsValue({
-        version: fetchedProjectDetails.projectDetails.parsedProject.version,
-        description:
-          fetchedProjectDetails.projectDetails.parsedProject.description,
+        version: projectDetails.projectDetails.parsedProject.version,
+        description: projectDetails.projectDetails.parsedProject.description,
       });
-      dependencies =
-        fetchedProjectDetails.projectDetails.parsedProject.dependencies;
+      dependencies = projectDetails.projectDetails.parsedProject.dependencies;
       devDependencies =
-        fetchedProjectDetails.projectDetails.parsedProject.devDependencies;
+        projectDetails.projectDetails.parsedProject.devDependencies;
     } else {
       openAlert.error({
         message: t('project.details.alert.title.loadProjectError'),
@@ -165,16 +182,16 @@ const ProjectDetails: FunctionComponent = () => {
   ];
 
   const onExportDependenciesWithNewVersion = () => {
-    void exportDependenciesWithNewVersionSaveDialog();
+    void exportDependenciesWithNewVersionSaveDialogFx();
   };
 
   useEffect(() => {
-    return exportDependenciesWithNewVersionSaveDialog.done.watch(
+    return exportDependenciesWithNewVersionSaveDialogFx.done.watch(
       ({ result }) => {
-        if (projectId && result) {
+        if (id && result) {
           setIsExportRunning(true);
-          void exportDependenciesWithNewVersion({
-            projectKey: projectId,
+          void exportDependenciesWithNewVersionFx({
+            projectKey: id,
             outputFilePath: result,
           });
         }
@@ -183,7 +200,7 @@ const ProjectDetails: FunctionComponent = () => {
   });
 
   useEffect(() => {
-    return exportDependenciesWithNewVersion.done.watch(({ result }) => {
+    return exportDependenciesWithNewVersionFx.done.watch(({ result }) => {
       setIsExportRunning(false);
       if (!result) {
         openAlert.success({
@@ -203,18 +220,18 @@ const ProjectDetails: FunctionComponent = () => {
   });
 
   const onDelete = useCallback(() => {
-    if (projectId) {
-      void window.projectManagement.delete(projectId).then(() => {
+    if (id) {
+      void window.projectManagement.delete(id).then(() => {
         openAlert.success({
           message: t('project.details.alert.title.projectRemoved', {
             projectName: title,
           }),
         });
-        void fetchProjectList();
+        void fetchProjectListFx();
         navigateTo(routePaths.packageList.generate());
       });
     }
-  }, [projectId, openAlert, t, title]);
+  }, [id, openAlert, t, title]);
 
   return (
     <>

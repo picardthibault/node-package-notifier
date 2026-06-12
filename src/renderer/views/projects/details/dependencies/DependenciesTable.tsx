@@ -8,24 +8,24 @@ import {
   PlusCircleOutlined,
 } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
-import { routePaths } from '../../../routes.js';
+import { routePaths } from '../../../../routes.js';
 import { Space, Table, TableColumnsType } from 'antd';
 import { useUnit } from 'effector-react';
-import {
-  $packageList,
-  createPackageFx,
-  deletePackageFx,
-} from '@renderer/stores/PackageListStore.js';
+import { $packageList } from '@renderer/stores/packages/PackageListStore.js';
 import { GetPackagesResult } from '@type/PackageListenerArgs.js';
-import { navigateTo } from '@renderer/stores/MenuStore.js';
+import { navigateTo } from '@renderer/stores/menu/MenuStore.js';
 import {
   TabPageConfiguration,
   TabKey,
   updateTabPageConfig,
-} from '@renderer/stores/DependenciesTabStore.js';
+} from '@renderer/stores/projects/DependenciesTabStore.js';
 import PackageVersionTag from '@renderer/components/Tag/Tag.js';
 import PublicationDateCell from './PublicationDateCell.js';
-import { selectPackageDetails } from '@renderer/stores/PackageDetailsStore.js';
+import { selectPackageDetails } from '@renderer/stores/packages/events/PackagesEvents.js';
+import {
+  createPackageFx,
+  deletePackageFx,
+} from '@renderer/stores/packages/effects/PackagesEffects.js';
 
 interface DependenciesTableProps {
   tabKey: TabKey;

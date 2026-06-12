@@ -1,4 +1,9 @@
-import React, { FunctionComponent, useEffect } from 'react';
+import React, {
+  FunctionComponent,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import Title from '@renderer/components/Title/Title.js';
 import {
   Form,
@@ -15,10 +20,16 @@ import { useUnit } from 'effector-react';
 import {
   PackageDetailsStore,
   $packageDetails,
-} from '@renderer/stores/PackageDetailsStore.js';
-import { MenuStore, $menu, navigateTo } from '@renderer/stores/MenuStore.js';
+} from '@renderer/stores/packages/PackageDetailsStore.js';
+import {
+  MenuStore,
+  $menu,
+  navigateTo,
+} from '@renderer/stores/menu/MenuStore.js';
 import { EyeOutlined } from '@ant-design/icons';
 import PackageVersionTag from '@renderer/components/Tag/Tag.js';
+import { GetPackageResult } from '@type/PackageListenerArgs.js';
+import { fetchPackageDetailsFx } from '@renderer/stores/packages/effects/PackagesEffects.js';
 
 interface TableItemType {
   key: number;
@@ -34,59 +45,84 @@ const backMouseButtonListener: (to: string) => (event: MouseEvent) => void =
     event.preventDefault();
   };
 
+const usePackageDetails = () => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [packageDetails, setPackageDetails] = useState<
+    GetPackageResult | undefined
+  >(undefined);
+
+  const selectPackage = useCallback(
+    (packageName: string, registryUrl: string) => {
+      setIsLoading(true);
+
+      void fetchPackageDetailsFx({
+        packageName: packageName,
+        registryUrl: registryUrl,
+      });
+    },
+    [setIsLoading],
+  );
+
+  useEffect(() => {
+    return fetchPackageDetailsFx.done.watch(({ result }) => {
+      setIsLoading(false);
+      setPackageDetails(result);
+    });
+  });
+
+  return { isLoading, packageDetails, selectPackage };
+};
+
 const PackageDetails: FunctionComponent = () => {
   const { t } = useTranslation();
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const [openAlert, contextHolder] = notification.useNotification();
 
-  const { fetchedPackageDetails: fetchDetails } =
+  const { packageName, registryUrl } =
     useUnit<PackageDetailsStore>($packageDetails);
 
   const { previousLocation } = useUnit<MenuStore>($menu);
 
   const [formInstance] = Form.useForm();
 
-  useEffect(() => {
-    const listener = backMouseButtonListener(previousLocation);
-    window.addEventListener('mouseup', listener);
+  const { isLoading, packageDetails, selectPackage } = usePackageDetails();
 
-    return () => {
-      window.removeEventListener('mouseup', listener);
-    };
-  });
+  useEffect(() => {
+    if (packageName && registryUrl) {
+      selectPackage(packageName, registryUrl);
+    }
+  }, [packageName, registryUrl, selectPackage]);
 
   let title = '';
   let tags: TableItemType[] = [];
-  let isLoading = true;
-  if (fetchDetails) {
+  if (packageDetails) {
     title =
-      fetchDetails.packageDetails.name.charAt(0).toUpperCase() +
-      fetchDetails.packageDetails.name.slice(1);
-    isLoading = false;
-    if (fetchDetails.error) {
+      packageDetails.packageDetails.name.charAt(0).toUpperCase() +
+      packageDetails.packageDetails.name.slice(1);
+    if (packageDetails.error) {
       formInstance.resetFields();
       tags = [];
       formInstance.setFieldValue(
         'registryUrl',
-        fetchDetails.packageDetails.registryUrl,
+        packageDetails.packageDetails.registryUrl,
       );
       openAlert.error({
         message: t('package.details.alert.title.error'),
         description: t('package.details.alert.description.error', {
-          cause: fetchDetails.error,
+          cause: packageDetails.error,
         }),
       });
     } else {
       formInstance.setFieldsValue({
-        registryUrl: fetchDetails.packageDetails.registryUrl,
-        licence: fetchDetails.packageDetails.license,
-        homePage: fetchDetails.packageDetails.homePage,
-        repository: fetchDetails.packageDetails.repository,
-        description: fetchDetails.packageDetails.description,
+        registryUrl: packageDetails.packageDetails.registryUrl,
+        licence: packageDetails.packageDetails.license,
+        homePage: packageDetails.packageDetails.homePage,
+        repository: packageDetails.packageDetails.repository,
+        description: packageDetails.packageDetails.description,
       });
 
-      const fetchedTags = fetchDetails.packageDetails.tags;
+      const fetchedTags = packageDetails.packageDetails.tags;
       if (fetchedTags) {
         Object.keys(fetchedTags).forEach((key, index) =>
           tags.push({
@@ -98,6 +134,15 @@ const PackageDetails: FunctionComponent = () => {
       }
     }
   }
+
+  useEffect(() => {
+    const listener = backMouseButtonListener(previousLocation);
+    window.addEventListener('mouseup', listener);
+
+    return () => {
+      window.removeEventListener('mouseup', listener);
+    };
+  });
 
   const tableColumns: TableColumnType<TableItemType>[] = [
     {

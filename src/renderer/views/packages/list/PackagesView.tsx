@@ -9,19 +9,23 @@ import { useTranslation } from 'react-i18next';
 import ActionButton from '@renderer/components/Button/ActionButton.js';
 import {
   $packageList,
-  deletePackageFx,
-  fetchPackageListFx,
   PackageListStore,
-  updatePackageListPageConfig,
-} from '@renderer/stores/PackageListStore.js';
+} from '@renderer/stores/packages/PackageListStore.js';
 import { useUnit } from 'effector-react';
 import Title from '@renderer/components/Title/Title.js';
-import { routePaths } from '../../routes.js';
-import { navigateTo } from '@renderer/stores/MenuStore.js';
+import { routePaths } from '../../../routes.js';
+import { navigateTo } from '@renderer/stores/menu/MenuStore.js';
 import PackageVersionTag from '@renderer/components/Tag/Tag.js';
 import { GetPackagesResult } from '@type/PackageListenerArgs.js';
-import i18n from '../../i18n.js';
-import { selectPackageDetails } from '@renderer/stores/PackageDetailsStore.js';
+import i18n from '../../../i18n.js';
+import {
+  selectPackageDetails,
+  updatePackageListPageConfig,
+} from '@renderer/stores/packages/events/PackagesEvents.js';
+import {
+  deletePackageFx,
+  fetchPackageListFx,
+} from '@renderer/stores/packages/effects/PackagesEffects.js';
 
 interface TableItemType {
   key: string;

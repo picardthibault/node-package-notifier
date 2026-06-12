@@ -1,7 +1,7 @@
 import { LeftOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
 import React, { FunctionComponent } from 'react';
-import { navigateTo } from '@renderer/stores/MenuStore.js';
+import { navigateTo } from '@renderer/stores/menu/MenuStore.js';
 
 interface LinkButtonProps {
   to: string;

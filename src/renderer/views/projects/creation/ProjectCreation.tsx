@@ -95,7 +95,7 @@ const ProjectCreation: FunctionComponent = () => {
                 if (value) {
                   const isProjectNameUsed =
                     await window.projectManagement.isProjectNameUsed(
-                      value as unknown as string,
+                      value as string,
                     );
                   if (isProjectNameUsed) {
                     throw new Error(

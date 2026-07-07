@@ -3,11 +3,11 @@ import { AutoComplete, Form, Space, notification } from 'antd';
 import { useTranslation } from 'react-i18next';
 import ActionButton from '@renderer/components/Button/ActionButton.js';
 import Title from '@renderer/components/Title/Title.js';
-import { routePaths } from '../../routes.js';
+import { routePaths } from '../../../routes.js';
 import LinkButton from '@renderer/components/Button/LinkButton.js';
 import RegistryField from '@renderer/components/Form/RegistryField.js';
-import { createPackage } from '@renderer/effects/PackageEffect.js';
-import { navigateTo } from '@renderer/effects/MenuEffect.js';
+import { navigateTo } from '@renderer/stores/menu/MenuStore.js';
+import { createPackageFx } from '@renderer/stores/packages/effects/PackagesEffects.js';
 
 interface PackageFormField {
   packageName: string;
@@ -30,16 +30,16 @@ export const PackageCreation = (): React.JSX.Element => {
   const [formInstance] = Form.useForm<PackageFormField>();
 
   useEffect(() => {
-    return createPackage.done.watch(({ result }) => {
+    return createPackageFx.done.watch(({ result }) => {
       setCreationLoading(false);
       if (!result) {
         openAlert.success({
-          message: t('package.creation.alert.title.success'),
+          title: t('package.creation.alert.title.success'),
         });
-        void navigateTo(routePaths.packageList.generate());
+        navigateTo(routePaths.packageList.generate());
       } else {
         openAlert.error({
-          message: t('package.creation.alert.title.error'),
+          title: t('package.creation.alert.title.error'),
           description: result,
         });
       }
@@ -76,7 +76,7 @@ export const PackageCreation = (): React.JSX.Element => {
 
   const onFinish = () => {
     setCreationLoading(true);
-    void createPackage(formInstance.getFieldsValue());
+    void createPackageFx(formInstance.getFieldsValue());
   };
 
   return (

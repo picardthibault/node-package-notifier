@@ -1,5 +1,5 @@
-import './listeners/index';
-import '@main/helpers/LogConfiguration';
+import './listeners/index.js';
+import '@main/helpers/LogConfiguration.js';
 import { app, BrowserWindow, Menu, Tray } from 'electron';
 import * as path from 'path';
 import {

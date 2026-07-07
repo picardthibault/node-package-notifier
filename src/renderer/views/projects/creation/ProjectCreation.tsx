@@ -77,16 +77,6 @@ const ProjectCreation: FunctionComponent = () => {
           projectPath: '',
         }}
         labelAlign="left"
-        /* labelCol={{
-          sm: {
-            span: 4,
-            offset: 0
-          },
-          xl: {
-            span: 2,
-            offset: 0,
-          },
-        }} */
         labelCol={{ lg: 4, xl: 2 }}
         labelWrap
         onFinish={onFinish}

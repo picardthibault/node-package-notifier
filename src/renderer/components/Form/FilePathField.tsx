@@ -53,23 +53,21 @@ const FilePathField: FunctionComponent<Props> = (props) => {
     <Button
       htmlType="button"
       style={{
-        padding: "0 11px 0 11px",
-        display: "flex",
-        alignItems: "center",
+        padding: '0 11px 0 11px',
+        display: 'flex',
+        alignItems: 'center',
         borderStyle: 'solid',
         borderWidth: '1px 1px 1px 0',
         borderColor: 'rgb(217, 217, 217)',
         borderBottomRightRadius: '6px',
         borderTopRightRadius: '6px',
-        backgroundColor: 'rgba(0, 0, 0, 0.02)'
+        backgroundColor: 'rgba(0, 0, 0, 0.02)',
       }}
       onClick={() => {
         const currentPath = formInstance.getFieldValue(name) as string;
-        console.log(currentPath)
         void window.projectManagement
           .projectPathSelector(currentPath ? currentPath : '')
           .then((selection) => {
-            console.log(selection)
             if (selection) {
               formInstance.setFieldValue(name, selection);
               inputRef.current?.focus();
@@ -85,15 +83,21 @@ const FilePathField: FunctionComponent<Props> = (props) => {
   return (
     <>
       {contextHolder}
-        <Space.Compact style={{width: "100%"}}>
-          <Form.Item label={label} name={name} tooltip={tooltip} rules={rules} style={{width: "100%"}}>
-            <Input
-              name={name}
-              placeholder={placeholder}
-              onChange={onChange}
-              onDrop={onDrop}
-              ref={inputRef}
-            />
+      <Space.Compact style={{ width: '100%' }}>
+        <Form.Item
+          label={label}
+          name={name}
+          tooltip={tooltip}
+          rules={rules}
+          style={{ width: '100%' }}
+        >
+          <Input
+            name={name}
+            placeholder={placeholder}
+            onChange={onChange}
+            onDrop={onDrop}
+            ref={inputRef}
+          />
         </Form.Item>
         {folderAddon}
       </Space.Compact>

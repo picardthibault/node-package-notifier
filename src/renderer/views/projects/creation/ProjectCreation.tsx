@@ -49,12 +49,12 @@ const ProjectCreation: FunctionComponent = () => {
         setIsLoading(false);
         if (projectCreationResult.error) {
           openAlert.error({
-            message: t('project.creation.alert.title.error'),
+            title: t('project.creation.alert.title.error'),
             description: projectCreationResult.error,
           });
         } else {
           openAlert.success({
-            message: t('project.creation.alert.title.success'),
+            title: t('project.creation.alert.title.success'),
           });
           void fetchProjectListFx();
           navigateTo(
@@ -77,7 +77,18 @@ const ProjectCreation: FunctionComponent = () => {
           projectPath: '',
         }}
         labelAlign="left"
-        labelCol={{ lg: 5, xl: 3 }}
+        /* labelCol={{
+          sm: {
+            span: 4,
+            offset: 0
+          },
+          xl: {
+            span: 2,
+            offset: 0,
+          },
+        }} */
+        labelCol={{ lg: 4, xl: 2 }}
+        labelWrap
         onFinish={onFinish}
         validateTrigger="onBlur"
       >

@@ -5,6 +5,8 @@ import {
   notification,
   FormInstance,
   FormRule,
+  Space,
+  Button,
 } from 'antd';
 import React, { DragEvent, FunctionComponent, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -41,19 +43,33 @@ const FilePathField: FunctionComponent<Props> = (props) => {
       inputRef.current?.focus();
     } else {
       openAlert.error({
-        message: t('project.creation.alert.title.invalidSelection'),
+        title: t('project.creation.alert.title.invalidSelection'),
       });
     }
     event.dataTransfer.clearData();
   };
 
   const folderAddon = (
-    <div
+    <Button
+      htmlType="button"
+      style={{
+        padding: "0 11px 0 11px",
+        display: "flex",
+        alignItems: "center",
+        borderStyle: 'solid',
+        borderWidth: '1px 1px 1px 0',
+        borderColor: 'rgb(217, 217, 217)',
+        borderBottomRightRadius: '6px',
+        borderTopRightRadius: '6px',
+        backgroundColor: 'rgba(0, 0, 0, 0.02)'
+      }}
       onClick={() => {
         const currentPath = formInstance.getFieldValue(name) as string;
+        console.log(currentPath)
         void window.projectManagement
           .projectPathSelector(currentPath ? currentPath : '')
           .then((selection) => {
+            console.log(selection)
             if (selection) {
               formInstance.setFieldValue(name, selection);
               inputRef.current?.focus();
@@ -63,22 +79,24 @@ const FilePathField: FunctionComponent<Props> = (props) => {
       }}
     >
       <FolderOpenOutlined />
-    </div>
+    </Button>
   );
 
   return (
     <>
       {contextHolder}
-      <Form.Item label={label} name={name} tooltip={tooltip} rules={rules}>
-        <Input
-          name={name}
-          placeholder={placeholder}
-          onChange={onChange}
-          onDrop={onDrop}
-          ref={inputRef}
-          addonAfter={folderAddon}
-        />
-      </Form.Item>
+        <Space.Compact style={{width: "100%"}}>
+          <Form.Item label={label} name={name} tooltip={tooltip} rules={rules} style={{width: "100%"}}>
+            <Input
+              name={name}
+              placeholder={placeholder}
+              onChange={onChange}
+              onDrop={onDrop}
+              ref={inputRef}
+            />
+        </Form.Item>
+        {folderAddon}
+      </Space.Compact>
     </>
   );
 };

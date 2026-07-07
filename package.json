@@ -51,8 +51,7 @@
     "vitest": "4.1.9"
   },
   "dependencies": {
-    "@ant-design/v5-patch-for-react-19": "1.0.3",
-    "antd": "5.25.2",
+    "antd": "6.4.4",
     "cache-manager": "7.2.8",
     "cron": "4.4.0",
     "effector": "23.4.4",

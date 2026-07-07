@@ -158,7 +158,7 @@ const DependenciesTable: React.FunctionComponent<DependenciesTableProps> = (
       pagination={{
         current: tabConfig.page,
         defaultPageSize: tabConfig.pageSize,
-        position: ['bottomCenter'],
+        placement: ['bottomCenter'],
         showSizeChanger: true,
         onChange(page: number, pageSize: number) {
           updateTabPageConfig({ tabKey, page, pageSize });

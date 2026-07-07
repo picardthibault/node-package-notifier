@@ -108,7 +108,7 @@ const PackageDetails: FunctionComponent = () => {
         packageDetails.packageDetails.registryUrl,
       );
       openAlert.error({
-        message: t('package.details.alert.title.error'),
+        title: t('package.details.alert.title.error'),
         description: t('package.details.alert.description.error', {
           cause: packageDetails.error,
         }),
@@ -229,7 +229,7 @@ const PackageDetails: FunctionComponent = () => {
             columns={tableColumns}
             dataSource={tags}
             pagination={{
-              position: ['bottomCenter'],
+              placement: ['bottomCenter'],
               showSizeChanger: true,
             }}
           />

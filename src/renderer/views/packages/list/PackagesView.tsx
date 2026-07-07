@@ -201,7 +201,7 @@ export const PackagesView = (): React.JSX.Element => {
         pagination={{
           current: page,
           defaultPageSize: pageSize,
-          position: ['bottomCenter'],
+          placement: ['bottomCenter'],
           showSizeChanger: true,
           onChange(page: number, pageSize: number) {
             updatePackageListPageConfig({ page, pageSize });

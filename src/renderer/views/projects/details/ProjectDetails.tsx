@@ -109,7 +109,7 @@ const ProjectDetails: FunctionComponent = () => {
     if (projectDetails.error) {
       formInstance.resetFields(['version', 'description']);
       openAlert.error({
-        message: t('project.details.alert.title.loadProjectError'),
+        title: t('project.details.alert.title.loadProjectError'),
         description: t('project.details.alert.description.loadProjectError', {
           cause: projectDetails.error,
         }),
@@ -125,7 +125,7 @@ const ProjectDetails: FunctionComponent = () => {
         projectDetails.projectDetails.parsedProject.devDependencies;
     } else {
       openAlert.error({
-        message: t('project.details.alert.title.loadProjectError'),
+        title: t('project.details.alert.title.loadProjectError'),
         description: t('project.details.alert.description.noProjectData'),
       });
     }
@@ -135,11 +135,11 @@ const ProjectDetails: FunctionComponent = () => {
     return createPackageFx.done.watch(({ result }) => {
       if (!result) {
         openAlert.success({
-          message: t('project.details.alert.title.dependencyFollowed'),
+          title: t('project.details.alert.title.dependencyFollowed'),
         });
       } else {
         openAlert.error({
-          message: t('project.details.alert.title.dependencyFollowError'),
+          title: t('project.details.alert.title.dependencyFollowError'),
           description: result,
         });
       }
@@ -149,7 +149,7 @@ const ProjectDetails: FunctionComponent = () => {
   useEffect(() => {
     return deletePackageFx.done.watch(() => {
       openAlert.success({
-        message: t('project.details.alert.title.dependencyUnfollowed'),
+        title: t('project.details.alert.title.dependencyUnfollowed'),
       });
     });
   });
@@ -204,13 +204,13 @@ const ProjectDetails: FunctionComponent = () => {
       setIsExportRunning(false);
       if (!result) {
         openAlert.success({
-          message: t(
+          title: t(
             'project.details.alert.title.dependenciesWithNewVersionExported',
           ),
         });
       } else {
         openAlert.error({
-          message: t(
+          title: t(
             'project.details.alert.title.exportDependenciesWithNewVersionExportError',
           ),
           description: result,
@@ -223,7 +223,7 @@ const ProjectDetails: FunctionComponent = () => {
     if (id) {
       void window.projectManagement.delete(id).then(() => {
         openAlert.success({
-          message: t('project.details.alert.title.projectRemoved', {
+          title: t('project.details.alert.title.projectRemoved', {
             projectName: title,
           }),
         });

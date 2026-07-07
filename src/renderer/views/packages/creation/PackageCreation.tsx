@@ -34,12 +34,12 @@ export const PackageCreation = (): React.JSX.Element => {
       setCreationLoading(false);
       if (!result) {
         openAlert.success({
-          message: t('package.creation.alert.title.success'),
+          title: t('package.creation.alert.title.success'),
         });
         navigateTo(routePaths.packageList.generate());
       } else {
         openAlert.error({
-          message: t('package.creation.alert.title.error'),
+          title: t('package.creation.alert.title.error'),
           description: result,
         });
       }

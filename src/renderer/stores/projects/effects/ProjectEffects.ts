@@ -1,4 +1,7 @@
-import { ExportDependenciesWithNewVersionArgs } from '@type/ProjectListenerArgs.js';
+import {
+  ExportDependenciesWithNewVersionArgs,
+  ProjectCreationArgs,
+} from '@type/ProjectListenerArgs.js';
 import { createEffect } from 'effector';
 
 export const fetchProjectDetailsFx = createEffect(async (params: string) =>
@@ -7,6 +10,11 @@ export const fetchProjectDetailsFx = createEffect(async (params: string) =>
 
 export const fetchProjectListFx = createEffect(() =>
   window.projectManagement.getProjectList(),
+);
+
+export const createProjectFx = createEffect(
+  (projectCreationArgs: ProjectCreationArgs) =>
+    window.projectManagement.create(projectCreationArgs),
 );
 
 export const exportDependenciesWithNewVersionSaveDialogFx = createEffect(() =>

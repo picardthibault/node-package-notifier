@@ -33,9 +33,6 @@ export const PackageCreation = (): React.JSX.Element => {
     return createPackageFx.done.watch(({ result }) => {
       setCreationLoading(false);
       if (!result) {
-        openAlert.success({
-          title: t('package.creation.alert.title.success'),
-        });
         navigateTo(routePaths.packageList.generate());
       } else {
         openAlert.error({

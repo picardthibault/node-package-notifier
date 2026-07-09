@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Title from '@renderer/components/Title/Title.js';
 import { Form, Input, Space, notification } from 'antd';
@@ -6,7 +6,10 @@ import ActionButton from '@renderer/components/Button/ActionButton.js';
 import { ProjectCreationArgs } from '@type/ProjectListenerArgs.js';
 import { routePaths } from '../../../routes.js';
 import RegistryField from '@renderer/components/Form/RegistryField.js';
-import { fetchProjectListFx } from '@renderer/stores/projects/effects/ProjectEffects.js';
+import {
+  createProjectFx,
+  fetchProjectListFx,
+} from '@renderer/stores/projects/effects/ProjectEffects.js';
 import { navigateTo } from '@renderer/stores/menu/MenuStore.js';
 import FilePathField from '@renderer/components/Form/FilePathField.js';
 
@@ -20,6 +23,20 @@ const ProjectCreation: FunctionComponent = () => {
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  useEffect(() => {
+    return createProjectFx.done.watch(({ result }) => {
+      setIsLoading(false);
+      if (result.error) {
+        openAlert.error({
+          title: t('project.creation.alert.title.error'),
+          description: result.error,
+        });
+      } else {
+        void fetchProjectListFx();
+        navigateTo(routePaths.projectDetails.generate(result.projectKey));
+      }
+    });
+  });
   const resetFieldError = (fieldName: string) => {
     const fieldErrors = formInstance.getFieldError(fieldName);
     if (fieldErrors.length > 0) {
@@ -43,27 +60,7 @@ const ProjectCreation: FunctionComponent = () => {
       registryUrl: formInstance.getFieldValue('registryUrl') as string,
     };
 
-    void window.projectManagement
-      .create(projectCreationArgs)
-      .then((projectCreationResult) => {
-        setIsLoading(false);
-        if (projectCreationResult.error) {
-          openAlert.error({
-            title: t('project.creation.alert.title.error'),
-            description: projectCreationResult.error,
-          });
-        } else {
-          openAlert.success({
-            title: t('project.creation.alert.title.success'),
-          });
-          void fetchProjectListFx();
-          navigateTo(
-            routePaths.projectDetails.generate(
-              projectCreationResult.projectKey,
-            ),
-          );
-        }
-      });
+    void createProjectFx(projectCreationArgs);
   };
 
   return (

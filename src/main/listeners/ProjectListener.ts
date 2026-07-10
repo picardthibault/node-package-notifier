@@ -33,9 +33,11 @@ ipcMain.handle(
         properties: ['openDirectory'],
         defaultPath: defaultPath,
       });
-      return selection.filePaths.length > 0 ? selection.filePaths[0] : undefined;
+      return selection.filePaths.length > 0
+        ? selection.filePaths[0]
+        : undefined;
     } else {
-      log.error("Unable to open dialog, missing existing window");
+      log.error('Unable to open dialog, missing existing window');
       return '';
     }
   },

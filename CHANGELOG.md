@@ -8,6 +8,7 @@
 ### Fix
 - Fix package/project creation modal visibility
 - Fix file dialog modal
+- Fix project list sorting
 
 ## v2.1.0
 

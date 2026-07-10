@@ -81,9 +81,11 @@ const App: FunctionComponent = () => {
         children: [
           ...projectList
             .sort((projectA, projectB) => {
-              if (projectA.name < projectB.name) {
+              const nameA = projectA.name.toUpperCase();
+              const nameB = projectB.name.toUpperCase();
+              if (nameA < nameB) {
                 return -1;
-              } else if (projectA.name > projectB.name) {
+              } else if (nameA > nameB) {
                 return 1;
               } else {
                 return 0;

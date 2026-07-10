@@ -28,11 +28,16 @@ ipcMain.handle(
   ProjectListenerChannel.PROJECT_PATH_SELECTOR,
   async (event, defaultPath: string): Promise<string | undefined> => {
     log.debug('Received project path show selector IPC');
-    const selection = await dialog.showOpenDialog({
-      properties: ['openDirectory'],
-      defaultPath: defaultPath,
-    });
-    return selection.filePaths.length > 0 ? selection.filePaths[0] : undefined;
+    if (mainWindow) {
+      const selection = await dialog.showOpenDialog(mainWindow, {
+        properties: ['openDirectory'],
+        defaultPath: defaultPath,
+      });
+      return selection.filePaths.length > 0 ? selection.filePaths[0] : undefined;
+    } else {
+      log.error("Unable to open dialog, missing existing window");
+      return '';
+    }
   },
 );
 

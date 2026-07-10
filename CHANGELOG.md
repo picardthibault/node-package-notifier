@@ -5,6 +5,10 @@
 ### Changed
 - Update dependencies
 
+### Fix
+- Fix package/project creation modal visibility
+- Fix file dialog modal
+
 ## v2.1.0
 
 ### Added

@@ -8,24 +8,24 @@ import {
   PlusCircleOutlined,
 } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
-import { routePaths } from '../../../routes.js';
-import { updatePackageDetails } from '@renderer/stores/PackageDetailsStore.js';
+import { routePaths } from '../../../../routes.js';
 import { Space, Table, TableColumnsType } from 'antd';
 import { useUnit } from 'effector-react';
-import { packageListStore } from '@renderer/stores/PackageListStore.js';
-import {
-  createPackage,
-  deletePackage,
-} from '@renderer/effects/PackageEffect.js';
+import { $packageList } from '@renderer/stores/packages/PackageListStore.js';
 import { GetPackagesResult } from '@type/PackageListenerArgs.js';
-import { navigateTo } from '@renderer/effects/MenuEffect.js';
+import { navigateTo } from '@renderer/stores/menu/MenuStore.js';
 import {
   TabPageConfiguration,
   TabKey,
   updateTabPageConfig,
-} from '@renderer/stores/DependenciesTabStore.js';
+} from '@renderer/stores/projects/DependenciesTabStore.js';
 import PackageVersionTag from '@renderer/components/Tag/Tag.js';
 import PublicationDateCell from './PublicationDateCell.js';
+import { selectPackageDetails } from '@renderer/stores/packages/events/PackagesEvents.js';
+import {
+  createPackageFx,
+  deletePackageFx,
+} from '@renderer/stores/packages/effects/PackagesEffects.js';
 
 interface DependenciesTableProps {
   tabKey: TabKey;
@@ -41,7 +41,7 @@ const DependenciesTable: React.FunctionComponent<DependenciesTableProps> = (
 
   const { t } = useTranslation();
 
-  const { fetchedPackages } = useUnit(packageListStore);
+  const { fetchedPackages } = useUnit($packageList);
 
   const dependenciesTableColumns: (
     followedPackages: GetPackagesResult,
@@ -106,11 +106,11 @@ const DependenciesTable: React.FunctionComponent<DependenciesTableProps> = (
               type="primary"
               toolTip={t('project.details.tooltip.viewPackage')}
               onClick={() => {
-                updatePackageDetails({
+                selectPackageDetails({
                   packageName: record.name,
                   registryUrl: registryUrl,
                 });
-                void navigateTo(routePaths.packageDetails.generate());
+                navigateTo(routePaths.packageDetails.generate());
               }}
             >
               <EyeOutlined />
@@ -121,7 +121,7 @@ const DependenciesTable: React.FunctionComponent<DependenciesTableProps> = (
                 danger={true}
                 toolTip={t('project.details.tooltip.unfollowPackage')}
                 onClick={() => {
-                  void deletePackage(
+                  void deletePackageFx(
                     followedPackageId ? followedPackageId : '',
                   );
                 }}
@@ -133,7 +133,7 @@ const DependenciesTable: React.FunctionComponent<DependenciesTableProps> = (
                 type="default"
                 toolTip={t('project.details.tooltip.followPackage')}
                 onClick={() => {
-                  void createPackage({
+                  void createPackageFx({
                     packageName: record.name,
                     registryUrl: registryUrl,
                   });
@@ -158,7 +158,7 @@ const DependenciesTable: React.FunctionComponent<DependenciesTableProps> = (
       pagination={{
         current: tabConfig.page,
         defaultPageSize: tabConfig.pageSize,
-        position: ['bottomCenter'],
+        placement: ['bottomCenter'],
         showSizeChanger: true,
         onChange(page: number, pageSize: number) {
           updateTabPageConfig({ tabKey, page, pageSize });

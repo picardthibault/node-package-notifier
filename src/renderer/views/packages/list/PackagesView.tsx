@@ -8,20 +8,24 @@ import {
 import { useTranslation } from 'react-i18next';
 import ActionButton from '@renderer/components/Button/ActionButton.js';
 import {
-  packageListStore,
+  $packageList,
   PackageListStore,
-  updatePackageListPageConfig,
-} from '@renderer/stores/PackageListStore.js';
+} from '@renderer/stores/packages/PackageListStore.js';
 import { useUnit } from 'effector-react';
 import Title from '@renderer/components/Title/Title.js';
-import { routePaths } from '../../routes.js';
-import { updatePackageDetails } from '@renderer/stores/PackageDetailsStore.js';
-import {
-  deletePackage,
-  fetchPackages,
-} from '@renderer/effects/PackageEffect.js';
-import { navigateTo } from '@renderer/effects/MenuEffect.js';
+import { routePaths } from '../../../routes.js';
+import { navigateTo } from '@renderer/stores/menu/MenuStore.js';
 import PackageVersionTag from '@renderer/components/Tag/Tag.js';
+import { GetPackagesResult } from '@type/PackageListenerArgs.js';
+import i18n from '../../../i18n.js';
+import {
+  selectPackageDetails,
+  updatePackageListPageConfig,
+} from '@renderer/stores/packages/events/PackagesEvents.js';
+import {
+  deletePackageFx,
+  fetchPackageListFx,
+} from '@renderer/stores/packages/effects/PackagesEffects.js';
 
 interface TableItemType {
   key: string;
@@ -32,44 +36,43 @@ interface TableItemType {
   version: string;
 }
 
+const mapFetchedPackageToTableItem = (
+  fetchedPackages: GetPackagesResult,
+): TableItemType[] => {
+  return Object.keys(fetchedPackages).map((packageId) => {
+    const fetchedPackage = fetchedPackages[packageId];
+    return {
+      key: packageId,
+      packageId,
+      name: fetchedPackage.name,
+      registryUrl: fetchedPackage.registryUrl,
+      license: fetchedPackage.license
+        ? fetchedPackage.license
+        : i18n.t('common.na'),
+      version: fetchedPackage.latest
+        ? fetchedPackage.latest
+        : i18n.t('common.na'),
+    };
+  });
+};
+
 export const PackagesView = (): React.JSX.Element => {
   const { t } = useTranslation();
 
-  const [packages, setPackages] = useState<TableItemType[]>([]);
   const [hasFilter, setHasFilter] = useState<boolean>(false);
   const [filteredPackages, setFilteredPackages] = useState<TableItemType[]>([]);
 
   const { fetchedPackages, page, pageSize } =
-    useUnit<PackageListStore>(packageListStore);
+    useUnit<PackageListStore>($packageList);
 
   const [formInstance] = Form.useForm();
 
+  const packages = mapFetchedPackageToTableItem(fetchedPackages);
+
   useEffect(() => {
     // Load packages
-    void fetchPackages();
+    void fetchPackageListFx();
   }, []);
-
-  useEffect(() => {
-    const tableItems: TableItemType[] = Object.keys(fetchedPackages).map(
-      (packageId) => {
-        const fetchedPackage = fetchedPackages[packageId];
-        return {
-          key: packageId,
-          packageId,
-          name: fetchedPackage.name,
-          registryUrl: fetchedPackage.registryUrl,
-          license: fetchedPackage.license
-            ? fetchedPackage.license
-            : t('common.na'),
-          version: fetchedPackage.latest
-            ? fetchedPackage.latest
-            : t('common.na'),
-        };
-      },
-    );
-
-    setPackages(tableItems);
-  }, [fetchedPackages, t]);
 
   const tableColumns: TableColumnsType<TableItemType> = [
     {
@@ -105,11 +108,11 @@ export const PackagesView = (): React.JSX.Element => {
             type="primary"
             toolTip={t('package.list.tooltips.detailsPackage')}
             onClick={() => {
-              updatePackageDetails({
+              selectPackageDetails({
                 packageName: tableItem.name,
                 registryUrl: tableItem.registryUrl,
               });
-              void navigateTo(routePaths.packageDetails.generate());
+              navigateTo(routePaths.packageDetails.generate());
             }}
           >
             <EyeOutlined />
@@ -118,7 +121,7 @@ export const PackagesView = (): React.JSX.Element => {
             type="default"
             danger={true}
             toolTip={t('package.list.tooltips.unfollowPackage')}
-            onClick={() => void deletePackage(tableItem.packageId)}
+            onClick={() => void deletePackageFx(tableItem.packageId)}
           >
             <MinusCircleOutlined />
           </ActionButton>
@@ -198,7 +201,7 @@ export const PackagesView = (): React.JSX.Element => {
         pagination={{
           current: page,
           defaultPageSize: pageSize,
-          position: ['bottomCenter'],
+          placement: ['bottomCenter'],
           showSizeChanger: true,
           onChange(page: number, pageSize: number) {
             updatePackageListPageConfig({ page, pageSize });

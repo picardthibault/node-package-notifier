@@ -1,4 +1,9 @@
-import React, { FunctionComponent, useEffect, useState } from 'react';
+import React, {
+  FunctionComponent,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import Title from '@renderer/components/Title/Title.js';
 import {
   Form,
@@ -14,12 +19,17 @@ import { useTranslation } from 'react-i18next';
 import { useUnit } from 'effector-react';
 import {
   PackageDetailsStore,
-  packageDetailsStore,
-} from '@renderer/stores/PackageDetailsStore.js';
-import { MenuStore, menuStore } from '@renderer/stores/MenuStore.js';
+  $packageDetails,
+} from '@renderer/stores/packages/PackageDetailsStore.js';
+import {
+  MenuStore,
+  $menu,
+  navigateTo,
+} from '@renderer/stores/menu/MenuStore.js';
 import { EyeOutlined } from '@ant-design/icons';
-import { navigateTo } from '@renderer/effects/MenuEffect.js';
 import PackageVersionTag from '@renderer/components/Tag/Tag.js';
+import { GetPackageResult } from '@type/PackageListenerArgs.js';
+import { fetchPackageDetailsFx } from '@renderer/stores/packages/effects/PackagesEffects.js';
 
 interface TableItemType {
   key: number;
@@ -30,10 +40,38 @@ interface TableItemType {
 const backMouseButtonListener: (to: string) => (event: MouseEvent) => void =
   (to: string) => (event: MouseEvent) => {
     if (event.button === 3) {
-      void navigateTo(to);
+      navigateTo(to);
     }
     event.preventDefault();
   };
+
+const usePackageDetails = () => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [packageDetails, setPackageDetails] = useState<
+    GetPackageResult | undefined
+  >(undefined);
+
+  const selectPackage = useCallback(
+    (packageName: string, registryUrl: string) => {
+      setIsLoading(true);
+
+      void fetchPackageDetailsFx({
+        packageName: packageName,
+        registryUrl: registryUrl,
+      });
+    },
+    [setIsLoading],
+  );
+
+  useEffect(() => {
+    return fetchPackageDetailsFx.done.watch(({ result }) => {
+      setIsLoading(false);
+      setPackageDetails(result);
+    });
+  });
+
+  return { isLoading, packageDetails, selectPackage };
+};
 
 const PackageDetails: FunctionComponent = () => {
   const { t } = useTranslation();
@@ -42,74 +80,69 @@ const PackageDetails: FunctionComponent = () => {
   const [openAlert, contextHolder] = notification.useNotification();
 
   const { packageName, registryUrl } =
-    useUnit<PackageDetailsStore>(packageDetailsStore);
+    useUnit<PackageDetailsStore>($packageDetails);
 
-  const { previousLocation: previousSelectedKey } =
-    useUnit<MenuStore>(menuStore);
-
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [title, setTitle] = useState<string>('');
-  const [tags, setTags] = useState<TableItemType[]>([]);
+  const { previousLocation } = useUnit<MenuStore>($menu);
 
   const [formInstance] = Form.useForm();
 
+  const { isLoading, packageDetails, selectPackage } = usePackageDetails();
+
   useEffect(() => {
-    const listener = backMouseButtonListener(previousSelectedKey);
+    if (packageName && registryUrl) {
+      selectPackage(packageName, registryUrl);
+    }
+  }, [packageName, registryUrl, selectPackage]);
+
+  let title = '';
+  let tags: TableItemType[] = [];
+  if (packageDetails) {
+    title =
+      packageDetails.packageDetails.name.charAt(0).toUpperCase() +
+      packageDetails.packageDetails.name.slice(1);
+    if (packageDetails.error) {
+      formInstance.resetFields();
+      tags = [];
+      formInstance.setFieldValue(
+        'registryUrl',
+        packageDetails.packageDetails.registryUrl,
+      );
+      openAlert.error({
+        title: t('package.details.alert.title.error'),
+        description: t('package.details.alert.description.error', {
+          cause: packageDetails.error,
+        }),
+      });
+    } else {
+      formInstance.setFieldsValue({
+        registryUrl: packageDetails.packageDetails.registryUrl,
+        licence: packageDetails.packageDetails.license,
+        homePage: packageDetails.packageDetails.homePage,
+        repository: packageDetails.packageDetails.repository,
+        description: packageDetails.packageDetails.description,
+      });
+
+      const fetchedTags = packageDetails.packageDetails.tags;
+      if (fetchedTags) {
+        Object.keys(fetchedTags).forEach((key, index) =>
+          tags.push({
+            key: index,
+            tagName: key,
+            tagVersion: fetchedTags[key],
+          }),
+        );
+      }
+    }
+  }
+
+  useEffect(() => {
+    const listener = backMouseButtonListener(previousLocation);
     window.addEventListener('mouseup', listener);
 
     return () => {
       window.removeEventListener('mouseup', listener);
     };
   });
-
-  useEffect(() => {
-    setIsLoading(true);
-    void window.packageManagement
-      .getPackage(packageName, registryUrl)
-      .then((getPackageResult) => {
-        setTitle(
-          getPackageResult.packageDetails.name.charAt(0).toUpperCase() +
-            getPackageResult.packageDetails.name.slice(1),
-        );
-
-        if (getPackageResult.error) {
-          formInstance.resetFields();
-          setTags([]);
-          formInstance.setFieldValue(
-            'registryUrl',
-            getPackageResult.packageDetails.registryUrl,
-          );
-          openAlert.error({
-            message: t('package.details.alert.title.error'),
-            description: t('package.details.alert.description.error', {
-              cause: getPackageResult.error,
-            }),
-          });
-        } else {
-          formInstance.setFieldsValue({
-            registryUrl: getPackageResult.packageDetails.registryUrl,
-            licence: getPackageResult.packageDetails.license,
-            homePage: getPackageResult.packageDetails.homePage,
-            repository: getPackageResult.packageDetails.repository,
-            description: getPackageResult.packageDetails.description,
-          });
-
-          const tags: TableItemType[] = [];
-          const fetchedTags = getPackageResult.packageDetails.tags;
-          if (fetchedTags) {
-            Object.keys(fetchedTags).forEach((key, index) =>
-              tags.push({
-                key: index,
-                tagName: key,
-                tagVersion: fetchedTags[key],
-              }),
-            );
-          }
-          setTags(tags);
-        }
-        setIsLoading(false);
-      });
-  }, [formInstance, openAlert, packageName, registryUrl, t]);
 
   const tableColumns: TableColumnType<TableItemType>[] = [
     {
@@ -150,11 +183,7 @@ const PackageDetails: FunctionComponent = () => {
         <Loading />
       ) : (
         <>
-          <LinkButton
-            to={previousSelectedKey}
-            label={t('common.back')}
-            isBack
-          />
+          <LinkButton to={previousLocation} label={t('common.back')} isBack />
           <Title content={title} />
           <div className="detailsForm">
             <Form
@@ -200,7 +229,7 @@ const PackageDetails: FunctionComponent = () => {
             columns={tableColumns}
             dataSource={tags}
             pagination={{
-              position: ['bottomCenter'],
+              placement: ['bottomCenter'],
               showSizeChanger: true,
             }}
           />

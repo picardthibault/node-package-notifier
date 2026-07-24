@@ -1,4 +1,3 @@
-import '@ant-design/v5-patch-for-react-19';
 import React, {
   FunctionComponent,
   useCallback,
@@ -6,10 +5,10 @@ import React, {
   useState,
 } from 'react';
 import { Route, Routes } from 'react-router';
-import { PackageCreation } from '@renderer/views/packages/PackageCreation.js';
-import { PackagesView } from '@renderer/views/packages/PackagesView.js';
+import { PackageCreation } from '@renderer/views/packages/creation/PackageCreation.js';
+import { PackagesView } from '@renderer/views/packages/list/PackagesView.js';
 import { routePaths } from './routes.js';
-import PackageDetails from '@renderer/views/packages/PackageDetails.js';
+import PackageDetails from '@renderer/views/packages/details/PackageDetails.js';
 import PageLayout from '@renderer/components/Layout/PageLayout.js';
 import { useTranslation } from 'react-i18next';
 import {
@@ -17,26 +16,54 @@ import {
   ProjectOutlined,
   UnorderedListOutlined,
 } from '@ant-design/icons';
-import ProjectCreation from '@renderer/views/projects/ProjectCreation.js';
-import ProjectDetails from '@renderer/views/projects/ProjectDetails.js';
+import ProjectCreation from '@renderer/views/projects/creation/ProjectCreation.js';
+import ProjectDetails from '@renderer/views/projects/details/ProjectDetails.js';
 import { ProjectListElement } from '@type/ProjectInfo.js';
-import { fetchProjectList } from './effects/ProjectEffects.js';
+import {
+  createProjectFx,
+  fetchProjectListFx,
+} from './stores/projects/effects/ProjectEffects.js';
 import { MenuItemType, SubMenuType } from 'antd/es/menu/interface.js';
+import { notification } from 'antd';
+import { createPackageFx } from './stores/packages/effects/PackagesEffects.js';
 
 const projectListMenuKey = 'projectList';
 
 const App: FunctionComponent = () => {
   const { t } = useTranslation();
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const [openAlert, contextHolder] = notification.useNotification();
+
   const [projectList, setProjectList] = useState<ProjectListElement[]>([]);
 
   useEffect(() => {
-    void fetchProjectList();
+    void fetchProjectListFx();
   }, []);
 
   useEffect(() => {
-    fetchProjectList.done.watch(({ result }) => {
+    fetchProjectListFx.done.watch(({ result }) => {
       setProjectList(result);
+    });
+  });
+
+  useEffect(() => {
+    return createPackageFx.done.watch(({ result }) => {
+      if (!result) {
+        openAlert.success({
+          title: t('package.creation.alert.title.success'),
+        });
+      }
+    });
+  });
+
+  useEffect(() => {
+    return createProjectFx.done.watch(({ result }) => {
+      if (!result.error) {
+        openAlert.success({
+          title: t('project.creation.alert.title.success'),
+        });
+      }
     });
   });
 
@@ -54,9 +81,11 @@ const App: FunctionComponent = () => {
         children: [
           ...projectList
             .sort((projectA, projectB) => {
-              if (projectA.name < projectB.name) {
+              const nameA = projectA.name.toUpperCase();
+              const nameB = projectB.name.toUpperCase();
+              if (nameA < nameB) {
                 return -1;
-              } else if (projectA.name > projectB.name) {
+              } else if (nameA > nameB) {
                 return 1;
               } else {
                 return 0;
@@ -77,37 +106,40 @@ const App: FunctionComponent = () => {
   }, [projectList, t]);
 
   return (
-    <Routes>
-      <Route
-        element={
-          <PageLayout
-            subMenuItems={subMenuItems()}
-            defaultOpenMenuKeys={[projectListMenuKey]}
+    <>
+      {contextHolder}
+      <Routes>
+        <Route
+          element={
+            <PageLayout
+              subMenuItems={subMenuItems()}
+              defaultOpenMenuKeys={[projectListMenuKey]}
+            />
+          }
+        >
+          <Route
+            path={routePaths.packageList.generate()}
+            element={<PackagesView />}
           />
-        }
-      >
-        <Route
-          path={routePaths.packageList.generate()}
-          element={<PackagesView />}
-        />
-        <Route
-          path={routePaths.packageCreation.generate()}
-          element={<PackageCreation />}
-        />
-        <Route
-          path={routePaths.packageDetails.generate()}
-          element={<PackageDetails />}
-        />
-        <Route
-          path={routePaths.projectCreation.generate()}
-          element={<ProjectCreation />}
-        />
-        <Route
-          path={routePaths.projectDetails.generate(':id')}
-          element={<ProjectDetails />}
-        />
-      </Route>
-    </Routes>
+          <Route
+            path={routePaths.packageCreation.generate()}
+            element={<PackageCreation />}
+          />
+          <Route
+            path={routePaths.packageDetails.generate()}
+            element={<PackageDetails />}
+          />
+          <Route
+            path={routePaths.projectCreation.generate()}
+            element={<ProjectCreation />}
+          />
+          <Route
+            path={routePaths.projectDetails.generate(':id')}
+            element={<ProjectDetails />}
+          />
+        </Route>
+      </Routes>
+    </>
   );
 };
 

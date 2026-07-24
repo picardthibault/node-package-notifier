@@ -1,5 +1,15 @@
 # Changelog
 
+## v2.1.1
+
+### Changed
+- Update dependencies
+
+### Fix
+- Fix package/project creation modal visibility
+- Fix file dialog modal
+- Fix project list sorting
+
 ## v2.1.0
 
 ### Added

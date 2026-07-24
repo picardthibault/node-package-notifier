@@ -1,19 +1,21 @@
 import { createEvent, createStore } from 'effector';
-import { routePaths } from '../routes.js';
+import { routePaths } from '../../routes.js';
 
+/* Events */
+export const navigateTo = createEvent<string>();
+
+/* Store */
 export interface MenuStore {
   currentLocation: string;
   previousLocation: string;
 }
 
-export const menuStore = createStore<MenuStore>({
+export const $menu = createStore<MenuStore>({
   currentLocation: routePaths.packageList.generate(),
   previousLocation: routePaths.packageList.generate(),
 });
 
-export const updateLocation = createEvent<string>();
-
-menuStore.on(updateLocation, (state, payload) => ({
+$menu.on(navigateTo, (state, payload) => ({
   ...state,
   previousLocation: state.currentLocation,
   currentLocation: payload,
